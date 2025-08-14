@@ -50,8 +50,47 @@ class usersController extends Controller
         return view('daftarKasir', compact('users'));
     }
 
-        public function kasirCreate()
+    public function kasirCreate()
     {
-        return view('siswa.create');
+        return view('admin.kasir-create');
+    }
+
+    public function kasirStore(Request $request) //untuk menyimpan data kasir
+    {
+        $data = $request->only('username', 'role');
+        $data['password'] = Hash::make($request->password); // hash password sebelum simpan
+        users::create($data);
+        return redirect()->route('daftarKasir');
+    }
+
+    public function kasirEdit($id)
+    {
+        $users = users::findOrFail($id);
+        return view('admin.kasir-edit', compact('users'));
+    }
+
+    public function kasirUpdate(Request $request, $id)
+    {
+        $users = users::findOrFail($id);
+        $users->update($request->only('username', 'role'));
+        if ($request->filled('password')) {
+            $users->password = Hash::make($request->password);
+        }
+        $users->save();
+        return redirect()->route('daftarKasir');
+    }
+
+    public function kasirDelete($id)
+    {
+        $users = users::findOrFail($id);
+        $users->delete();
+        return redirect()->route('daftarKasir');
+    }
+
+    public function logout()
+    {
+        //hapus session
+        session()->forget(['users_id', 'users_username']);
+        return redirect()->route('login');
     }
 }

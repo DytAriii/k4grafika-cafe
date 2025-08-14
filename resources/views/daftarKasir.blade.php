@@ -4,6 +4,11 @@
     <a href="{{ route('kasir.create') }}">
         <button>+ Tambah Kasir</button>
     </a>
+
+    <a href="{{ route('logout') }}">
+        <button>Logout</button>
+    </a>
+    
     <table border="1">
         <thead>
             <tr>
@@ -20,8 +25,8 @@
                 <td style="overflow: auto;">{{ $usr->password }}</td>
                 <td>{{ $usr->role }}</td>
                 <td>
-                    <a href="">Edit</a>|
-                    <a href="">Hapus</a>
+                    <a href="{{ route('kasir.edit', $usr->id) }}">Edit</a> |
+                    <a href="{{ route('kasir.delete', $usr->id) }}" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
                 </td>
             </tr>
             @endforeach
