@@ -4,63 +4,208 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kasir Café</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
-<body class="bg-[#FAF9F6] text-gray-800 font-sans">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #FAF9F6;
+            color: #333;
+        }
 
-    <div class="flex h-screen">
+        ul, li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 80px;
+            background: #fff;
+            box-shadow: 2px 0 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo img {
+            width: 40px;      /* atur ukuran logo */
+            height: auto;
+            display: block;
+            margin: 0 auto 40px auto;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            align-items: center;
+            flex: 1; /* biar nav isi penuh sidebar */
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #555;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        nav a i {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        nav a:hover {
+            color: #A74C3C;
+        }
+
+        nav a.active {
+            background: #A74C3C;
+            color: #fff;
+            border-radius: 8px;
+            width: 60px;
+        }
+
+        nav a.logout {
+            margin-top: auto; /* dorong logout ke bawah */
+            color: #555;
+        }
+
+        nav a.logout:hover {
+            color: #A74C3C;
+        }
+
+        nav a.logout.active {
+            background: #A74C3C;
+            color: #fff;
+            border-radius: 8px;
+        }
+
+        /* Main */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 60px;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin: 10px;
+            border-radius: 8px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f3f3f3;
+            border-radius: 6px;
+            padding: 6px 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+        }
+
+        .clock {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile span {
+            font-weight: 600;
+        }
+
+        .profile .avatar {
+            width: 32px;
+            height: 32px;
+            background: #ccc;
+            border-radius: 50%;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
         <!-- Sidebar -->
-        <aside class="w-1/6 bg-white shadow-md p-6 flex flex-col">
-            <div class="mb-8 font-bold text-lg text-[#A74C3C]">LOGO</div>
-            <nav class="flex flex-col gap-4">
-                <a href="#" class="flex items-center gap-2 text-[#A74C3C] font-semibold">
-                    <i class="fa fa-cart-shopping"></i> Order
+        <aside>
+            <div class="logo">
+                <!-- ganti src dengan gambar logomu -->
+                <img src="/images/logo.png" alt="Logo">
+            </div>
+            <nav>
+                <a href="#" class="active">
+                    <i class="fa fa-cart-shopping"></i>
+                    <span>Order</span>
                 </a>
-                <a href="#" class="flex items-center gap-2 hover:text-[#A74C3C]">
-                    <i class="fa fa-clock-rotate-left"></i> History
+                <a href="#">
+                    <i class="fa fa-clock-rotate-left"></i>
+                    <span>History</span>
                 </a>
-                <a href="#" class="flex items-center gap-2 hover:text-[#A74C3C]">
-                    <i class="fa fa-ban"></i> Menu Sold
+                <a href="#">
+                    <i class="fa fa-ban"></i>
+                    <span>Menu Sold</span>
                 </a>
-                <a href="#" class="flex items-center gap-2 hover:text-[#A74C3C]">
-                    <i class="fa fa-right-from-bracket"></i> Logout
+                <a href="#" class="logout">
+                    <i class="fa fa-right-from-bracket"></i>
+                    <span>Logout</span>
                 </a>
             </nav>
         </aside>
 
         <!-- Main -->
-        <main class="flex-1 flex flex-col">
-            
-            <!-- Topbar -->
-            <div class="h-16 bg-white shadow rounded-lg m-4 px-6 flex items-center justify-between">
-                
-                <!-- Search Bar -->
-                <div class="flex items-center bg-gray-100 rounded-lg px-3 py-2 ">
-                    <i class="fa fa-search text-gray-500 mr-2"></i>
-                    <input type="text" placeholder="Search..." 
-                        class="bg-transparent outline-none w-full text-sm">
+        <main>
+            <div class="topbar">
+                <div class="search-bar">
+                    <i class="fa fa-search" style="color: #777; margin-right: 6px;"></i>
+                    <input type="text" placeholder="Search...">
                 </div>
-
-                <!-- Clock -->
-                <div id="clock" class="font-bold text-lg"></div>
-
-                <!-- Profile -->
-                <div class="flex items-center gap-3">
-                    <span class="font-semibold">Sikasir</span>
-                    <div class="w-8 h-8 rounded-full bg-gray-300"></div>
+                <div id="clock" class="clock"></div>
+                <div class="profile">
+                    <span>Sikasir</span>
+                    <div class="avatar"></div>
                 </div>
             </div>
 
-            <!-- Konten Halaman -->
-            <div class="flex-1 p-4 overflow-y-auto">
+            <div class="content">
                 @yield('content')
             </div>
         </main>
     </div>
 
     <script>
-        // Jam real-time
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');

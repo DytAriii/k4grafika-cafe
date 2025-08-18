@@ -17,5 +17,9 @@ class DatabaseSeeder extends Seeder
 
         users::factory()->create();
         users::factory()->kasir()->create();
+
+        $this->call([
+        CategorySeeder::class,
+    ]);
     }
 }

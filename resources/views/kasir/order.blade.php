@@ -66,51 +66,148 @@
         background: #8C3E22;
     }
 
-    /* kategori pill */
-    .nav-pills .nav-link.active {
-        background-color: #A74C29;
+    /* kategori */
+    .category-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .category-btn {
+        border: 1px solid #A74C29;
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-size: 14px;
+        background: #fff;
+        color: #A74C29;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .category-btn.active,
+    .category-btn:hover {
+        background: #A74C29;
+        color: #fff;
+    }
+
+    .kasir-container {
+        display: flex;
+        gap: 20px;
+    }
+
+    .menu-section {
+        flex: 3;
+    }
+
+    .cart-section {
+        flex: 1;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        height: calc(100vh - 120px);
+    }
+
+    .cart-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .cart-items {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .cart-total {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 12px 0;
+        text-align: right;
+    }
+
+    .pay-btn {
+        background: #A74C29;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+        width: 100%;
+    }
+
+    .pay-btn:hover {
+        background: #8C3E22;
     }
 </style>
 
-<div class="container-fluid">
-    <h2 class="mb-4">Pilih Menu</h2>
+<div class="kasir-container">
+    <div class="menu-section">
+        <h2 class="mb-4">Pilih Menu</h2>
+        <ul class="category-list">
+            @foreach($categories as $category)
+                <li>
+                    <button 
+                        class="category-btn {{ $loop->first ? 'active' : '' }}"
+                        data-id="{{ $category->id }}">
+                        {{ $category->name }}
+                    </button>
+                </li>
+            @endforeach
+        </ul>
 
-    {{-- Kategori --}}
-    <ul class="nav nav-pills mb-3">
-        @foreach($categories as $category)
-            <li class="nav-item">
-                <button 
-                    class="nav-link category-btn {{ $loop->first ? 'active' : '' }}"
-                    data-id="{{ $category->id }}">
-                    {{ $category->name }}
-                </button>
-            </li>
-        @endforeach
-    </ul>
-
-    {{-- Daftar Menu --}}
-    <div class="menu-container" id="menu-container">
-        @forelse($menus as $menu)
-            <div class="menu-card">
-                <img src="{{ asset('storage/'.$menu->image) }}" alt="{{ $menu->name }}">
-                <div class="menu-info">
-                    <div>
-                        <div class="menu-title">{{ $menu->name }}</div>
-                        <div class="menu-price">Rp {{ number_format($menu->price, 0, ',', '.') }}</div>
+        <div class="menu-container" id="menu-container">
+            @forelse($menus as $menu)
+                <div class="menu-card">
+                    <img src="{{ asset('storage/'.$menu->image) }}" alt="{{ $menu->name }}">
+                    <div class="menu-info">
+                        <div>
+                            <div class="menu-title">{{ $menu->name }}</div>
+                            <div class="menu-price">Rp {{ number_format($menu->price, 0, ',', '.') }}</div>
+                        </div>
+                        <form action="{{ route('order.add', $menu->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="add-btn">Tambah</button>
+                        </form>
                     </div>
-                    <form action="{{ route('order.add', $menu->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="add-btn">Tambah</button>
-                    </form>
                 </div>
+            @empty
+                <p>Tidak ada menu tersedia.</p>
+            @endforelse
+        </div>
+    </div>
+
+    <div class="cart-section">
+        <div class="cart-title">Keranjang</div>
+        <div class="cart-items" id="cart-items">
+            <div class="cart-item">
+                <span>Cappuccino</span>
+                <span>Rp 20.000</span>
             </div>
-        @empty
-            <p>Tidak ada menu tersedia.</p>
-        @endforelse
+            <div class="cart-item">
+                <span>Snack A</span>
+                <span>Rp 15.000</span>
+            </div>
+        </div>
+        <div class="cart-total">Total: Rp 35.000</div>
+        <button class="pay-btn">Bayar</button>
     </div>
 </div>
 
-{{-- Script AJAX untuk ganti kategori --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(".category-btn").on("click", function() {
