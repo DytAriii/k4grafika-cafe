@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\usersController;
+use App\Http\Controllers\KasirController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/kasir/order', [KasirController::class, 'order'])->name('kasir.order');
+// ambil menu berdasarkan kategori (AJAX)
+Route::get('/order/category/{id}', [KasirController::class, 'getByCategory'])->name('order.category');
+// tambah ke keranjang (sementara dummy)
+Route::post('/order/add/{id}', [KasirController::class, 'addToCart'])->name('order.add');
 
 Route::get('/', [usersController::class, 'formLogin'])->name('login'); //menangani page login(page pertama yang didatangi admin/kasir)
 

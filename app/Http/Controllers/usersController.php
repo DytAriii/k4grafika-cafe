@@ -25,7 +25,7 @@ class usersController extends Controller
             ]);
 
             if ($users->role === 'kasir') {
-                return redirect()->route('home');
+                return redirect()->route('kasir.order');
             } elseif ($users->role === 'admin') {
                 return redirect()->route('daftarKasir');
             } else {
