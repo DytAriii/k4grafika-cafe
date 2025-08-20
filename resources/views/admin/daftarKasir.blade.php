@@ -1,12 +1,11 @@
+@extends('admin')
+
+@section('content')
 <div>
     <h2>CRUD Kasir</h2>
 
     <a href="{{ route('kasir.create') }}">
         <button>+ Tambah Kasir</button>
-    </a>
-
-    <a href="{{ route('logout') }}">
-        <button>Logout</button>
     </a>
     
     <table border="1">
@@ -33,3 +32,4 @@
         </tbody>
     </table>
 </div>
+@endsection

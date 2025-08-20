@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\users;
+use App\Models\Menu;
 use Illuminate\Support\Facades\Hash;
 
 class usersController extends Controller
@@ -27,7 +28,7 @@ class usersController extends Controller
             if ($users->role === 'kasir') {
                 return redirect()->route('kasir.order');
             } elseif ($users->role === 'admin') {
-                return redirect()->route('daftarKasir');
+                return redirect()->route('admin');
             } else {
                 // Jika role tidak dikenali, diarahkan ke halaman login
                 return redirect()->route('login');
@@ -47,7 +48,7 @@ class usersController extends Controller
             return redirect()->route('login');
         }
         $users = users::all(); // Ambil semua data pengguna dalam tabel
-        return view('daftarKasir', compact('users'));
+        return view('admin.daftarKasir', compact('users'));
     }
 
     public function kasirCreate()
@@ -92,5 +93,73 @@ class usersController extends Controller
         //hapus session
         session()->forget(['users_id', 'users_username']);
         return redirect()->route('login');
+    }
+
+    public function dashboard()
+    {
+        return view('admin.dashboard');
+    }
+
+    public function manajemenMenu()
+    {
+        if (!session()->has('users_id')) { //mengecek session
+            return redirect()->route('login');
+        }
+        $menu = Menu::all(); // Ambil semua data menu dalam tabel
+        return view('admin.manajemenMenu', compact('menu'));
+    }
+
+    public function menuCreate()
+    {
+        return view('admin.create-menu');
+    }
+
+    public function menuStore(Request $request) //untuk menyimpan data menu
+    {
+        $request->validate([
+            'nama' => 'required',
+            'harga' => 'required|numeric',
+            'kategori' => 'required',
+            'status' => 'required',
+            'gambar' => 'required|image|mimes:jpg,JPG,jpeg,JPEG,png'
+        ]);
+
+        $data = $request->only('nama', 'harga', 'kategori', 'gambar', 'status');
+        $data['gambar'] = $request->file('gambar')->store('menu', 'public');
+        Menu::create($data);
+        return redirect()->route('manajemenMenu');
+    }
+
+    public function menuDelete($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $menu->delete();
+        return redirect()->route('manajemenMenu');
+    }
+
+    public function menuEdit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        return view('admin.edit-menu', compact('menu'));
+    }
+
+    public function menuUpdate(Request $request, $id)
+    {
+        $menu = Menu::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required',
+            'harga' => 'required|numeric',
+            'kategori' => 'required',
+            'status' => 'required',
+            'gambar' => 'nullable|image|mimes:jpg,JPG,jpeg,JPEG,png'
+        ]);
+
+        $data = $request->only('nama', 'harga', 'kategori', 'status');
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('menu', 'public');
+        }
+        $menu->update($data);
+        return redirect()->route('manajemenMenu');
     }
 }
