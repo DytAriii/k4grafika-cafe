@@ -12,7 +12,7 @@ class MenuSeeder extends Seeder
      */
     public function run(): void
 {
-    // contoh membuat 5 data menu
-    Menu::factory()->count(5)->create();
+    // contoh membuat 1 data menu
+    Menu::factory()->count(1)->create();
 }
 }

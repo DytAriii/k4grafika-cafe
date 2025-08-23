@@ -1,6 +1,6 @@
 <form action="{{ route('menu.update', $menu->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
-    @method('POST')
+    @method('PATCH')
     <label for="nama">Nama:</label>
     <input type="text" name="nama" id="nama" value="{{ $menu->nama }}" required>
 
@@ -16,7 +16,14 @@
     </select>
 
     <label for="gambar">Gambar:</label>
+    @if($menu->gambar)
+    <img src="{{ asset('storage/' . $menu->gambar) }}" alt="{{ $menu->nama }}" width="100">
+    @endif
     <input type="file" name="gambar" id="gambar">
 
+    <select name="status" id="status">
+        <option value="available" {{ $menu->status === 'available' ? 'selected' : '' }}>Available</option>
+        <option value="unavailable" {{ $menu->status === 'unavailable' ? 'selected' : '' }}>Unavailable</option>
+    </select>
     <button type="submit">Update Menu</button>
 </form>

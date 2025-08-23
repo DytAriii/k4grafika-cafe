@@ -20,8 +20,8 @@
     <br>
     <label>Status:</label>
     <select name="status" required>
-        <option value="On">On</option>
-        <option value="Off">Off</option>
+        <option value="available">Available</option>
+        <option value="unavailable">Unavailable</option>
     </select>
     <br>
     <button type="submit">Simpan</button>

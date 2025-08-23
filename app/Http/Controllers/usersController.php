@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\users;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class usersController extends Controller
 {
@@ -133,6 +134,12 @@ class usersController extends Controller
     public function menuDelete($id)
     {
         $menu = Menu::findOrFail($id);
+
+        // Hapus file gambar dari storage jika ada
+        if ($menu->gambar && Storage::disk('public')->exists($menu->gambar)) {
+            Storage::disk('public')->delete($menu->gambar);
+        }
+
         $menu->delete();
         return redirect()->route('manajemenMenu');
     }
@@ -156,9 +163,16 @@ class usersController extends Controller
         ]);
 
         $data = $request->only('nama', 'harga', 'kategori', 'status');
+
         if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('menu', 'public');
+        // Hapus gambar lama jika ada
+        if ($menu->gambar && Storage::disk('public')->exists($menu->gambar)) {
+            Storage::disk('public')->delete($menu->gambar);
         }
+        // Simpan gambar baru
+        $data['gambar'] = $request->file('gambar')->store('menu', 'public');
+    }
+
         $menu->update($data);
         return redirect()->route('manajemenMenu');
     }

@@ -17,7 +17,7 @@ return new class extends Migration
     $table->float('harga');
     $table->enum('kategori', ['Drink', 'Coffee', 'Snack', 'Food']);
     $table->string('gambar')->nullable();
-    $table->enum('status', ['On', 'Off']);
+    $table->enum('status', ['available', 'unavailable']);
     $table->timestamps();
 });
     }

@@ -21,7 +21,7 @@ class menuFactory extends Factory
         'harga' => $this->faker->randomFloat(2, 10000, 100000),
         'kategori' => $this->faker->randomElement(['Drink', 'Coffee', 'Snack', 'Food']),
         'gambar' => $this->faker->imageUrl(180, 180, 'food'),
-        'status' => $this->faker->randomElement(['On', 'Off']),
+        'status' => $this->faker->randomElement(['available', 'unavailable']),
     ];
     }
 }

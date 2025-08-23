@@ -37,6 +37,6 @@ Route::get('/admin/create-menu', [usersController::class, 'menuCreate'])->name('
 Route::post('/admin/store-menu', [usersController::class, 'menuStore'])->name('menu.store'); //simpan data menu
 
 Route::get('/admin/{id}/edit-menu', [usersController::class, 'menuEdit'])->name('menu.edit');//rute ke halaman edit menu ---> mengirimkan id
-Route::post('/admin/{id}/update-menu', [usersController::class, 'menuUpdate'])->name('menu.update');//update data menu
+Route::patch('/admin/{id}/update-menu', [usersController::class, 'menuUpdate'])->name('menu.update');//update data menu
 
 Route::get('/admin/{id}/menu-delete', [usersController::class, 'menuDelete'])->name('menu.delete'); //hapus data menu
