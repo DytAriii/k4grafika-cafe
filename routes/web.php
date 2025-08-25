@@ -4,38 +4,36 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\usersController;
 use App\Http\Controllers\KasirController;
 
+// Kasir
 Route::get('/kasir/order', [KasirController::class, 'order'])->name('kasir.order');
-
 Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory']);
-
 Route::post('/order/add/{id}', [KasirController::class, 'addToCart'])->name('order.add');
 
-Route::get('/', [usersController::class, 'formLogin'])->name('login'); //menangani page login(page pertama yang didatangi admin/kasir)
+// Login
+Route::get('/', [usersController::class, 'formLogin'])->name('login'); 
+Route::post('/', [usersController::class, 'prosesLogin'])->name('login.post');
 
-Route::post('/', [usersController::class, 'prosesLogin'])->name('login.post');//mengangani proses login
+// Home
+Route::get('/home', [usersController::class, 'home'])->name('home');
 
-Route::get('/home', [usersController::class, 'home'])->name('home');//rute ke halaman home
+// Kasir Management
+Route::get('/admin/create-kasir', [usersController::class, 'kasirCreate'])->name('kasir.create');
+Route::post('/admin/store-kasir', [usersController::class, 'kasirStore'])->name('kasir.store');
+Route::get('/admin/{id}/edit', [usersController::class, 'kasirEdit'])->name('kasir.edit');
+Route::post('/admin/{id}/update', [usersController::class, 'kasirUpdate'])->name('kasir.update');
+Route::get('/admin/{id}/kasir-delete', [usersController::class, 'kasirDelete'])->name('kasir.delete');
 
-Route::get('/admin/create-kasir', [usersController::class, 'kasirCreate'])->name('kasir.create'); //rute ke Tambah Kasir
-Route::post('/admin/store-kasir', [usersController::class, 'kasirStore'])->name('kasir.store'); //simpan data kasir
-
-Route::get('/admin/{id}/edit', [usersController::class, 'kasirEdit'])->name('kasir.edit');//rute ke halaman edit kasir ---> mengirimkan id
-Route::post('/admin/{id}/update', [usersController::class, 'kasirUpdate'])->name('kasir.update');//update data kasir
-
-Route::get('/admin/{id}/kasir-delete', [usersController::class, 'kasirDelete'])->name('kasir.delete'); //hapus data kasir
+// Logout
 Route::get('/logout', [usersController::class, 'logout'])->name('logout');
 
-//admin
-Route::get('/admin', [usersController::class, 'dashboard'])->name('admin'); //rute ke halaman dashboard admin
-Route::get('/admin/dashboard', [usersController::class, 'dashboard'])->name('dashboard'); //rute ke halaman dashboard
-Route::get('/admin/daftarKasir', [usersController::class, 'daftarKasir'])->name('daftarKasir');//Rute ke halaman daftar kasir
-Route::get('/admin/manajemenMenu', [usersController::class, 'manajemenMenu'])->name('manajemenMenu');//rute ke halaman manajemen menu
+// Admin
+Route::get('/admin', [usersController::class, 'dashboard'])->name('admin');
+Route::get('/admin/dashboard', [usersController::class, 'dashboard'])->name('dashboard');
+Route::get('/admin/daftarKasir', [usersController::class, 'daftarKasir'])->name('daftarKasir');
+Route::get('/admin/manajemenMenu', [usersController::class, 'manajemenMenu'])->name('manajemenMenu');
 
-
-//manajemen menu
+// Manajemen Menu
 Route::prefix('admin')->group(function () {
-    Route::get('/manajemenMenu', [usersController::class, 'manajemenMenu'])->name('manajemenMenu');
-
     Route::get('/create-menu', [usersController::class, 'menuCreate'])->name('menu.create');
     Route::post('/store-menu', [usersController::class, 'menuStore'])->name('menu.store');
 

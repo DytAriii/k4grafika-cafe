@@ -7,6 +7,7 @@ use App\Models\users;
 use App\Models\Menu;
 use App\Models\Category;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class usersController extends Controller
 {
@@ -141,28 +142,41 @@ class usersController extends Controller
     public function menuDelete($id)
     {
         $menu = Menu::findOrFail($id);
+
+        // Hapus file gambar dari storage jika ada
+        if ($menu->gambar && Storage::disk('public')->exists($menu->gambar)) {
+            Storage::disk('public')->delete($menu->gambar);
+        }
+
         $menu->delete();
         return redirect()->route('manajemenMenu');
     }
 
     public function menuUpdate(Request $request, $id)
-    {
-        $menu = Menu::findOrFail($id);
+{
+    $menu = Menu::findOrFail($id);
 
-        $request->validate([
-            'nama' => 'required',
-            'harga' => 'required|numeric',
-            'kategori_id' => 'required|exists:categories,id',
-            'status' => 'required',
-            'gambar' => 'nullable|image|mimes:jpg,JPG,jpeg,JPEG,png'
-        ]);
+    $request->validate([
+        'nama' => 'required',
+        'harga' => 'required|numeric',
+        'kategori_id' => 'required|exists:categories,id',
+        'status' => 'required',
+        'gambar' => 'nullable|image|mimes:jpg,JPG,jpeg,JPEG,png'
+    ]);
 
-        $data = $request->only('nama', 'harga', 'kategori_id', 'status');
-        if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('menu', 'public');
+    $data = $request->only('nama', 'harga', 'kategori_id', 'status');
+
+    if ($request->hasFile('gambar')) {
+        // Hapus gambar lama jika ada
+        if ($menu->gambar && Storage::disk('public')->exists($menu->gambar)) {
+            Storage::disk('public')->delete($menu->gambar);
         }
-        $menu->update($data);
-
-        return redirect()->route('manajemenMenu');
+        // Simpan gambar baru
+        $data['gambar'] = $request->file('gambar')->store('menu', 'public');
     }
+
+    $menu->update($data);
+
+    return redirect()->route('manajemenMenu');
+}
 }
