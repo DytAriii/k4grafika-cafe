@@ -24,7 +24,8 @@
         <tr>
             <td>{{ $mn->nama }}</td>
             <td>{{ $mn->harga }}</td>
-            <td>{{ $mn->kategori }}</td>
+            <td>{{ $mn->category->nama ?? '-' }}</td>
+
             <td><img src="{{ asset('storage/' . $mn->gambar) }}" alt="{{ $mn->nama }}" width="100"></td>
             <td>
 

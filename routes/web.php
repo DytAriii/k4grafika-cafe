@@ -5,9 +5,9 @@ use App\Http\Controllers\usersController;
 use App\Http\Controllers\KasirController;
 
 Route::get('/kasir/order', [KasirController::class, 'order'])->name('kasir.order');
-// ambil menu berdasarkan kategori (AJAX)
-Route::get('/order/category/{id}', [KasirController::class, 'getByCategory'])->name('order.category');
-// tambah ke keranjang (sementara dummy)
+
+Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory']);
+
 Route::post('/order/add/{id}', [KasirController::class, 'addToCart'])->name('order.add');
 
 Route::get('/', [usersController::class, 'formLogin'])->name('login'); //menangani page login(page pertama yang didatangi admin/kasir)
@@ -33,10 +33,14 @@ Route::get('/admin/manajemenMenu', [usersController::class, 'manajemenMenu'])->n
 
 
 //manajemen menu
-Route::get('/admin/create-menu', [usersController::class, 'menuCreate'])->name('menu.create'); //rute ke Tambah menu
-Route::post('/admin/store-menu', [usersController::class, 'menuStore'])->name('menu.store'); //simpan data menu
+Route::prefix('admin')->group(function () {
+    Route::get('/manajemenMenu', [usersController::class, 'manajemenMenu'])->name('manajemenMenu');
 
-Route::get('/admin/{id}/edit-menu', [usersController::class, 'menuEdit'])->name('menu.edit');//rute ke halaman edit menu ---> mengirimkan id
-Route::post('/admin/{id}/update-menu', [usersController::class, 'menuUpdate'])->name('menu.update');//update data menu
+    Route::get('/create-menu', [usersController::class, 'menuCreate'])->name('menu.create');
+    Route::post('/store-menu', [usersController::class, 'menuStore'])->name('menu.store');
 
-Route::get('/admin/{id}/menu-delete', [usersController::class, 'menuDelete'])->name('menu.delete'); //hapus data menu
+    Route::get('/{id}/edit-menu', [usersController::class, 'menuEdit'])->name('menu.edit');
+    Route::put('/{id}/update-menu', [usersController::class, 'menuUpdate'])->name('menu.update');
+
+    Route::get('/{id}/menu-delete', [usersController::class, 'menuDelete'])->name('menu.delete');
+});

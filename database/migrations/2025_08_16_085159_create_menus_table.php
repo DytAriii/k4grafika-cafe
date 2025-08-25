@@ -15,10 +15,14 @@ return new class extends Migration
     $table->id();
     $table->string('nama');
     $table->float('harga');
-    $table->enum('kategori', ['Drink', 'Coffee', 'Snack', 'Food']);
+    $table->unsignedBigInteger('kategori_id'); // foreign key
     $table->string('gambar')->nullable();
     $table->enum('status', ['On', 'Off']);
     $table->timestamps();
+
+    $table->foreign('kategori_id')
+          ->references('id')->on('categories')
+          ->onDelete('cascade');
 });
     }
 

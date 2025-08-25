@@ -5,24 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\users;
 use App\Models\Menu;
+use App\Models\Category;
 use Illuminate\Support\Facades\Hash;
 
 class usersController extends Controller
 {
-    public function formLogin() //mengatur halaman login
+    public function formLogin()
     {
         return view('login');
     }
 
-    public function prosesLogin(Request $request) //menangani proses login
+    public function prosesLogin(Request $request)
     {
         $users = users::where('username', $request->username)->first();
         if ($users && Hash::check($request->password, $users->password)) {
-            // simpan ke session
             session([
                 'users_id' => $users->id,
                 'users_username' => $users->username,
-                'users_role' => $users->role // simpan role ke session jika perlu
+                'users_role' => $users->role
             ]);
 
             if ($users->role === 'kasir') {
@@ -30,7 +30,6 @@ class usersController extends Controller
             } elseif ($users->role === 'admin') {
                 return redirect()->route('admin');
             } else {
-                // Jika role tidak dikenali, diarahkan ke halaman login
                 return redirect()->route('login');
             }
         }
@@ -44,10 +43,10 @@ class usersController extends Controller
 
     public function daftarKasir()
     {
-        if (!session()->has('users_id')) { //mengecek session
+        if (!session()->has('users_id')) {
             return redirect()->route('login');
         }
-        $users = users::all(); // Ambil semua data pengguna dalam tabel
+        $users = users::all();
         return view('admin.daftarKasir', compact('users'));
     }
 
@@ -56,10 +55,10 @@ class usersController extends Controller
         return view('admin.kasir-create');
     }
 
-    public function kasirStore(Request $request) //untuk menyimpan data kasir
+    public function kasirStore(Request $request)
     {
         $data = $request->only('username', 'role');
-        $data['password'] = Hash::make($request->password); // hash password sebelum simpan
+        $data['password'] = Hash::make($request->password);
         users::create($data);
         return redirect()->route('daftarKasir');
     }
@@ -90,7 +89,6 @@ class usersController extends Controller
 
     public function logout()
     {
-        //hapus session
         session()->forget(['users_id', 'users_username']);
         return redirect()->route('login');
     }
@@ -102,32 +100,42 @@ class usersController extends Controller
 
     public function manajemenMenu()
     {
-        if (!session()->has('users_id')) { //mengecek session
+        if (!session()->has('users_id')) {
             return redirect()->route('login');
         }
-        $menu = Menu::all(); // Ambil semua data menu dalam tabel
+        $menu = Menu::all();
         return view('admin.manajemenMenu', compact('menu'));
     }
 
     public function menuCreate()
     {
-        return view('admin.create-menu');
+        $categories = Category::all();
+        return view('admin.create-menu', compact('categories'));
     }
 
-    public function menuStore(Request $request) //untuk menyimpan data menu
+    public function menuEdit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $categories = Category::all();
+        return view('admin.edit-menu', compact('menu', 'categories'));
+    }
+
+    public function menuStore(Request $request)
     {
         $request->validate([
             'nama' => 'required',
             'harga' => 'required|numeric',
-            'kategori' => 'required',
+            'kategori_id' => 'required|exists:categories,id',
             'status' => 'required',
             'gambar' => 'required|image|mimes:jpg,JPG,jpeg,JPEG,png'
         ]);
 
-        $data = $request->only('nama', 'harga', 'kategori', 'gambar', 'status');
+        $data = $request->only('nama', 'harga', 'kategori_id', 'status');
         $data['gambar'] = $request->file('gambar')->store('menu', 'public');
+
         Menu::create($data);
-        return redirect()->route('manajemenMenu');
+
+        return redirect()->route('manajemenMenu')->with('success', 'Menu berhasil ditambahkan!');
     }
 
     public function menuDelete($id)
@@ -137,12 +145,6 @@ class usersController extends Controller
         return redirect()->route('manajemenMenu');
     }
 
-    public function menuEdit($id)
-    {
-        $menu = Menu::findOrFail($id);
-        return view('admin.edit-menu', compact('menu'));
-    }
-
     public function menuUpdate(Request $request, $id)
     {
         $menu = Menu::findOrFail($id);
@@ -150,16 +152,17 @@ class usersController extends Controller
         $request->validate([
             'nama' => 'required',
             'harga' => 'required|numeric',
-            'kategori' => 'required',
+            'kategori_id' => 'required|exists:categories,id',
             'status' => 'required',
             'gambar' => 'nullable|image|mimes:jpg,JPG,jpeg,JPEG,png'
         ]);
 
-        $data = $request->only('nama', 'harga', 'kategori', 'status');
+        $data = $request->only('nama', 'harga', 'kategori_id', 'status');
         if ($request->hasFile('gambar')) {
             $data['gambar'] = $request->file('gambar')->store('menu', 'public');
         }
         $menu->update($data);
+
         return redirect()->route('manajemenMenu');
     }
 }

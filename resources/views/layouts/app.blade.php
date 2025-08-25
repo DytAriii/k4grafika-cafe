@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +36,7 @@
         }
 
         .logo img {
-            width: 40px;      /* atur ukuran logo */
+            width: 70px;     
             height: auto;
             display: block;
             margin: 0 auto 40px auto;
@@ -48,7 +48,7 @@
             gap: 20px;
             width: 100%;
             align-items: center;
-            flex: 1; /* biar nav isi penuh sidebar */
+            flex: 1;
         }
 
         nav a {
@@ -80,7 +80,7 @@
         }
 
         nav a.logout {
-            margin-top: auto; /* dorong logout ke bawah */
+            margin-top: auto;
             color: #555;
         }
 
@@ -162,25 +162,24 @@
         <!-- Sidebar -->
         <aside>
             <div class="logo">
-                <!-- ganti src dengan gambar logomu -->
-                <img src="/images/logo.png" alt="Logo">
+                <img src="/images/logok4cafe.png" alt="Logo">
             </div>
             <nav>
                 <a href="#" class="active">
-                    <i class="fa fa-cart-shopping"></i>
-                    <span>Order</span>
+                    <i class="fa-solid fa-utensils"></i>
+                    <span>Pesan</span>
                 </a>
                 <a href="#">
                     <i class="fa fa-clock-rotate-left"></i>
-                    <span>History</span>
+                    <span>Riwayat</span>
                 </a>
                 <a href="#">
-                    <i class="fa fa-ban"></i>
-                    <span>Menu Sold</span>
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span>Menu Habis</span>
                 </a>
-                <a href="#" class="logout">
+                <a href="{{ route('logout') }}" class="logout">
                     <i class="fa fa-right-from-bracket"></i>
-                    <span>Logout</span>
+                    <span>Keluar</span>
                 </a>
             </nav>
         </aside>
@@ -190,7 +189,7 @@
             <div class="topbar">
                 <div class="search-bar">
                     <i class="fa fa-search" style="color: #777; margin-right: 6px;"></i>
-                    <input type="text" placeholder="Search...">
+                    <input type="text" placeholder="Cari...">
                 </div>
                 <div id="clock" class="clock"></div>
                 <div class="profile">
