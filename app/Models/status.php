@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Category extends Model
+class status extends Model
 {
+    protected $table = 'status';
     use HasFactory;
 
-    protected $table = 'categories';
-    protected $fillable = ['name'];
+    protected $fillable = ['nama_status'];
 
     public function menus()
     {

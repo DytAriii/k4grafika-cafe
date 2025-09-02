@@ -13,7 +13,6 @@
             <tr>
                 <th>Username</th>
                 <th>Password</th>
-                <th>Role</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -22,7 +21,6 @@
             <tr>
                 <td>{{ $usr->username }}</td>
                 <td style="overflow: auto;">{{ $usr->password }}</td>
-                <td>{{ $usr->role }}</td>
                 <td>
                     <a href="{{ route('kasir.edit', $usr->id) }}">Edit</a> |
                     <a href="{{ route('kasir.delete', $usr->id) }}" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>

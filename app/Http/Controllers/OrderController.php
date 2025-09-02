@@ -6,9 +6,19 @@ use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
+use App\Models\Category;
+use App\Models\Status;
 
 class OrderController extends Controller
 {
+public function order()
+{
+    $menus = Menu::all();
+    $categories = Category::all();
+    $statuses = Status::all();
+    return view('kasir.order', compact('menus', 'categories', 'statuses'));
+}
+    
     // Tambah ke Cart
     // Tambah ke Cart
 public function addToCart(Request $request, $id)

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('datamenu', function (Blueprint $table) {
-            $table->id();
-            $table->string('namaMenu');
-            $table->string('kategori');
-            $table->float('harga');
-            $table->string('password');
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id('id');
+            $table->string('nama_role', 50);
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('datamenu');
+        Schema::dropIfExists('roles');
     }
 };
