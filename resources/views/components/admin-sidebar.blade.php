@@ -21,7 +21,7 @@
     </ul>
     <div class="sidebar-footer">
         <a href="{{ route('logout') }}">
-            <span class="icon">↪️</span> Logout
+             Logout
         </a>
     </div>
 </div>

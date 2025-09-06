@@ -1,7 +1,7 @@
 .sidebar {
     width: 240px;
     height: 100vh;
-    background-color: #a64b3c; /* warna merah bata */
+    background-color: #7c1f1f; /* warna merah bata */
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -14,7 +14,7 @@
 }
 
 .sidebar-header {
-    background-color: #a64b3c;
+    background-color: #7c1f1f;
     text-align: center;
     padding: 20px 10px;
     border-bottom: 1px solid rgba(255,255,255,0.2);
