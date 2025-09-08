@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use App\Models\Transaksi;
+use App\Models\TransaksiDetail;
+use App\Models\Menu;
 
 class TransaksiController extends Controller
 {

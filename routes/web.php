@@ -16,6 +16,7 @@ Route::post('/order/update/{id}', [OrderController::class, 'update'])->name('ord
 Route::post('/order/remove/{id}', [OrderController::class, 'removeFromCart'])->name('order.remove');
 Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 Route::post('/order/reset', [OrderController::class, 'reset'])->name('order.reset');
+Route::get('/order/category/{id}', [OrderController::class, 'getMenuByCategory']);
 
 // ==================== Login ====================
 Route::get('/', [usersController::class, 'formLogin'])->name('login');

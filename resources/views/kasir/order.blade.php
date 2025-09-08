@@ -25,7 +25,7 @@
         padding: 15px;
         background: #ffffff;
         border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
 
     .category-btn {
@@ -71,7 +71,7 @@
     .menu-card {
         background: #fff;
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -140,7 +140,7 @@
         flex: 1;
         background: #fff;
         border-radius: 14px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
         display: flex;
         flex-direction: column;
         padding: 16px;
@@ -343,7 +343,7 @@
         background: #f2e2dd;
     }
 
-    .order-type-buttons input:checked + label {
+    .order-type-buttons input:checked+label {
         background: #A74C29;
         color: #fff;
         border-color: #A74C29;
@@ -370,35 +370,42 @@
 <div class="kasir-container">
     <div class="menu-section">
         <ul class="category-list">
+            <li>
+                <button
+                    class="category-btn active"
+                    data-id="all">
+                    Semua Kategori
+                </button>
+            </li>
             @foreach($categories as $category)
-                <li>
-                    <button 
-                        class="category-btn {{ $loop->first ? 'active' : '' }}" 
-                        data-id="{{ $category->id }}">
-                        {{ $category->name }}
-                    </button>
-                </li>
+            <li>
+                <button
+                    class="category-btn"
+                    data-id="{{ $category->id }}">
+                    {{ $category->nama_category }}
+                </button>
+            </li>
             @endforeach
         </ul>
 
         <h2>Pilih Menu</h2>
         <div class="menu-container" id="menu-container">
             @forelse($menus as $menu)
-                <div class="menu-card">
-                    <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
-                    <div class="menu-info">
-                        <div class="menu-title">{{ $menu->nama }}</div>
-                        <div class="menu-price">
-                            Rp {{ number_format($menu->harga, 0, ',', '.') }}
-                        </div>
-                        <form action="{{ route('order.add', $menu->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="add-btn">+ Tambah</button>
-                        </form>
+            <div class="menu-card">
+                <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
+                <div class="menu-info">
+                    <div class="menu-title">{{ $menu->nama }}</div>
+                    <div class="menu-price">
+                        Rp {{ number_format($menu->harga, 0, ',', '.') }}
                     </div>
+                    <form action="{{ route('order.add', $menu->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="add-btn">+ Tambah</button>
+                    </form>
                 </div>
+            </div>
             @empty
-                <p>Tidak ada menu tersedia.</p>
+            <p>Tidak ada menu tersedia.</p>
             @endforelse
         </div>
     </div>
@@ -407,198 +414,202 @@
         <div class="cart-title">Keranjang</div>
         <div class="cart-items">
             @if(session('cart') && count(session('cart')) > 0)
-                @foreach(session('cart') as $id => $item)
-                    <div class="cart-item">
-                        <div style="flex:1">
-                            <div class="cart-item-name">{{ $item['nama'] }}</div>
-                            <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls">
-                                @csrf
-                                <button 
-                                    type="submit" 
-                                    name="qty" 
-                                    value="{{ $item['qty'] - 1 }}" 
-                                    class="qty-btn minus"
-                                    {{ $item['qty'] <= 1 ? 'disabled' : '' }}>
-                                    -
-                                </button>
+            @foreach(session('cart') as $id => $item)
+            <div class="cart-item">
+                <div style="flex:1">
+                    <div class="cart-item-name">{{ $item['nama'] }}</div>
+                    <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls">
+                        @csrf
+                        <button
+                            type="submit"
+                            name="qty"
+                            value="{{ $item['qty'] - 1 }}"
+                            class="qty-btn minus"
+                            {{ $item['qty'] <= 1 ? 'disabled' : '' }}>
+                            -
+                        </button>
 
-                                <input type="text" value="{{ $item['qty'] }}" readonly class="qty-display">
+                        <input type="text" value="{{ $item['qty'] }}" readonly class="qty-display">
 
-                                <button 
-                                    type="submit" 
-                                    name="qty" 
-                                    value="{{ $item['qty'] + 1 }}" 
-                                    class="qty-btn">
-                                    +
-                                </button>
-                            </form>
-                        </div>
-
-                        <div style="text-align:right; min-width:100px;">
-                            <div>Rp {{ number_format($item['harga'], 0, ',', '.') }}</div>
-                            <div style="font-size:13px; color:#666;">
-                                Subtotal: Rp {{ number_format($item['harga'] * $item['qty'], 0, ',', '.') }}
-                            </div>
-                            <form action="{{ route('order.remove', $id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="remove-btn">Hapus</button>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="empty-cart">
-                    <p>Keranjang masih kosong.</p>
+                        <button
+                            type="submit"
+                            name="qty"
+                            value="{{ $item['qty'] + 1 }}"
+                            class="qty-btn">
+                            +
+                        </button>
+                    </form>
                 </div>
+
+                <div style="text-align:right; min-width:100px;">
+                    <div>Rp {{ number_format($item['harga'], 0, ',', '.') }}</div>
+                    <div style="font-size:13px; color:#666;">
+                        Subtotal: Rp {{ number_format($item['harga'] * $item['qty'], 0, ',', '.') }}
+                    </div>
+                    <form action="{{ route('order.remove', $id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="remove-btn">Hapus</button>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+            @else
+            <div class="empty-cart">
+                <p>Keranjang masih kosong.</p>
+            </div>
             @endif
         </div>
 
         <div id="cart-footer">
             @if(session('cart') && count(session('cart')) > 0)
-                <form action="{{ route('order.checkout') }}" method="POST">
-                    @csrf
-                    <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-                    <input 
-                        type="text" 
-                        name="nama_customer" 
-                        id="nama_customer" 
-                        placeholder="Pelanggan" 
-                        class="form-control" 
-                        required>
+            <form action="{{ route('order.checkout') }}" method="POST">
+                @csrf
+                <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
+                <input
+                    type="text"
+                    name="nama_customer"
+                    id="nama_customer"
+                    placeholder="Pelanggan"
+                    class="form-control"
+                    required>
 
-                    <div class="order-type">
-                        <label>Pilih Tipe Pesanan:</label>
-                        <div class="order-type-buttons">
-                            <input type="radio" id="dine_in" name="order_type" value="dine_in">
-                            <label for="dine_in">Dine In</label>
+                <div class="order-type">
+                    <label>Pilih Tipe Pesanan:</label>
+                    <div class="order-type-buttons">
+                        <input type="radio" id="dine_in" name="order_type" value="dine_in">
+                        <label for="dine_in">Dine In</label>
 
-                            <input type="radio" id="takeaway" name="order_type" value="takeaway">
-                            <label for="takeaway">Takeaway</label>
-                        </div>
+                        <input type="radio" id="takeaway" name="order_type" value="takeaway">
+                        <label for="takeaway">Takeaway</label>
                     </div>
+                </div>
 
-                    <div class="cart-summary">
-                        <div>
-                            <span>Jumlah Menu:</span>
-                            <span>{{ count(session('cart')) }}</span>
-                        </div>
-                        <div>
-                            <span>Total Porsi:</span>
-                            <span>{{ array_sum(array_column(session('cart'), 'qty')) }}</span>
-                        </div>
-                        <div class="total">
-                            <span>Total Bayar:</span>
-                            <span>
-                                Rp {{ number_format(array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], session('cart'))), 0, ',', '.') }}
-                            </span>
-                        </div>
+                <div class="cart-summary">
+                    <div>
+                        <span>Jumlah Menu:</span>
+                        <span>{{ count(session('cart')) }}</span>
                     </div>
+                    <div>
+                        <span>Total Porsi:</span>
+                        <span>{{ array_sum(array_column(session('cart'), 'qty')) }}</span>
+                    </div>
+                    <div class="total">
+                        <span>Total Bayar:</span>
+                        <span>
+                            Rp {{ number_format(array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], session('cart'))), 0, ',', '.') }}
+                        </span>
+                    </div>
+                </div>
 
-                    <div style="display:flex; gap:10px; margin-top:12px;">
-                        <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
-                </form>
+                <div style="display:flex; gap:10px; margin-top:12px;">
+                    <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
+            </form>
 
-                <form action="{{ route('order.reset') }}" method="POST" style="flex:1;">
-                    @csrf
-                    <button type="submit" class="reset-btn">Reset</button>
-                </form>
-            </div>
-            @endif
+            <form action="{{ route('order.reset') }}" method="POST" style="flex:1;">
+                @csrf
+                <button type="submit" class="reset-btn">Reset</button>
+            </form>
         </div>
+        @endif
     </div>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function () {
-    // Klik kategori → simpan ke localStorage
-    $(".category-btn").on("click", function(e) {
-        e.preventDefault();
-        $(".category-btn").removeClass("active");
-        $(this).addClass("active");
+    $(document).ready(function() {
+        // Klik kategori → simpan ke localStorage
+        $(".category-btn").on("click", function(e) {
+            e.preventDefault();
+            $(".category-btn").removeClass("active");
+            $(this).addClass("active");
 
-        let kategoriId = $(this).data("id");
-        localStorage.setItem("activeCategory", kategoriId);
-        loadCategory(kategoriId);
-    });
-    
-    // Fungsi load menu by kategori
-    function loadCategory(kategoriId) {
-        $.ajax({
-            url: "/order/category/" + kategoriId,
-            method: "GET",
-            cache: false,
-            success: function(data) {
-                let html = "";
-                if (data.length === 0) {
-                    html = "<p>Tidak ada menu tersedia.</p>";
-                } else {
-                    data.forEach(menu => {
-                        html += `
-                            <div class="menu-card">
-                                <img src="/storage/${menu.gambar}" alt="${menu.nama}">
-                                <div class="menu-info">
-                                    <div class="menu-title">${menu.nama}</div>
-                                    <div class="menu-price">
-                                        Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
-                                    </div>
-                                    <form action="/order/add/${menu.id}" method="POST">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="add-btn">+ Tambah</button>
-                                    </form>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-                $("#menu-container").html(html);
-            }
+            let kategoriId = $(this).data("id");
+            localStorage.setItem("activeCategory", kategoriId);
+            loadCategory(kategoriId);
         });
-    }
 
-    // Saat reload, buka kategori terakhir yg aktif
-    let savedCategory = localStorage.getItem("activeCategory");
-    if (savedCategory) {
-        $(".category-btn").removeClass("active");
-        $(`.category-btn[data-id="${savedCategory}"]`).addClass("active");
-        loadCategory(savedCategory);
-    }
-});
+        // Fungsi load menu by kategori
+        function loadCategory(kategoriId) {
+            let url = "/order/category/" + kategoriId;
+            if (kategoriId === "all") {
+                url = "/order/category/all";
+            }
+            $.ajax({
+                url: url,
+                method: "GET",
+                cache: false,
+                success: function(data) {
+                    let html = "";
+                    if (data.length === 0) {
+                        html = "<p>Tidak ada menu tersedia.</p>";
+                    } else {
+                        data.forEach(menu => {
+                            html += `
+                                <div class="menu-card">
+                                    <img src="/storage/${menu.gambar}" alt="${menu.nama}">
+                                    <div class="menu-info">
+                                        <div class="menu-title">${menu.nama}</div>
+                                        <div class="menu-price">
+                                            Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
+                                        </div>
+                                        <form action="/order/add/${menu.id}" method="POST">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="add-btn">+ Tambah</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+                    $("#menu-container").html(html);
+                }
+            });
+        }
 
-$(document).on("click", "form button[type=submit]", function() {
-    $(this).closest("form").find("button[type=submit]").removeAttr("clicked");
-    $(this).attr("clicked", "true");
-});
-
-$(document).on("submit", ".menu-card form, .cart-item-controls, .cart-item form[action*='remove']", function(e) {
-    e.preventDefault();
-
-    let form = $(this);
-    let url = form.attr("action");
-
-    let clickedButton = form.find("button[type=submit][clicked=true]");
-    let data = form.serialize();
-
-    if (clickedButton.length) {
-        data += "&" + clickedButton.attr("name") + "=" + encodeURIComponent(clickedButton.val());
-    }
-
-    $.post(url, data, function(res) {
-        if (res.success) {
-            renderCart(res.cart, res.summary);
+        // Saat reload, buka kategori terakhir yg aktif
+        let savedCategory = localStorage.getItem("activeCategory");
+        if (savedCategory) {
+            $(".category-btn").removeClass("active");
+            $(`.category-btn[data-id="${savedCategory}"]`).addClass("active");
+            loadCategory(savedCategory);
         }
     });
-});
 
-function renderCart(cart, summary) {
-    let itemsHtml = "";
-    if (Object.keys(cart).length === 0) {
-        itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
-    } else {
-        $.each(cart, function(id, item) {
-            itemsHtml += `
+    $(document).on("click", "form button[type=submit]", function() {
+        $(this).closest("form").find("button[type=submit]").removeAttr("clicked");
+        $(this).attr("clicked", "true");
+    });
+
+    $(document).on("submit", ".menu-card form, .cart-item-controls, .cart-item form[action*='remove']", function(e) {
+        e.preventDefault();
+
+        let form = $(this);
+        let url = form.attr("action");
+
+        let clickedButton = form.find("button[type=submit][clicked=true]");
+        let data = form.serialize();
+
+        if (clickedButton.length) {
+            data += "&" + clickedButton.attr("name") + "=" + encodeURIComponent(clickedButton.val());
+        }
+
+        $.post(url, data, function(res) {
+            if (res.success) {
+                renderCart(res.cart, res.summary);
+            }
+        });
+    });
+
+    function renderCart(cart, summary) {
+        let itemsHtml = "";
+        if (Object.keys(cart).length === 0) {
+            itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
+        } else {
+            $.each(cart, function(id, item) {
+                itemsHtml += `
                 <div class="cart-item">
                     <div style="flex:1">
                         <div class="cart-item-name">${item.nama}</div>
@@ -633,15 +644,15 @@ function renderCart(cart, summary) {
                     </div>
                 </div>
             `;
-        });
-    }
+            });
+        }
 
-    $(".cart-items").html(itemsHtml);
+        $(".cart-items").html(itemsHtml);
 
-    // Update the summary and action buttons section
-    let footerHtml = "";
-    if (Object.keys(cart).length > 0) {
-        footerHtml = `
+        // Update the summary and action buttons section
+        let footerHtml = "";
+        if (Object.keys(cart).length > 0) {
+            footerHtml = `
         <form action="/order/checkout" method="POST">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
@@ -673,9 +684,9 @@ function renderCart(cart, summary) {
         </form>
         </div>
         `;
-    }
+        }
 
-    $("#cart-footer").html(footerHtml);
-}
+        $("#cart-footer").html(footerHtml);
+    }
 </script>
 @endsection
