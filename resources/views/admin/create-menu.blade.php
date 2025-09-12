@@ -8,9 +8,9 @@
     <input type="number" name="harga" required>
 
     <label>Kategori</label>
-    <select name="kategori_id" required>
+    <select name="categories_id" required>
         @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->name }}</option>
+            <option value="{{ $category->id }}">{{ $category->nama_category }}</option>
         @endforeach
     </select>
     <br>
@@ -20,9 +20,10 @@
     <br>
 
     <label>Status:</label>
-    <select name="status" required>
-        <option value="available">Available</option>
-        <option value="unavailable">Unavailable</option>
+    <select name="status_id" required>
+        @foreach($statuses as $status)
+        <option value="{{ $status->id }}">{{ $status->nama_status }}</option>
+    @endforeach
     </select>
     <br>
 

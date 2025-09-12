@@ -20,7 +20,7 @@ class usersFactory extends Factory
         return [
             'username' => 'admin',
             'password' => Hash::make('admin123'),
-            'role' => 'admin'
+            'roles_id' => '1'
         ];
     }
 
@@ -29,7 +29,7 @@ class usersFactory extends Factory
         return $this->state([
             'username' => 'kasir',
             'password' => Hash::make('kasir123'),
-            'role' => 'kasir'
+            'roles_id' => '2'
         ]);
     }
 }

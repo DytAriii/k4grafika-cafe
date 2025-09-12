@@ -9,11 +9,10 @@ class Menu extends Model
 {
     use HasFactory;
 
-    protected $table = 'menus';
-    protected $fillable = ['nama', 'harga', 'categories_id', 'status_id', 'gambar'];
+    protected $fillable = ['nama', 'harga', 'category', 'gambar', 'status'];
 
     public function category()
     {
-        return $this->belongsTo(Category::class, 'categories_id');
+        return $this->belongsTo(Category::class, 'category', 'id');
     }
 }
