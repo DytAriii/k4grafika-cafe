@@ -365,16 +365,19 @@
         .menu-container {
             grid-template-columns: 1fr;
         }
+        .kasir-container {
+            padding: 12px;
+        }
     }
 </style>
+
 <div class="kasir-container">
+    {{-- Bagian Menu --}}
     <div class="menu-section">
         <ul class="category-list">
             @foreach($categories as $category)
                 <li>
-                    <button 
-                        class="category-btn {{ $loop->first ? 'active' : '' }}" 
-                        data-id="{{ $category->id }}">
+                    <button class="category-btn {{ $loop->first ? 'active' : '' }}" data-id="{{ $category->id }}">
                         {{ $category->name }}
                     </button>
                 </li>
@@ -388,10 +391,10 @@
                     <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
                     <div class="menu-info">
                         <div class="menu-title">{{ $menu->nama }}</div>
-                        <div class="menu-price">
-                            Rp {{ number_format($menu->harga, 0, ',', '.') }}
-                        </div>
-                        <form action="{{ route('order.add', $menu->id) }}" method="POST">
+                        <div class="menu-price">Rp {{ number_format($menu->harga, 0, ',', '.') }}</div>
+
+                        {{-- tambahkan class "ajax-form" agar JS menanganinya via AJAX (tetap ada fallback reload) --}}
+                        <form action="{{ route('order.add', $menu->id) }}" method="POST" class="add-form ajax-form">
                             @csrf
                             <button type="submit" class="add-btn">+ Tambah</button>
                         </form>
@@ -403,34 +406,26 @@
         </div>
     </div>
 
+    {{-- Bagian Keranjang --}}
     <div class="cart-section">
         <div class="cart-title">Keranjang</div>
+
         <div class="cart-items">
             @if(session('cart') && count(session('cart')) > 0)
                 @foreach(session('cart') as $id => $item)
                     <div class="cart-item">
                         <div style="flex:1">
                             <div class="cart-item-name">{{ $item['nama'] }}</div>
-                            <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls">
+
+                            {{-- form update juga pakai ajax-form --}}
+                            <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls ajax-form">
                                 @csrf
-                                <button 
-                                    type="submit" 
-                                    name="qty" 
-                                    value="{{ $item['qty'] - 1 }}" 
-                                    class="qty-btn minus"
-                                    {{ $item['qty'] <= 1 ? 'disabled' : '' }}>
-                                    -
-                                </button>
+                                <button type="submit" name="qty" value="{{ $item['qty'] - 1 }}" class="qty-btn minus"
+                                    {{ $item['qty'] <= 1 ? 'disabled' : '' }}> - </button>
 
                                 <input type="text" value="{{ $item['qty'] }}" readonly class="qty-display">
 
-                                <button 
-                                    type="submit" 
-                                    name="qty" 
-                                    value="{{ $item['qty'] + 1 }}" 
-                                    class="qty-btn">
-                                    +
-                                </button>
+                                <button type="submit" name="qty" value="{{ $item['qty'] + 1 }}" class="qty-btn"> + </button>
                             </form>
                         </div>
 
@@ -439,7 +434,9 @@
                             <div style="font-size:13px; color:#666;">
                                 Subtotal: Rp {{ number_format($item['harga'] * $item['qty'], 0, ',', '.') }}
                             </div>
-                            <form action="{{ route('order.remove', $id) }}" method="POST">
+
+                            {{-- remove juga ajax --}}
+                            <form action="{{ route('order.remove', $id) }}" method="POST" class="ajax-form remove-form">
                                 @csrf
                                 <button type="submit" class="remove-btn">Hapus</button>
                             </form>
@@ -453,18 +450,14 @@
             @endif
         </div>
 
+        {{-- Footer (checkout) --}}
         <div id="cart-footer">
             @if(session('cart') && count(session('cart')) > 0)
-                <form action="{{ route('order.checkout') }}" method="POST">
+                {{-- Form checkout -> gunakan route order.checkout (POST) --}}
+                <form action="{{ route('order.checkout') }}" method="POST" class="checkout-form">
                     @csrf
                     <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-                    <input 
-                        type="text" 
-                        name="nama_customer" 
-                        id="nama_customer" 
-                        placeholder="Pelanggan" 
-                        class="form-control" 
-                        required>
+                    <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
 
                     <div class="order-type">
                         <label>Pilih Tipe Pesanan:</label>
@@ -472,80 +465,84 @@
                             <input type="radio" id="dine_in" name="order_type" value="dine_in">
                             <label for="dine_in">Dine In</label>
 
-                            <input type="radio" id="takeaway" name="order_type" value="takeaway">
+                            <input type="radio" id="takeaway" name="order_type" value="take_away">
                             <label for="takeaway">Takeaway</label>
                         </div>
                     </div>
 
                     <div class="cart-summary">
-                        <div>
-                            <span>Jumlah Menu:</span>
-                            <span>{{ count(session('cart')) }}</span>
-                        </div>
-                        <div>
-                            <span>Total Porsi:</span>
-                            <span>{{ array_sum(array_column(session('cart'), 'qty')) }}</span>
-                        </div>
+                        <div><span>Jumlah Menu:</span><span>{{ count(session('cart')) }}</span></div>
+                        <div><span>Total Porsi:</span><span>{{ array_sum(array_column(session('cart'), 'qty')) }}</span></div>
                         <div class="total">
                             <span>Total Bayar:</span>
-                            <span>
-                                Rp {{ number_format(array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], session('cart'))), 0, ',', '.') }}
-                            </span>
+                            <span>Rp {{ number_format(array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], session('cart'))), 0, ',', '.') }}</span>
                         </div>
                     </div>
 
                     <div style="display:flex; gap:10px; margin-top:12px;">
                         <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
-                </form>
 
-                <form action="{{ route('order.reset') }}" method="POST" style="flex:1;">
-                    @csrf
-                    <button type="submit" class="reset-btn">Reset</button>
+                        <form action="{{ route('order.reset') }}" method="POST" style="flex:1;">
+                            @csrf
+                            <button type="submit" class="reset-btn">Reset</button>
+                        </form>
+                    </div>
                 </form>
-            </div>
             @endif
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+{{-- Script --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-$(document).ready(function () {
-    // Klik kategori → simpan ke localStorage
-    $(".category-btn").on("click", function(e) {
+/*
+  Catatan penting:
+  - Kita set csrfToken ke variabel JS supaya aman saat membuat HTML dinamis.
+  - Semua form yang ingin dikirim via AJAX diberi class "ajax-form".
+  - Jika response server bukan JSON (mis. redirect), script akan fallback ke reload halaman.
+*/
+const csrfToken = '{{ csrf_token() }}';
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': csrfToken
+    }
+});
+
+$(function () {
+    // Kategori klik
+    $(".category-btn").on("click", function (e) {
         e.preventDefault();
         $(".category-btn").removeClass("active");
         $(this).addClass("active");
-
         let kategoriId = $(this).data("id");
         localStorage.setItem("activeCategory", kategoriId);
         loadCategory(kategoriId);
     });
-    
-    // Fungsi load menu by kategori
+
+    // Load category menu (AJAX)
     function loadCategory(kategoriId) {
         $.ajax({
             url: "/order/category/" + kategoriId,
             method: "GET",
             cache: false,
-            success: function(data) {
+            success: function (data) {
                 let html = "";
-                if (data.length === 0) {
+                if (!data || data.length === 0) {
                     html = "<p>Tidak ada menu tersedia.</p>";
                 } else {
                     data.forEach(menu => {
+                        // gunakan csrfToken JS (bukan blade tag di dalam template literal)
                         html += `
                             <div class="menu-card">
                                 <img src="/storage/${menu.gambar}" alt="${menu.nama}">
                                 <div class="menu-info">
                                     <div class="menu-title">${menu.nama}</div>
-                                    <div class="menu-price">
-                                        Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
-                                    </div>
-                                    <form action="/order/add/${menu.id}" method="POST">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <div class="menu-price">Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}</div>
+
+                                    <form action="/order/add/${menu.id}" method="POST" class="ajax-form add-form">
+                                        <input type="hidden" name="_token" value="${csrfToken}">
                                         <button type="submit" class="add-btn">+ Tambah</button>
                                     </form>
                                 </div>
@@ -554,80 +551,90 @@ $(document).ready(function () {
                     });
                 }
                 $("#menu-container").html(html);
+            },
+            error: function () {
+                $("#menu-container").html("<p class='text-danger'>Gagal memuat menu.</p>");
             }
         });
     }
 
-    // Saat reload, buka kategori terakhir yg aktif
+    // restore kategori terakhir
     let savedCategory = localStorage.getItem("activeCategory");
     if (savedCategory) {
         $(".category-btn").removeClass("active");
         $(`.category-btn[data-id="${savedCategory}"]`).addClass("active");
         loadCategory(savedCategory);
     }
-});
 
-$(document).on("click", "form button[type=submit]", function() {
-    $(this).closest("form").find("button[type=submit]").removeAttr("clicked");
-    $(this).attr("clicked", "true");
-});
-
-$(document).on("submit", ".menu-card form, .cart-item-controls, .cart-item form[action*='remove']", function(e) {
-    e.preventDefault();
-
-    let form = $(this);
-    let url = form.attr("action");
-
-    let clickedButton = form.find("button[type=submit][clicked=true]");
-    let data = form.serialize();
-
-    if (clickedButton.length) {
-        data += "&" + clickedButton.attr("name") + "=" + encodeURIComponent(clickedButton.val());
-    }
-
-    $.post(url, data, function(res) {
-        if (res.success) {
-            renderCart(res.cart, res.summary);
-        }
+    // Tangani klik pada tombol submit agar kita tahu tombol mana yang diklik
+    $(document).on("click", "form button[type=submit]", function () {
+        $(this).closest("form").find("button[type=submit]").removeAttr("clicked");
+        $(this).attr("clicked", "true");
     });
-});
 
+    // Generic AJAX submit handler untuk form dengan class .ajax-form
+    // fallback: bila server tidak mengembalikan JSON -> reload page
+    $(document).on("submit", "form.ajax-form", function (e) {
+        e.preventDefault();
+
+        let form = $(this);
+        let url = form.attr("action");
+        let method = (form.attr("method") || "POST").toUpperCase();
+
+        // ambil semua data (termasuk tombol yang diklik)
+        let dataArray = form.serializeArray();
+        let clicked = form.find("button[type=submit][clicked=true]");
+        if (clicked.length) {
+            dataArray.push({ name: clicked.attr("name"), value: clicked.val() });
+        }
+        let data = $.param(dataArray);
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: data
+        }).done(function (res, textStatus, xhr) {
+            // jika server mengembalikan JSON { success: true, cart:..., summary:... }
+            if (res && res.success) {
+                renderCart(res.cart, res.summary);
+                return;
+            }
+
+            // jika bukan JSON => reload (misal controller melakukan redirect)
+            window.location.reload();
+        }).fail(function (xhr) {
+            // bila 419 (CSRF) atau 500 => reload agar user lihat pesan error
+            window.location.reload();
+        });
+    });
+}); // end ready
+
+// Render ulang isi keranjang (dipanggil saat response JSON sukses)
 function renderCart(cart, summary) {
     let itemsHtml = "";
-    if (Object.keys(cart).length === 0) {
+
+    if (!cart || Object.keys(cart).length === 0) {
         itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
     } else {
-        $.each(cart, function(id, item) {
+        Object.keys(cart).forEach(function (id) {
+            const item = cart[id];
             itemsHtml += `
                 <div class="cart-item">
                     <div style="flex:1">
                         <div class="cart-item-name">${item.nama}</div>
-                        <form action="/order/update/${id}" method="POST" class="cart-item-controls">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <button 
-                                type="submit" 
-                                name="qty" 
-                                value="${item.qty - 1}" 
-                                class="qty-btn minus"
-                                ${item.qty <= 1 ? 'disabled' : ''}>
-                                -
-                            </button>
+                        <form action="/order/update/${id}" method="POST" class="cart-item-controls ajax-form">
+                            <input type="hidden" name="_token" value="${csrfToken}">
+                            <button type="submit" name="qty" value="${item.qty - 1}" class="qty-btn minus" ${item.qty <= 1 ? 'disabled' : ''}> - </button>
                             <input type="text" value="${item.qty}" readonly class="qty-display">
-                            <button 
-                                type="submit" 
-                                name="qty" 
-                                value="${item.qty + 1}" 
-                                class="qty-btn">+
-                            </button>
+                            <button type="submit" name="qty" value="${item.qty + 1}" class="qty-btn"> + </button>
                         </form>
                     </div>
                     <div style="text-align:right; min-width:100px;">
                         <div>Rp ${new Intl.NumberFormat('id-ID').format(item.harga)}</div>
-                        <div style="font-size:13px; color:#666;">
-                            Subtotal: Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}
-                        </div>
-                        <form action="/order/remove/${id}" method="POST">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <div style="font-size:13px; color:#666;">Subtotal: Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}</div>
+
+                        <form action="/order/remove/${id}" method="POST" class="ajax-form remove-form">
+                            <input type="hidden" name="_token" value="${csrfToken}">
                             <button type="submit" class="remove-btn">Hapus</button>
                         </form>
                     </div>
@@ -638,40 +645,39 @@ function renderCart(cart, summary) {
 
     $(".cart-items").html(itemsHtml);
 
-    // Update the summary and action buttons section
+    // footer (checkout)
     let footerHtml = "";
-    if (Object.keys(cart).length > 0) {
+    if (summary && Object.keys(cart).length > 0) {
         footerHtml = `
-        <form action="/order/checkout" method="POST">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-            <input type="text" name="nama_customer" id="nama_customer" 
-                placeholder="Pelanggan" class="form-control" required>
-            <div class="order-type">
-                <label>Pilih Tipe Pesanan:</label>
-                <div class="order-type-buttons">
-                    <input type="radio" id="dine_in" name="order_type" value="dine_in">
-                    <label for="dine_in">Dine In</label>
-                    <input type="radio" id="takeaway" name="order_type" value="takeaway">
-                    <label for="takeaway">Takeaway</label>
+            <form action="/order/checkout" method="POST" class="checkout-form">
+                <input type="hidden" name="_token" value="${csrfToken}">
+                <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
+                <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
+
+                <div class="order-type">
+                    <label>Pilih Tipe Pesanan:</label>
+                    <div class="order-type-buttons">
+                        <input type="radio" id="dine_in" name="order_type" value="dine_in">
+                        <label for="dine_in">Dine In</label>
+                        <input type="radio" id="take_away" name="order_type" value="take_away">
+                        <label for="take_away">Takeaway</label>
+                    </div>
                 </div>
-            </div>
-            <div class="cart-summary">
-                <div><span>Jumlah Menu:</span><span>${summary.total_items}</span></div>
-                <div><span>Total Porsi:</span><span>${summary.total_qty}</span></div>
-                <div class="total">
-                    <span>Total Bayar:</span>
-                    <span>Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span>
+
+                <div class="cart-summary">
+                    <div><span>Jumlah Menu:</span><span>${summary.total_items}</span></div>
+                    <div><span>Total Porsi:</span><span>${summary.total_qty}</span></div>
+                    <div class="total"><span>Total Bayar:</span><span>Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span></div>
                 </div>
-            </div>
-            <div style="display:flex; gap:10px; margin-top:12px;">
-                <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
-        </form>
-        <form action="/order/reset" method="POST" style="flex:1;">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button type="submit" class="reset-btn">Reset</button>
-        </form>
-        </div>
+
+                <div style="display:flex; gap:10px; margin-top:12px;">
+                    <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
+                    <form action="/order/reset" method="POST" style="flex:1;">
+                        <input type="hidden" name="_token" value="${csrfToken}">
+                        <button type="submit" class="reset-btn">Reset</button>
+                    </form>
+                </div>
+            </form>
         `;
     }
 

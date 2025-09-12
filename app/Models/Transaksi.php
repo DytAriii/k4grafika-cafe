@@ -6,15 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    protected $fillable = ['user_id','total','diskon','bayar','metode_pembayaran'];
+    protected $fillable = [
+    'user_id','invoice','nama_customer','order_type',
+    'total','diskon','bayar','kembali','metode_pembayaran'
+];
 
     public function details()
     {
         return $this->hasMany(TransaksiDetail::class);
     }
 
-    public function user()
+    public function kasir()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'users_id');
     }
+    public function items()
+{
+    return $this->hasMany(TransaksiDetail::class);
+}
+
 }

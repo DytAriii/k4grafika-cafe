@@ -8,6 +8,7 @@ use App\Models\Menu;
 use App\Models\Category;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class usersController extends Controller
 {
