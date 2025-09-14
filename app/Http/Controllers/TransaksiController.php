@@ -76,7 +76,7 @@ class TransaksiController extends Controller
 
     // invoice
     $invoice = 'INV-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(5));
-
+    
     // Simpan transaksi
     $transaksi = Transaksi::create([
         'invoice' => $invoice,

@@ -11,7 +11,7 @@ use App\Http\Controllers\MenuController;
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
 Route::get('/order/category/{id}', [OrderController::class, 'getMenuByCategory']);
-Route::get('/kasir/history', [TransaksiController::class, 'history'])->name('kasir.history');
+Route::get('/kasir/history', [KasirController::class, 'history'])->name('kasir.history');
 Route::get('/kasir/menu', [KasirController::class, 'menu'])->name('kasir.menu');
 Route::post('/kasir/soldout', [TransaksiController::class, 'soldout'])->name('kasir.soldout');
 Route::get('/kasir/payment', [KasirController::class, 'payment'])->name('kasir.payment');
@@ -25,6 +25,14 @@ Route::post('/order/update/{id}', [OrderController::class, 'update'])->name('ord
 Route::post('/order/remove/{id}', [OrderController::class, 'removeFromCart'])->name('order.remove');
 Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 Route::post('/order/reset', [OrderController::class, 'reset'])->name('order.reset');
+
+// pindah kategori
+Route::get('/order/category/{id}', function ($id) {
+    return \App\Models\Menu::where('categories_id', $id)->get();
+});
+
+// print nota
+Route::get('/kasir/print/{id}', [KasirController::class, 'print'])->name('kasir.print');
 
 // ==================== Opsional: CheckoutController ====================
 Route::get('/orders/{order}/payment', [CheckoutController::class, 'showPayment'])->name('orders.payment');
