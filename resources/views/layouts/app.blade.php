@@ -165,15 +165,15 @@
                 <img src="/images/logok4cafe.png" alt="Logo">
             </div>
             <nav>
-                <a href="#" class="active">
+                <a href="{{ route('kasir.order') }}" class="active">
                     <i class="fa-solid fa-utensils"></i>
-                    <span>Pesan</span>
+                    <span>Order</span>
                 </a>
                 <a href="#">
                     <i class="fa fa-clock-rotate-left"></i>
                     <span>Riwayat</span>
                 </a>
-                <a href="#">
+                <a href="{{ route('menuhabis') }}">
                     <i class="fa-solid fa-circle-xmark"></i>
                     <span>Menu Habis</span>
                 </a>
@@ -200,6 +200,7 @@
 
             <div class="content">
                 @yield('content')
+                @yield('onoffmenu')
             </div>
         </main>
     </div>

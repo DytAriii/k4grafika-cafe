@@ -9,6 +9,8 @@ use App\Http\Controllers\MenuController;
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
 Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory']);
+Route::get('/menu/menuHabis/', [OrderController::class, 'menuHabis'])->name('menuhabis');
+Route::post('/menu/updateStatus', [OrderController::class, 'updateMenuStatus'])->name('menuhabis.update');
 
 // ==================== Order & Cart ====================
 Route::post('/order/add/{id}', [OrderController::class, 'addToCart'])->name('order.add');

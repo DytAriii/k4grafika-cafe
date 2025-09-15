@@ -366,6 +366,31 @@
             grid-template-columns: 1fr;
         }
     }
+
+    .menu-card.sold-out {
+        position: relative;
+        /* Hapus filter di sini */
+    }
+
+    .menu-card.sold-out img {
+        filter: grayscale(50%) brightness(20%);
+        /* Pindahkan filter ke gambar saja */
+        opacity: 0.7;
+    }
+
+    .menu-card .sold-out-label {
+        position: absolute;
+        top: 25%;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 8px 18px;
+        border-radius: 8px;
+        z-index: 2;
+        pointer-events: none;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+        /* Tidak perlu filter di sini */
+    }
 </style>
 <div class="kasir-container">
     <div class="menu-section">
@@ -391,17 +416,24 @@
         <h2>Pilih Menu</h2>
         <div class="menu-container" id="menu-container">
             @forelse($menus as $menu)
-            <div class="menu-card">
+            <div class="menu-card{{ $menu->status_id == 2 ? ' sold-out' : '' }}">
                 <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
+                @if($menu->status_id == 2)
+                <div class="sold-out-label">SOLD OUT</div>
+                @endif
                 <div class="menu-info">
                     <div class="menu-title">{{ $menu->nama }}</div>
                     <div class="menu-price">
                         Rp {{ number_format($menu->harga, 0, ',', '.') }}
                     </div>
+                    @if($menu->status_id != 2)
                     <form action="{{ route('order.add', $menu->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="add-btn">+ Tambah</button>
                     </form>
+                    @else
+                    <button class="add-btn" disabled style="background:#bbb;cursor:not-allowed;">+ Tambah</button>
+                    @endif
                 </div>
             </div>
             @empty
@@ -547,18 +579,23 @@
                         html = "<p>Tidak ada menu tersedia.</p>";
                     } else {
                         data.forEach(menu => {
+                            let soldOut = menu.status_id == 2;
                             html += `
-                                <div class="menu-card">
+                                <div class="menu-card${soldOut ? ' sold-out' : ''}">
                                     <img src="/storage/${menu.gambar}" alt="${menu.nama}">
+                                    ${soldOut ? '<div class="sold-out-label">Sold Out</div>' : ''}
                                     <div class="menu-info">
                                         <div class="menu-title">${menu.nama}</div>
                                         <div class="menu-price">
                                             Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
                                         </div>
-                                        <form action="/order/add/${menu.id}" method="POST">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <button type="submit" class="add-btn">+ Tambah</button>
-                                        </form>
+                                        ${soldOut
+                                            ? `<button class="add-btn" disabled style="background:#bbb;cursor:not-allowed;">+ Tambah</button>`
+                                            : `<form action="/order/add/${menu.id}" method="POST">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="add-btn">+ Tambah</button>
+                                            </form>`
+                                        }
                                     </div>
                                 </div>
                             `;
