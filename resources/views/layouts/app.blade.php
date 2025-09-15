@@ -13,16 +13,9 @@
             color: #333;
         }
 
-        ul, li {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
+        ul, li { list-style: none; margin: 0; padding: 0; }
 
-        .container {
-            display: flex;
-            height: 100vh;
-        }
+        .container { display: flex; height: 100vh; }
 
         /* Sidebar */
         aside {
@@ -36,20 +29,14 @@
         }
 
         .logo img {
-            width: 70px;     
-            height: auto;
-            display: block;
-            margin: 0 auto 40px auto;
-        }
+    width: 70px;
+    height: 70px; /* tambahkan fix height */
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 40px auto;
+}
 
-        nav {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-            align-items: center;
-            flex: 1;
-        }
+        nav { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; flex: 1; }
 
         nav a {
             text-decoration: none;
@@ -63,14 +50,9 @@
             transition: 0.2s;
         }
 
-        nav a i {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
+        nav a i { font-size: 18px; margin-bottom: 5px; }
 
-        nav a:hover {
-            color: #A74C3C;
-        }
+        nav a:hover { color: #A74C3C; }
 
         nav a.active {
             background: #A74C3C;
@@ -79,27 +61,12 @@
             width: 60px;
         }
 
-        nav a.logout {
-            margin-top: auto;
-            color: #555;
-        }
-
-        nav a.logout:hover {
-            color: #A74C3C;
-        }
-
-        nav a.logout.active {
-            background: #A74C3C;
-            color: #fff;
-            border-radius: 8px;
-        }
+        nav a.logout { margin-top: auto; color: #555; }
+        nav a.logout:hover { color: #A74C3C; }
+        nav a.logout.active { background: #A74C3C; color: #fff; border-radius: 8px; }
 
         /* Main */
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
+        main { flex: 1; display: flex; flex-direction: column; }
 
         .topbar {
             height: 60px;
@@ -121,40 +88,15 @@
             padding: 6px 10px;
         }
 
-        .search-bar input {
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 14px;
-        }
+        .search-bar input { border: none; outline: none; background: transparent; font-size: 14px; }
 
-        .clock {
-            font-weight: bold;
-            font-size: 16px;
-        }
+        .clock { font-weight: bold; font-size: 16px; }
 
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .profile { display: flex; align-items: center; gap: 10px; }
+        .profile span { font-weight: 600; }
+        .profile .avatar { width: 32px; height: 32px; background: #ccc; border-radius: 50%; }
 
-        .profile span {
-            font-weight: 600;
-        }
-
-        .profile .avatar {
-            width: 32px;
-            height: 32px;
-            background: #ccc;
-            border-radius: 50%;
-        }
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
+        .content { flex: 1; padding: 20px; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -162,22 +104,26 @@
         <!-- Sidebar -->
         <aside>
             <div class="logo">
-                <img src="/images/logok4cafe.png" alt="Logo">
+                <img src="{{ asset('images/logok4cafe.png') }}" alt="Logo">
             </div>
             <nav>
-                <a href="#" class="active">
+                <a href="{{ route('kasir.order') }}" 
+                   class="{{ request()->routeIs('kasir.order') || request()->routeIs('kasir.payment') ? 'active' : '' }}">
                     <i class="fa-solid fa-utensils"></i>
                     <span>Pesan</span>
                 </a>
-                <a href="#">
+                <a href="{{ route('kasir.history') }}" 
+                   class="{{ request()->routeIs('kasir.history') ? 'active' : '' }}">
                     <i class="fa fa-clock-rotate-left"></i>
                     <span>Riwayat</span>
                 </a>
-                <a href="#">
-                    <i class="fa-solid fa-circle-xmark"></i>
-                    <span>Menu Habis</span>
-                </a>
-                <a href="{{ route('logout') }}" class="logout">
+                <a href="{{ route('kasir.soldout') }}" 
+   class="{{ request()->routeIs('kasir.soldout') ? 'active' : '' }}">
+    <i class="fa-solid fa-circle-xmark"></i>
+    <span>Menu Habis</span>
+</a>
+                <a href="{{ route('logout') }}" 
+                   class="logout {{ request()->routeIs('logout') ? 'active' : '' }}">
                     <i class="fa fa-right-from-bracket"></i>
                     <span>Keluar</span>
                 </a>
@@ -198,11 +144,27 @@
                 </div>
             </div>
 
-            <div class="content">
+            <div id="pjax-container" class="content">
                 @yield('content')
             </div>
         </main>
     </div>
+
+    {{-- Script --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+    <script>
+        $(document).ready(function() {
+    $(document).pjax('nav a:not(.logout)', '#pjax-container', {
+        timeout: 2000
+    });
+
+    $(document).on('pjax:end', function() {
+        window.scrollTo(0,0);
+    });
+});
+
+    </script>
 
     <script>
         function updateClock() {
