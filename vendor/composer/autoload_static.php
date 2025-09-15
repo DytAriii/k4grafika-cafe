@@ -338,8 +338,8 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -383,8 +383,8 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
-            1 => __DIR__ . '/..' . '/league/uri',
+            0 => __DIR__ . '/..' . '/league/uri',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
         'League\\MimeTypeDetection\\' => 
         array (
@@ -523,8 +523,20 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
 
     public static $classMap = array (
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
-        'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Http\\Controllers\\KasirController' => __DIR__ . '/../..' . '/app/Http/Controllers/KasirController.php',
+        'App\\Http\\Controllers\\OrderController' => __DIR__ . '/../..' . '/app/Http/Controllers/OrderController.php',
+        'App\\Http\\Controllers\\TransaksiController' => __DIR__ . '/../..' . '/app/Http/Controllers/TransaksiController.php',
+        'App\\Http\\Controllers\\menuController' => __DIR__ . '/../..' . '/app/Http/Controllers/menuController.php',
+        'App\\Http\\Controllers\\usersController' => __DIR__ . '/../..' . '/app/Http/Controllers/usersController.php',
+        'App\\Models\\Category' => __DIR__ . '/../..' . '/app/Models/Category.php',
+        'App\\Models\\Menu' => __DIR__ . '/../..' . '/app/Models/Menu.php',
+        'App\\Models\\Transaksi' => __DIR__ . '/../..' . '/app/Models/Transaksi.php',
+        'App\\Models\\TransaksiDetail' => __DIR__ . '/../..' . '/app/Models/TransaksiDetail.php',
+        'App\\Models\\roles' => __DIR__ . '/../..' . '/app/Models/roles.php',
+        'App\\Models\\status' => __DIR__ . '/../..' . '/app/Models/status.php',
+        'App\\Models\\users' => __DIR__ . '/../..' . '/app/Models/users.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
+        'App\\View\\Components\\AdminSidebar' => __DIR__ . '/../..' . '/app/View/Components/AdminSidebar.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',
@@ -642,8 +654,13 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         'Cron\\HoursField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/HoursField.php',
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
-        'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
+        'Database\\Factories\\CategoryFactory' => __DIR__ . '/../..' . '/database/factories/CategoryFactory.php',
+        'Database\\Factories\\menuFactory' => __DIR__ . '/../..' . '/database/factories/menuFactory.php',
+        'Database\\Factories\\rolesFactory' => __DIR__ . '/../..' . '/database/factories/rolesFactory.php',
+        'Database\\Factories\\statusFactory' => __DIR__ . '/../..' . '/database/factories/statusFactory.php',
+        'Database\\Factories\\usersFactory' => __DIR__ . '/../..' . '/database/factories/usersFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\MenuSeeder' => __DIR__ . '/../..' . '/database/seeders/MenuSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
         'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',

@@ -5,26 +5,29 @@
     <ul class="sidebar-menu">
         <li>
             <a href="{{ route('dashboard') }}">
-                <span class="icon">👓</span> Dashboard
+                <i class="fas fa-tachometer-alt icon"></i> Dashboard
             </a>
         </li>
         <li>
             <a href="{{ route('daftarKasir') }}">
-                <span class="icon">👥</span> Daftar Kasir
+                <i class="fas fa-users icon"></i> Daftar Kasir
             </a>
         </li>
         <li>
             <a href="{{ route('manajemenMenu') }}">
-                <span class="icon">☰</span> Manajemen Menu
+                <i class="fas fa-utensils icon"></i> Manajemen Menu
             </a>
         </li>
     </ul>
     <div class="sidebar-footer">
         <a href="{{ route('logout') }}">
-             Logout
+            <i class="fas fa-sign-out-alt icon"></i> Logout
         </a>
     </div>
 </div>
 
-{{-- panggil file css --}}
+{{-- Panggil file CSS --}}
 <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+
+{{-- Panggil Font Awesome --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

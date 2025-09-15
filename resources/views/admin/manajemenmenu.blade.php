@@ -28,14 +28,13 @@
                     <td>{{ $mn->category->nama_category ?? '-' }}</td>
                     <td>Rp{{ number_format($mn->harga, 0, ',', '.') }}</td>
                     <td>
-                        <img src="{{ asset('storage/' . $mn->gambar) }}" 
-                             alt="{{ $mn->nama }}">
+                        <img src="{{ asset('storage/' . $mn->gambar) }}" alt="{{ $mn->nama }}">
                     </td>
                     <td class="action-buttons">
-                        <a href="{{ route('menu.edit', $mn->id) }}" class="btn-edit">✏️</a>
+                        <a href="{{ route('menu.edit', $mn->id) }}" class="btn-edit">Edit</a>
                         <a href="{{ route('menu.delete', $mn->id) }}" 
                            onclick="return confirm('Yakin ingin menghapus?')" 
-                           class="btn-delete">🗑️</a>
+                           class="btn-delete">Delete</a>
                     </td>
                 </tr>
                 @endforeach
@@ -43,6 +42,7 @@
         </table>
     </div>
 </div>
-@endsection
-{{-- panggil file css --}}
+
+{{-- Panggil file CSS --}}
 <link rel="stylesheet" href="{{ asset('css/manajemenmenu.css') }}">
+@endsection

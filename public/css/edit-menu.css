@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container utama */
+.container {
+    width: 100%;
+    max-width: 520px;
+    background-color: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    overflow: hidden;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #6a4e42, #b8694d);
+    color: #fff;
+    text-align: center;
+    padding: 22px;
+}
+
+.header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Form */
+.form-container {
+    padding: 28px;
+    background-color: #fff;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    color: #6a4e42;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* Input & Select */
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.8px solid #cbb7a5;
+    border-radius: 10px;
+    background-color: #fff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #b8694d;
+    box-shadow: 0 0 6px rgba(184, 105, 77, 0.3);
+    outline: none;
+}
+
+/* Preview gambar */
+.preview-img {
+    margin-bottom: 10px;
+}
+.preview-img img {
+    width: 120px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+/* Batal (link styled) */
+.btn-batal {
+    flex: 1;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: #b94a4a;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+.btn-batal:hover {
+    background-color: #a13c3c;
+    transform: translateY(-1px);
+}
+
+/* Simpan */
+.btn-simpan {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #2d5a3d;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+.btn-simpan:hover {
+    background-color: #244c32;
+    transform: translateY(-1px);
+}
+
+/* Animasi */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
+}

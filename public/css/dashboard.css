@@ -1,0 +1,76 @@
+.dashboard-container {
+    font-family: 'Poppins', sans-serif;
+    padding: 30px;
+    background: #f9f9f9;
+    min-height: 100vh;
+}
+
+.dashboard-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #222;
+}
+
+/* Card Statistik Horizontal */
+.stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    flex: 1;
+    min-width: 200px;
+    max-width: 240px;
+    background: #fff5f2;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h3 {
+    font-size: 15px;
+    color: #a94d28;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #215c3c;
+}
+
+/* Bagian Grafik */
+.charts-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+.chart-card {
+    flex: 1;
+    min-width: 400px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.chart-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #a94d28;
+    margin-bottom: 15px;
+}

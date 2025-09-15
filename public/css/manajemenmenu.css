@@ -42,17 +42,22 @@
     background: #5d1616;
 }
 
-/* Wrapper untuk efek shadow */
+/* Wrapper tabel */
 .table-wrapper {
+    display: flex;
+    justify-content: center;
     background: #fff;
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    padding: 15px;
 }
 
 /* Tabel */
 .menu-table {
-    width: 100%;
+    width: 80%;
+    max-width: 1000px;
+    min-width: 600px;
     border-collapse: collapse;
 }
 
@@ -63,7 +68,7 @@
 .menu-table th, 
 .menu-table td {
     padding: 14px 18px;
-    text-align: left;
+    text-align: center;
     font-size: 14px;
     border-bottom: 1px solid #eee;
 }
@@ -85,29 +90,36 @@
 /* Tombol aksi */
 .action-buttons {
     display: flex;
-    gap: 12px;
-    justify-content: flex-start;
+    gap: 8px;
+    justify-content: center;
     align-items: center;
 }
 
-.btn-edit, .btn-delete {
-    font-size: 18px;
+.btn-edit,
+.btn-delete {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     text-decoration: none;
-    transition: 0.2s ease;
+    transition: background 0.3s ease;
+    color: #fff;
 }
 
+/* Edit */
 .btn-edit {
-    color: #ff9800;
+    background-color: #4CAF50;
 }
 
 .btn-edit:hover {
-    color: #e68900;
+    background-color: #45A049;
 }
 
+/* Delete */
 .btn-delete {
-    color: #c62828;
+    background-color: #E53935;
 }
 
 .btn-delete:hover {
-    color: #a11d1d;
+    background-color: #C62828;
 }

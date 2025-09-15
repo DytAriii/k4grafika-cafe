@@ -1,29 +1,36 @@
 @extends('admin')
 
 @section('content')
-<div>
-    <h2>CRUD Kasir</h2>
+<div class="kasir-container">
+    {{-- Tombol Tambah Kasir --}}
+    <div class="kasir-header">
+        <a href="{{ route('kasir.create') }}" class="btn-tambah">+ Tambah Kasir</a>
+    </div>
 
-    <a href="{{ route('kasir.create') }}">
-        <button>+ Tambah Kasir</button>
-    </a>
-    
-    <table border="1">
+    {{-- Tabel Kasir --}}
+    <table class="kasir-table">
         <thead>
             <tr>
+                <th>No</th>
                 <th>Username</th>
-                <th>Password</th>
+                <th>Nama Lengkap</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($users as $usr)
+            @foreach ($users as $index => $usr)
             <tr>
+                <td>{{ $index + 1 }}</td>
                 <td>{{ $usr->username }}</td>
-                <td style="overflow: auto;">{{ $usr->password }}</td>
-                <td>
-                    <a href="{{ route('kasir.edit', $usr->id) }}">Edit</a> |
-                    <a href="{{ route('kasir.delete', $usr->id) }}" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+                <td>{{ $usr->name }}</td>
+                <td class="aksi">
+                    <a href="{{ route('kasir.edit', $usr->id) }}">
+                        <button class="btn-edit">Edit</button>
+                    </a>
+                    <a href="{{ route('kasir.delete', $usr->id) }}" 
+                       onclick="return confirm('Yakin ingin menghapus?')">
+                        <button class="btn-delete">Hapus</button>
+                    </a>
                 </td>
             </tr>
             @endforeach
@@ -31,3 +38,6 @@
     </table>
 </div>
 @endsection
+
+{{-- Panggil CSS --}}
+<link rel="stylesheet" href="{{ asset('css/daftarkasir.css') }}">
