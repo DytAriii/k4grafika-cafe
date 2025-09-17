@@ -45,10 +45,5 @@ class DatabaseSeeder extends Seeder
         Category::factory()->Drink()->create();
         Category::factory()->Food()->create();
         Category::factory()->Snack()->create();
-
-        // panggil seeder tambahan
-        $this->call([
-            MenuSeeder::class,
-        ]);
     }
 }

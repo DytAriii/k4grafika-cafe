@@ -138,4 +138,27 @@ class OrderController extends Controller
 
         return redirect()->route('kasir.payment');
     }
+
+    public function menuHabis()
+    {
+        $menu = Menu::all();
+        $categories = Category::all();
+        $statuses = Status::all();
+
+        return view('kasir.menuhabis', compact('menu', 'categories', 'statuses'));
+    }
+
+    public function updateMenuStatus(Request $request)
+    {
+        $statusUpdates = $request->input('status', []);
+        foreach ($statusUpdates as $menuId => $statusId) {
+            $menu = Menu::find($menuId);
+            if ($menu) {
+                $menu->status_id = $statusId;
+                $menu->save();
+            }
+        }
+        return redirect()->route('menuhabis')->with('success', 'Status menu berhasil diperbarui.');
+    }
+    
 }

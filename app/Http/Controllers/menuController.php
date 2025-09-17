@@ -32,7 +32,7 @@ class menuController extends Controller
             'harga' => 'required|numeric',
             'categories_id' => 'required',
             'status_id' => 'required',
-            'gambar' => 'required|image|mimes:jpg,JPG,jpeg,JPEG,png'
+            'gambar' => 'required|image|mimes:jpg,JPG,jpeg,JPEG,png,webp'
         ]);
 
         $data = $request->only('nama', 'harga', 'categories_id', 'status_id');
@@ -71,7 +71,7 @@ class menuController extends Controller
             'harga' => 'required|numeric',
             'categories_id' => 'required',
             'status_id' => 'required',
-            'gambar' => 'nullable|image|mimes:jpg,JPG,jpeg,JPEG,png'
+            'gambar' => 'nullable|image|mimes:jpg,JPG,jpeg,JPEG,png,webp'
         ]);
 
         $data = $request->only('nama', 'harga', 'categories_id', 'status_id');

@@ -30,7 +30,7 @@ class usersController extends Controller
             if ($users->roles_id == '2') {
                 return redirect()->route('kasir.order');
             } elseif ($users->roles_id == '1') {
-                return redirect()->route('admin');
+                return redirect()->route('dashboard');
             } else {
                 return redirect()->route('login');
             }
@@ -47,10 +47,5 @@ class usersController extends Controller
     {
         session()->forget(['users_id', 'users_username']);
         return redirect()->route('login');
-    }
-
-    public function dashboard()
-    {
-        return view('admin.dashboard');
     }
 }

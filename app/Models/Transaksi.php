@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use App\Models\TransaksiDetail;
+use App\Models\User;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,8 +21,8 @@ class Transaksi extends Model
     // Relasi ke kasir (user yang melayani transaksi)
     public function kasir()
     {
-        return $this->belongsTo(User::class, 'user_id'); 
-        // sebaiknya pakai 'user_id', bukan 'users_id'
+        // Pastikan kolom di tabel transaksi bernama 'user_id'
+        return $this->belongsTo(Users::class, 'user_id', 'id')->withDefault();
     }
 
     // Relasi ke detail item

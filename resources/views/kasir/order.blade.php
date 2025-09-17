@@ -4,7 +4,6 @@
     <style>
         body {
             background: #f9f9f9;
-            font-family: 'Arial', sans-serif;
         }
 
         .kasir-container {
