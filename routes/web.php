@@ -1,18 +1,20 @@
 <?php
 
+use App\Models\Menu;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\dashboardController;
 
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
-Route::get('/order/category/{id}', [OrderController::class, 'getMenuByCategory']);
-Route::get('/kasir/history', [TransaksiController::class, 'history'])->name('kasir.history');
-Route::get('/kasir/menu', [KasirController::class, 'menu'])->name('kasir.menu');
-Route::post('/kasir/soldout', [TransaksiController::class, 'soldout'])->name('kasir.soldout');
+Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory']);
+Route::get('/kasir/history', [KasirController::class, 'history'])->name('kasir.history');
+Route::get('/menu/menuHabis/', [OrderController::class, 'menuHabis'])->name('menuhabis');
+Route::post('/menu/updateStatus', [OrderController::class, 'updateMenuStatus'])->name('menuhabis.update');
 Route::get('/kasir/payment', [KasirController::class, 'payment'])->name('kasir.payment');
 Route::post('/kasir/payment/process', [TransaksiController::class, 'processPayment'])->name('kasir.payment.process');
 Route::get('/kasir/receipt/{id}', [TransaksiController::class, 'receipt'])->name('kasir.receipt');
@@ -27,7 +29,10 @@ Route::post('/order/reset', [OrderController::class, 'reset'])->name('order.rese
 
 // pindah kategori
 Route::get('/order/category/{id}', function ($id) {
-    return \App\Models\Menu::where('categories_id', $id)->get();
+    if ($id === 'all') {
+        return Menu::all();
+    }
+    return Menu::where('categories_id', $id)->get();
 });
 
 // print nota
@@ -40,23 +45,22 @@ Route::get('/home', [UsersController::class, 'home'])->name('home');
 Route::get('/logout', [UsersController::class, 'logout'])->name('logout');
 
 // ==================== Admin Dashboard ====================
-Route::get('/admin', [UsersController::class, 'dashboard'])->name('admin');
-Route::get('/admin/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
-Route::get('/admin/daftarKasir', [UsersController::class, 'daftarKasir'])->name('daftarKasir');
+Route::get('/admin/dashboard', [dashboardController::class, 'index'])->name('dashboard');
+Route::get('/admin/daftarKasir', [KasirController::class, 'daftarKasir'])->name('daftarKasir');
 Route::get('/admin/manajemenMenu', [MenuController::class, 'manajemenMenu'])->name('manajemenMenu');
 
 // ==================== Kasir Management ====================
-Route::get('/admin/create-kasir', [UsersController::class, 'kasirCreate'])->name('kasir.create');
-Route::post('/admin/store-kasir', [UsersController::class, 'kasirStore'])->name('kasir.store');
-Route::get('/admin/{id}/edit', [UsersController::class, 'kasirEdit'])->name('kasir.edit');
-Route::post('/admin/{id}/update', [UsersController::class, 'kasirUpdate'])->name('kasir.update');
-Route::get('/admin/{id}/kasir-delete', [UsersController::class, 'kasirDelete'])->name('kasir.delete');
+Route::get('/admin/create-kasir', [KasirController::class, 'kasirCreate'])->name('kasir.create');
+Route::post('/admin/store-kasir', [KasirController::class, 'kasirStore'])->name('kasir.store');
+Route::get('/admin/{id}/edit', [KasirController::class, 'kasirEdit'])->name('kasir.edit');
+Route::patch('/admin/{id}/update', [KasirController::class, 'kasirUpdate'])->name('kasir.update');
+Route::get('/admin/{id}/kasir-delete', [KasirController::class, 'kasirDelete'])->name('kasir.delete');
 
 // ==================== Manajemen Menu ====================
 Route::prefix('admin')->group(function () {
     Route::get('/create-menu', [MenuController::class, 'menuCreate'])->name('menu.create');
     Route::post('/store-menu', [MenuController::class, 'menuStore'])->name('menu.store');
     Route::get('/{id}/edit-menu', [MenuController::class, 'menuEdit'])->name('menu.edit');
-    Route::put('/{id}/update-menu', [MenuController::class, 'menuUpdate'])->name('menu.update');
+    Route::patch('/{id}/update-menu', [MenuController::class, 'menuUpdate'])->name('menu.update');
     Route::get('/{id}/menu-delete', [MenuController::class, 'menuDelete'])->name('menu.delete');
 });
