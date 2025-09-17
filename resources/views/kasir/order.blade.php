@@ -558,24 +558,27 @@
             $(".category-btn").removeClass("active");
             $(this).addClass("active");
 
-            let kategoriId = $(this).data("id");
-            localStorage.setItem("activeCategory", kategoriId);
+            // ambil sebagai string agar konsisten ('all' tetap string)
+            let kategoriId = $(this).attr("data-id");
+            localStorage.setItem("activeCategory", String(kategoriId));
             loadCategory(kategoriId);
         });
 
         // Fungsi load menu by kategori
         function loadCategory(kategoriId) {
-            let url = "/order/category/" + kategoriId;
-            if (kategoriId === "all") {
-                url = "/order/category/all";
-            }
+            kategoriId = String(kategoriId);
+            console.log('loadCategory:', kategoriId);
+
+            // bangun URL dengan aman
+            let url = `/order/category/${encodeURIComponent(kategoriId)}`;
+
             $.ajax({
                 url: url,
                 method: "GET",
                 cache: false,
                 success: function(data) {
                     let html = "";
-                    if (data.length === 0) {
+                    if (!data || data.length === 0) {
                         html = "<p>Tidak ada menu tersedia.</p>";
                     } else {
                         data.forEach(menu => {
@@ -602,6 +605,9 @@
                         });
                     }
                     $("#menu-container").html(html);
+                },
+                error: function(xhr, status, err) {
+                    console.error('Load category error:', status, err, xhr.responseText);
                 }
             });
         }
@@ -610,8 +616,15 @@
         let savedCategory = localStorage.getItem("activeCategory");
         if (savedCategory) {
             $(".category-btn").removeClass("active");
-            $(`.category-btn[data-id="${savedCategory}"]`).addClass("active");
-            loadCategory(savedCategory);
+            const $btn = $(`.category-btn[data-id="${savedCategory}"]`);
+            if ($btn.length) {
+                $btn.addClass("active");
+                loadCategory(savedCategory);
+            } else {
+                // fallback ke all jika tidak cocok
+                $(`.category-btn[data-id="all"]`).addClass("active");
+                loadCategory('all');
+            }
         }
     });
 

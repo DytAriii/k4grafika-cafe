@@ -11,6 +11,7 @@ use App\Models\Status;
 
 class OrderController extends Controller
 {
+    // Halaman order (pilih menu)
     public function order()
     {
         $menus = Menu::all();
@@ -19,8 +20,7 @@ class OrderController extends Controller
         return view('kasir.order', compact('menus', 'categories', 'statuses'));
     }
 
-    // Tambah ke Cart
-    // Tambah ke Cart
+    // Tambah item ke keranjang
     public function addToCart(Request $request, $id)
     {
         $menu = Menu::findOrFail($id);
@@ -48,48 +48,33 @@ class OrderController extends Controller
             ]);
         }
 
-        return back();
+        return redirect()->back()->with('success', 'Menu ditambahkan ke keranjang!');
     }
 
-    // OrderController
-
-    public function getMenuByCategory($id)
-    {
-        if ($id === 'all') {
-            $menus = Menu::all();
-        } else {
-            $menus = Menu::where('categories_id', $id)->get();
-        }
-        return response()->json($menus);
-    }
+    // Update jumlah item
     public function update(Request $request, $id)
     {
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
-            $qty = (int) $request->qty;
-
-            // Batasi minimal 1
-            if ($qty < 1) {
-                $qty = 1;
-            }
-
+            $qty = max(1, (int) $request->qty);
             $cart[$id]['qty'] = $qty;
-            $cart[$id]['subtotal'] = $cart[$id]['harga'] * $qty;
+            $cart[$id]['subtotal'] = $qty * $cart[$id]['harga'];
             session()->put('cart', $cart);
         }
 
-        return response()->json([
-            'success' => true,
-            'cart' => $cart,
-            'summary' => [
-                'total_items' => count($cart),
-                'total_qty'   => array_sum(array_column($cart, 'qty')),
-                'total_price' => array_sum(array_column($cart, 'subtotal')),
-            ],
-        ]);
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'cart' => $cart,
+                'summary' => $this->cartSummary($cart),
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Jumlah menu diperbarui!');
     }
 
+    // Hapus item dari keranjang
     public function removeFromCart(Request $request, $id)
     {
         $cart = session()->get('cart', []);
@@ -106,9 +91,17 @@ class OrderController extends Controller
             ]);
         }
 
-        return back();
+        return redirect()->back()->with('success', 'Menu dihapus dari keranjang!');
     }
 
+    // Reset keranjang
+    public function reset()
+    {
+        session()->forget('cart');
+        return redirect()->route('kasir.order')->with('success', 'Keranjang dikosongkan!');
+    }
+
+    // Ringkasan keranjang
     private function cartSummary($cart)
     {
         return [
@@ -118,47 +111,32 @@ class OrderController extends Controller
         ];
     }
 
-    // Checkout & simpan transaksi ke DB
+    // Checkout (simpan data ke session dulu, lalu redirect ke halaman payment)
     public function checkout(Request $request)
     {
         $request->validate([
             'nama_customer' => 'required|string|max:100',
-            'order_type'    => 'required|in:dine_in,take_away',
+            'order_type' => 'required|in:dine_in,takeaway',
         ]);
 
         $cart = session('cart', []);
-
         if (empty($cart)) {
-            return redirect()->back()->with('error', 'Keranjang masih kosong.');
+            return redirect()->back()->with('error', 'Keranjang kosong.');
         }
 
-        // Simpan transaksi utama
-        $transaksi = Transaksi::create([
+        $total = collect($cart)->sum(fn($i) => $i['harga'] * $i['qty']);
+        $summary = [
             'nama_customer' => $request->nama_customer,
-            'order_type'    => $request->order_type,
-            'total'         => array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], $cart)),
-        ]);
+            'order_type' => $request->order_type,
+            'cart' => $cart,
+            'total' => $total,
+            'total_items' => count($cart),
+            'total_qty' => array_sum(array_column($cart, 'qty')),
+        ];
 
-        // Simpan detail transaksi
-        foreach ($cart as $item) {
-            $transaksi->detail()->create([
-                'menu_id' => $item['id'],
-                'qty'     => $item['qty'],
-                'harga'   => $item['harga'],
-            ]);
-        }
+        session(['payment_data' => $summary]);
 
-        // Kosongkan keranjang setelah checkout
-        session()->forget('cart');
-
-        return redirect()->route('kasir.order')->with('success', 'Transaksi berhasil disimpan!');
-    }
-    public function reset()
-    {
-        // misalnya clear session cart
-        session()->forget('cart');
-
-        return redirect()->route('kasir.order')->with('success', 'Pesanan berhasil direset.');
+        return redirect()->route('kasir.payment');
     }
 
     public function menuHabis()
@@ -182,4 +160,5 @@ class OrderController extends Controller
         }
         return redirect()->route('menuhabis')->with('success', 'Status menu berhasil diperbarui.');
     }
+    
 }

@@ -1,0 +1,93 @@
+.kasir-container {
+    padding: 20px;
+    background: #faf9f7;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+.kasir-header {
+    margin-bottom: 18px;
+    text-align: left; /* biar tombol sejajar kiri */
+}
+
+.btn-tambah {
+    display: inline-block;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    background: #6a4e42;
+    transition: 0.3s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.btn-tambah:hover {
+    background: #4a342b;
+}
+
+/* Table */
+.kasir-table {
+    width: 100%; /* pastikan full */
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.kasir-table th {
+    background: #6a4e42;
+    color: #fff;
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.kasir-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+}
+
+.kasir-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Aksi */
+.aksi {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-edit, .btn-delete {
+    padding: 6px 12px;
+    font-size: 13px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+/* Edit Button */
+.btn-edit {
+    background: #d1a257;
+    color: #fff;
+}
+.btn-edit:hover {
+    background: #b9883d;
+}
+
+/* Delete Button */
+.btn-delete {
+    background: #c94c4c;
+    color: #fff;
+}
+.btn-delete:hover {
+    background: #a63838;
+}

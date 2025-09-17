@@ -18,4 +18,3 @@ class TransaksiDetail extends Model
         return $this->belongsTo(Menu::class);
     }
 }
-

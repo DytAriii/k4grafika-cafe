@@ -169,7 +169,8 @@
                     <i class="fa-solid fa-utensils"></i>
                     <span>Order</span>
                 </a>
-                <a href="#">
+                <a href="{{ route('kasir.history') }}" 
+                   class="{{ request()->routeIs('kasir.history') ? 'active' : '' }}">
                     <i class="fa fa-clock-rotate-left"></i>
                     <span>Riwayat</span>
                 </a>

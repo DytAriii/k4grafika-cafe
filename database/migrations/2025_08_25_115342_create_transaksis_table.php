@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaksis', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade'); // kasir yg input
-        $table->decimal('total', 10, 2);
-        $table->decimal('diskon', 10, 2)->default(0);
-        $table->decimal('bayar', 10, 2); // uang yg dibayar customer
-        $table->enum('metode_pembayaran', ['cash', 'qris']);
-        $table->timestamps();
-    });
+    Schema::create('transaksis', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // kasir
+    $table->string('invoice')->unique();
+    $table->string('nama_customer')->nullable();
+    $table->enum('order_type', ['dine_in', 'take_away']);
+    $table->decimal('total', 12, 2);
+    $table->decimal('diskon', 12, 2)->default(0);
+    $table->decimal('bayar', 12, 2)->nullable();
+    $table->decimal('kembali', 12, 2)->nullable();
+    $table->enum('metode_pembayaran', ['cash', 'qris'])->nullable();
+    $table->timestamps();
+});
     }
 
     /**

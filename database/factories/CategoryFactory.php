@@ -17,28 +17,28 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'Coffee',
+            'nama_category' => 'Coffee',
         ];
     }
 
     public function Drink(): self
     {
         return $this->state([
-            'name' => 'Drink',
+            'nama_category' => 'Non-Coffee',
         ]);
     }
 
     public function Food(): self
     {
         return $this->state([
-            'name' => 'Food',
+            'nama_category' => 'Food',
         ]);
     }
 
     public function Snack(): self
     {
         return $this->state([
-            'name' => 'Snack',
+            'nama_category' => 'Snack',
         ]);
     }
 }
