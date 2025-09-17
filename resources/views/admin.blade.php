@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ADMIIIIIIIIIIOIIInnnn</title>
+    <title>Admin Café</title>
 </head>
 <body>
     <div style="display: flex;">

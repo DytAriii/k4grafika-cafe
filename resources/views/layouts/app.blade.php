@@ -4,15 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kasir Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #FAF9F6;
-            color: #333;
-        }
-
         ul, li { list-style: none; margin: 0; padding: 0; }
 
         .container { display: flex; height: 100vh; }
@@ -94,9 +89,24 @@
 
         .profile { display: flex; align-items: center; gap: 10px; }
         .profile span { font-weight: 600; }
-        .profile .avatar { width: 32px; height: 32px; background: #ccc; border-radius: 50%; }
+        .profile .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FBBC05;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    .menu-item.highlight {
+    background-color: yellow !important;
+    transition: background 0.3s ease;
+}
 
-        .content { flex: 1; padding: 20px; overflow-y: auto; }
+    .content { flex: 1; padding: 20px; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -135,12 +145,14 @@
             <div class="topbar">
                 <div class="search-bar">
                     <i class="fa fa-search" style="color: #777; margin-right: 6px;"></i>
-                    <input type="text" placeholder="Cari...">
+<input type="text" id="searchInput" placeholder="Cari...">
                 </div>
                 <div id="clock" class="clock"></div>
                 <div class="profile">
-                    <span>Sikasir</span>
-                    <div class="avatar"></div>
+                    <span>{{ session('users_username') }}</span>
+<div class="avatar" id="profile-avatar">
+    {{ strtoupper(substr(session('users_username'), 0, 1)) }}
+</div>
                 </div>
             </div>
 

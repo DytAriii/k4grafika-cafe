@@ -116,7 +116,7 @@ class OrderController extends Controller
     {
         $request->validate([
             'nama_customer' => 'required|string|max:100',
-            'order_type' => 'required|in:dine_in,takeaway',
+            'order_type' => 'required|in:dine_in,take_away',
         ]);
 
         $cart = session('cart', []);

@@ -4,14 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MenuController;
 
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
 Route::get('/order/category/{id}', [OrderController::class, 'getMenuByCategory']);
-Route::get('/kasir/history', [KasirController::class, 'history'])->name('kasir.history');
+Route::get('/kasir/history', [TransaksiController::class, 'history'])->name('kasir.history');
 Route::get('/kasir/menu', [KasirController::class, 'menu'])->name('kasir.menu');
 Route::post('/kasir/soldout', [TransaksiController::class, 'soldout'])->name('kasir.soldout');
 Route::get('/kasir/payment', [KasirController::class, 'payment'])->name('kasir.payment');
@@ -33,11 +32,6 @@ Route::get('/order/category/{id}', function ($id) {
 
 // print nota
 Route::get('/kasir/print/{id}', [KasirController::class, 'print'])->name('kasir.print');
-
-// ==================== Opsional: CheckoutController ====================
-Route::get('/orders/{order}/payment', [CheckoutController::class, 'showPayment'])->name('orders.payment');
-Route::post('/orders/{order}/pay/cash', [CheckoutController::class, 'payCash'])->name('orders.pay.cash');
-Route::post('/orders/{order}/pay/qris/confirm', [CheckoutController::class, 'confirmQris'])->name('orders.pay.qris.confirm');
 
 // ==================== Login ====================
 Route::get('/', [UsersController::class, 'formLogin'])->name('login');

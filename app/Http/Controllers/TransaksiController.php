@@ -108,14 +108,39 @@ class TransaksiController extends Controller
     /**
      * Riwayat transaksi
      */
-    public function history()
-    {
-        $transaksis = Transaksi::with('details.menu')
-            ->orderBy('created_at', 'desc')
-            ->get();
+    public function history(Request $request)
+{
+    $query = Transaksi::with('details.menu');
 
-        return view('kasir.history', compact('transaksis'));
+    // filter search
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('invoice', 'like', "%{$search}%")
+              ->orWhere('nama_customer', 'like', "%{$search}%");
+        });
     }
+
+    // filter tanggal
+    if ($request->filled('date')) {
+        $query->whereDate('created_at', $request->date);
+    }
+
+    // filter metode pembayaran
+    if ($request->filled('metode')) {
+        $query->where('metode_pembayaran', $request->metode);
+    }
+
+    // filter order type
+    if ($request->filled('order')) {
+        $query->where('order_type', $request->order);
+    }
+
+    // paginate biar jalan dengan filter
+    $transaksis = $query->latest()->paginate(10)->appends($request->query());
+
+    return view('kasir.history', compact('transaksis'));
+}
 
     public function receipt($id)
 {

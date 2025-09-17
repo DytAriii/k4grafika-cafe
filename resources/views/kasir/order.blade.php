@@ -445,7 +445,7 @@
                     <div class="order-type">
                         <label>Pilih Tipe Pesanan:</label>
                         <div class="order-type-buttons">
-                            <input type="radio" id="dine_in" name="order_type" value="dine_in">
+                            <input type="radio" id="dine_in" name="order_type" value="dine_in" checked>
                             <label for="dine_in">Dine In</label>
                             <input type="radio" id="take_away" name="order_type" value="take_away">
                             <label for="take_away">Takeaway</label>
@@ -453,14 +453,14 @@
                     </div>
 
                     <div class="cart-summary">
-                        <div><span>Jumlah Menu:</span><span>{{ count(session('cart')) }}</span></div>
-                        <div><span>Total Porsi:</span><span>{{ array_sum(array_column(session('cart'), 'qty')) }}</span></div>
-                        <div class="total"><span>Total Bayar:</span>
-                            <span>
-                                Rp {{ number_format(array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], session('cart'))), 0, ',', '.') }}
-                            </span>
-                        </div>
-                    </div>
+    <div><span>Jumlah Menu:</span><span data-summary="total_items">{{ count(session('cart')) }}</span></div>
+    <div><span>Total Porsi:</span><span data-summary="total_qty">{{ array_sum(array_column(session('cart'), 'qty')) }}</span></div>
+    <div class="total"><span>Total Bayar:</span>
+        <span data-summary="total_price">
+            Rp {{ number_format(array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], session('cart'))), 0, ',', '.') }}
+        </span>
+    </div>
+</div>
 
                     <div style="display:flex; gap:10px; margin-top:12px;">
                         <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
@@ -564,9 +564,12 @@ $(document).on("submit", ".menu-card form, .cart-item-controls, .cart-item form[
 // --- Render ulang cart ---
 function renderCart(cart, summary) {
     let itemsHtml = "";
+
     if (Object.keys(cart).length === 0) {
         itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
+        $("#cart-footer").hide(); // sembunyikan footer jika kosong
     } else {
+        $("#cart-footer").show(); // tampilkan footer
         $.each(cart, function(id, item) {
             itemsHtml += `
                 <div class="cart-item">
@@ -574,21 +577,9 @@ function renderCart(cart, summary) {
                         <div class="cart-item-name">${item.nama}</div>
                         <form action="/order/update/${id}" method="POST" class="cart-item-controls">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <button 
-                                type="submit" 
-                                name="qty" 
-                                value="${item.qty - 1}" 
-                                class="qty-btn minus"
-                                ${item.qty <= 1 ? 'disabled' : ''}>
-                                -
-                            </button>
+                            <button type="submit" name="qty" value="${item.qty - 1}" class="qty-btn minus" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
                             <input type="text" value="${item.qty}" readonly class="qty-display">
-                            <button 
-                                type="submit" 
-                                name="qty" 
-                                value="${item.qty + 1}" 
-                                class="qty-btn">+
-                            </button>
+                            <button type="submit" name="qty" value="${item.qty + 1}" class="qty-btn">+</button>
                         </form>
                     </div>
                     <div style="text-align:right; min-width:100px;">
@@ -604,48 +595,42 @@ function renderCart(cart, summary) {
                 </div>
             `;
         });
+
+        // --- footer dynamic ---
+        let footerHtml = `
+            <form action="/order/checkout" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
+                <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
+                <div class="order-type">
+                    <label>Pilih Tipe Pesanan:</label>
+                    <div class="order-type-buttons">
+                        <input type="radio" id="dine_in" name="order_type" value="dine_in" checked>
+                        <label for="dine_in">Dine In</label>
+                        <input type="radio" id="take_away" name="order_type" value="take_away">
+                        <label for="take_away">Takeaway</label>
+                    </div>
+                </div>
+                <div class="cart-summary">
+                    <div><span>Jumlah Menu:</span><span data-summary="total_items">${summary.total_items}</span></div>
+                    <div><span>Total Porsi:</span><span data-summary="total_qty">${summary.total_qty}</span></div>
+                    <div class="total"><span>Total Bayar:</span>
+                        <span data-summary="total_price">Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:12px;">
+                    <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
+            </form>
+            <form action="/order/reset" method="POST" style="flex:1;">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <button type="submit" class="reset-btn">Reset</button>
+            </form>
+            </div>
+        `;
+        $("#cart-footer").html(footerHtml);
     }
 
     $(".cart-items").html(itemsHtml);
-
-    // Update summary
-    let footerHtml = "";
-    if (Object.keys(cart).length > 0) {
-        footerHtml = `
-        <form action="/order/checkout" method="POST">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-            <input type="text" name="nama_customer" id="nama_customer" 
-                placeholder="Pelanggan" class="form-control" required>
-            <div class="order-type">
-                <label>Pilih Tipe Pesanan:</label>
-                <div class="order-type-buttons">
-                    <input type="radio" id="dine_in" name="order_type" value="dine_in">
-                    <label for="dine_in">Dine In</label>
-                    <input type="radio" id="take_away" name="order_type" value="take_away">
-                    <label for="take_away">Takeaway</label>
-                </div>
-            </div>
-            <div class="cart-summary">
-                <div><span>Jumlah Menu:</span><span>${summary.total_items}</span></div>
-                <div><span>Total Porsi:</span><span>${summary.total_qty}</span></div>
-                <div class="total">
-                    <span>Total Bayar:</span>
-                    <span>Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span>
-                </div>
-            </div>
-            <div style="display:flex; gap:10px; margin-top:12px;">
-                <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
-        </form>
-        <form action="/order/reset" method="POST" style="flex:1;">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button type="submit" class="reset-btn">Reset</button>
-        </form>
-        </div>
-        `;
-    }
-
-    $("#cart-footer").html(footerHtml);
 }
 </script>
     @endsection
