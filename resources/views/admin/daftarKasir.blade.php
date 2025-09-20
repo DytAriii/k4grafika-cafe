@@ -13,7 +13,6 @@
             <tr>
                 <th>No</th>
                 <th>Username</th>
-                <th>Nama Lengkap</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -22,7 +21,6 @@
             <tr>
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $usr->username }}</td>
-                <td>{{ $usr->name }}</td>
                 <td class="aksi">
                     <a href="{{ route('kasir.edit', $usr->id) }}">
                         <button class="btn-edit">Edit</button>

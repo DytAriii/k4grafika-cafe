@@ -1,407 +1,447 @@
-    @extends('layouts.app')
+@extends('layouts.app')
 
-    @section('content')
-    <style>
-        body {
-            background: #f9f9f9;
-        }
+@section('content')
+<style>
+    body {
+        background: #f9f9f9;
+        font-family: 'Arial', sans-serif;
+    }
 
-        .kasir-container {
-            display: flex;
-            gap: 20px;
-            align-items: stretch;
-            padding: 10px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .kasir-container {
+        display: flex;
+        gap: 20px;
+        align-items: stretch;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
-        /* Bagian kategori */
-        .category-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 8px;
-            padding: 15px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
+    /* Bagian kategori */
+    .category-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 8px;
+        padding: 15px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
 
-        .category-btn {
-            border: 1px solid #A74C29;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 14px;
-            background: #fff;
-            color: #A74C29;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    .category-btn {
+        border: 1px solid #A74C29;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 14px;
+        background: #fff;
+        color: #A74C29;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
 
-        .category-btn.active,
-        .category-btn:hover {
-            background: #A74C29;
-            color: #fff;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(167, 76, 41, 0.3);
-        }
+    .category-btn.active,
+    .category-btn:hover {
+        background: #A74C29;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(167, 76, 41, 0.3);
+    }
 
-        /* Bagian menu */
-        .menu-section {
-            flex: 3;
-            display: flex;
-            flex-direction: column;
-        }
+    /* Bagian menu */
+    .menu-section {
+        flex: 3;
+        display: flex;
+        flex-direction: column;
+    }
 
-        .menu-section h2 {
-            color: #333;
-            font-size: 20px;
-            margin-bottom: 16px;
-            font-weight: 600;
-        }
+    .menu-section h2 {
+        color: #333;
+        font-size: 20px;
+        margin-bottom: 16px;
+        font-weight: 600;
+    }
 
+    .menu-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .menu-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #f0f0f0;
+        height: 245px;
+    }
+
+    .menu-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .menu-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .menu-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        text-align: center;
+        color: #333;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .menu-price {
+        font-size: 14px;
+        color: #A74C29;
+        font-weight: bold;
+        margin-bottom: 6px;
+        text-align: center;
+    }
+
+    .add-btn {
+        width: 180px;
+        background: #A74C29;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-block;
+    }
+
+    .add-btn:hover {
+        background: #8C3E22;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(140, 62, 34, 0.3);
+    }
+
+    /* Bagian keranjang */
+    .cart-section {
+        flex: 1;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        min-height: 80vh;
+    }
+
+    .cart-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 12px;
+        color: #A74C29;
+        text-align: center;
+    }
+
+    .cart-items {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        max-height: 350px;
+    }
+
+    .cart-items::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .cart-items::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        color: #444;
+    }
+
+    .cart-item-name {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .cart-item-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .qty-btn {
+        background: #A74C29;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .qty-btn:hover {
+        background: #8C3E22;
+    }
+
+    .qty-btn.minus {
+        background: #ccc;
+        color: #333;
+    }
+
+    .qty-btn.minus:hover {
+        background: #aaa;
+    }
+
+    .qty-display {
+        width: 35px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #f9f9f9;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: red;
+        cursor: pointer;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    .empty-cart {
+        text-align: center;
+        color: #999;
+        padding: 20px;
+        font-style: italic;
+    }
+
+    .cart-summary {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        margin-top: 10px;
+        font-size: 15px;
+    }
+
+    .cart-summary div {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px;
+    }
+
+    .cart-summary .total {
+        font-size: 16px;
+        font-weight: bold;
+        color: #222;
+    }
+
+    .pay-btn {
+        background: #A74C29;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+        width: 100%;
+    }
+
+    .pay-btn:hover {
+        background: #8C3E22;
+    }
+
+    .reset-btn {
+        background: #bbb;
+        color: #000;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .reset-btn:hover {
+        background: #999;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        box-sizing: border-box;
+    }
+
+    .order-type {
+        margin: 10px 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .order-type-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 6px;
+    }
+
+    .form-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin: 10px 0 6px;
+        display: block;
+    }
+
+    .order-type-buttons label {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        border: 1px solid #A74C29;
+        border-radius: 8px;
+        padding: 8px 16px;
+        transition: all 0.2s ease;
+        color: #A74C29;
+        font-weight: 500;
+    }
+
+    .order-type-buttons input {
+        display: none;
+    }
+
+    .order-type-buttons label:hover {
+        background: #f2e2dd;
+    }
+
+    .order-type-buttons input:checked+label {
+        background: #A74C29;
+        color: #fff;
+        border-color: #A74C29;
+    }
+
+    @media (max-width: 1024px) {
         .menu-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(3, 1fr);
         }
+    }
 
-        .menu-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            border: 1px solid #f0f0f0;
-            height: 220px;
+    @media (max-width: 768px) {
+        .menu-container {
+            grid-template-columns: repeat(2, 1fr);
         }
+    }
 
-        .menu-card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
+    @media (max-width: 480px) {
+        .menu-container {
+            grid-template-columns: 1fr;
         }
+    }
 
-        .menu-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 8px;
-        }
+    .menu-card.sold-out {
+        position: relative;
+        /* Hapus filter di sini */
+    }
 
-        .menu-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            text-align: center;
-            color: #333;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .menu-card.sold-out img {
+        filter: grayscale(50%) brightness(20%);
+        /* Pindahkan filter ke gambar saja */
+        opacity: 0.7;
+    }
 
-        .menu-price {
-            font-size: 14px;
-            color: #A74C29;
-            font-weight: bold;
-            margin-bottom: 6px;
-            text-align: center;
-        }
-
-        .add-btn {
-            width: 180px;
-            background: #A74C29;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-block;
-        }
-
-        .add-btn:hover {
-            background: #8C3E22;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(140, 62, 34, 0.3);
-        }
-
-        /* Bagian keranjang */
-        .cart-section {
-            flex: 1;
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
-            min-height: 80vh;
-        }
-
-        .cart-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 12px;
-            color: #A74C29;
-            text-align: center;
-        }
-
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            max-height: 350px;
-        }
-
-        .cart-items::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .cart-items::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 10px;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-            color: #444;
-        }
-
-        .cart-item-name {
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .qty-btn {
-            background: #A74C29;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 4px 10px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .qty-btn:hover {
-            background: #8C3E22;
-        }
-
-        .qty-btn.minus {
-            background: #ccc;
-            color: #333;
-        }
-
-        .qty-btn.minus:hover {
-            background: #aaa;
-        }
-
-        .qty-display {
-            width: 35px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #f9f9f9;
-        }
-
-        .remove-btn {
-            background: none;
-            border: none;
-            color: red;
-            cursor: pointer;
-            font-size: 13px;
-            margin-top: 6px;
-        }
-
-        .empty-cart {
-            text-align: center;
-            color: #999;
-            padding: 20px;
-            font-style: italic;
-        }
-
-        .cart-summary {
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-            margin-top: 10px;
-            font-size: 15px;
-        }
-
-        .cart-summary div {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .cart-summary .total {
-            font-size: 16px;
-            font-weight: bold;
-            color: #222;
-        }
-
-        .pay-btn {
-            background: #A74C29;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-        }
-
-        .pay-btn:hover {
-            background: #8C3E22;
-        }
-
-        .reset-btn {
-            background: #bbb;
-            color: #000;
-            border: none;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .reset-btn:hover {
-            background: #999;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            box-sizing: border-box;
-        }
-
-        .order-type {
-            margin: 10px 0;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .order-type-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 6px;
-        }
-
-        .form-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin: 10px 0 6px;
-            display: block;
-        }
-
-        .order-type-buttons label {
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            border: 1px solid #A74C29;
-            border-radius: 8px;
-            padding: 8px 16px;
-            transition: all 0.2s ease;
-            color: #A74C29;
-            font-weight: 500;
-        }
-
-        .order-type-buttons input {
-            display: none;
-        }
-
-        .order-type-buttons label:hover {
-            background: #f2e2dd;
-        }
-
-        .order-type-buttons input:checked + label {
-            background: #A74C29;
-            color: #fff;
-            border-color: #A74C29;
-        }
-
-        @media (max-width: 1024px) {
-            .menu-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .menu-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .menu-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <div class="kasir-container">
+    .menu-card .sold-out-label {
+        position: absolute;
+        top: 25%;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 8px 18px;
+        border-radius: 8px;
+        z-index: 2;
+        pointer-events: none;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+        /* Tidak perlu filter di sini */
+    }
+</style>
+<div class="kasir-container">
     <div class="menu-section">
         <ul class="category-list">
+            <li>
+                <button
+                    class="category-btn active"
+                    data-id="all">
+                    Semua Kategori
+                </button>
+            </li>
             @foreach($categories as $category)
-                <li>
-                    <button 
-                        class="category-btn {{ $loop->first ? 'active' : '' }}" 
-                        data-id="{{ $category->id }}">
-                        {{ $category->name }}
-                    </button>
-                </li>
+            <li>
+                <button
+                    class="category-btn"
+                    data-id="{{ $category->id }}">
+                    {{ $category->nama_category }}
+                </button>
+            </li>
             @endforeach
         </ul>
 
+        <h2>Pilih Menu</h2>
         <div class="menu-container" id="menu-container">
             @forelse($menus as $menu)
-                <div class="menu-card">
-                    <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
-                    <div class="menu-info">
-                        <div class="menu-title">{{ $menu->nama }}</div>
-                        <div class="menu-price">
-                            Rp {{ number_format($menu->harga, 0, ',', '.') }}
-                        </div>
-                        <form action="{{ route('order.add', $menu->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="add-btn">+ Tambah</button>
-                        </form>
+            <div class="menu-card{{ $menu->status_id == 2 ? ' sold-out' : '' }}">
+                <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
+                @if($menu->status_id == 2)
+                <div class="sold-out-label">SOLD OUT</div>
+                @endif
+                <div class="menu-info">
+                    <div class="menu-title">{{ $menu->nama }}</div>
+                    <div class="menu-price">
+                        Rp {{ number_format($menu->harga, 0, ',', '.') }}
                     </div>
+                    @if($menu->status_id != 2)
+                    <form action="{{ route('order.add', $menu->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="add-btn">+ Tambah</button>
+                    </form>
+                    @else
+                    <button class="add-btn" disabled style="background:#bbb;cursor:not-allowed;">+ Tambah</button>
+                    @endif
                 </div>
+            </div>
             @empty
-                <p>Tidak ada menu tersedia.</p>
+            <p>Tidak ada menu tersedia.</p>
             @endforelse
         </div>
     </div>
 
-    {{-- Cart --}}
     <div class="cart-section">
         <div class="cart-title">Keranjang</div>
         <div class="cart-items">
@@ -500,18 +540,30 @@ $(document).ready(function () {
                     html = "<p>Tidak ada menu tersedia.</p>";
                 } else {
                     data.forEach(menu => {
+                        let soldOutClass = menu.status_id == 2 ? " sold-out" : "";
+                        let soldOutLabel = menu.status_id == 2 ? `<div class="sold-out-label">SOLD OUT</div>` : "";
+                        let addButton = "";
+                        if (menu.status_id != 2) {
+                            addButton = `
+                                <form action="/order/add/${menu.id}" method="POST">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="add-btn">+ Tambah</button>
+                                </form>
+                            `;
+                        } else {
+                            addButton = `<button class="add-btn" disabled style="background:#bbb;cursor:not-allowed;">+ Tambah</button>`;
+                        }
+
                         html += `
-                            <div class="menu-card">
+                            <div class="menu-card${soldOutClass}">
                                 <img src="/storage/${menu.gambar}" alt="${menu.nama}">
+                                ${soldOutLabel}
                                 <div class="menu-info">
                                     <div class="menu-title">${menu.nama}</div>
                                     <div class="menu-price">
                                         Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
                                     </div>
-                                    <form action="/order/add/${menu.id}" method="POST">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="add-btn">+ Tambah</button>
-                                    </form>
+                                    ${addButton}
                                 </div>
                             </div>
                         `;
