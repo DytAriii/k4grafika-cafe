@@ -1,52 +1,92 @@
-    @extends('layouts.app')
+@extends('layouts.app') 
 
-    @section('content')
-    <style>
-        body {
-            background: #f9f9f9;
-        }
+@section('content')
+<style>
+body {
+    background: #f9f9f9;
+}
 
-        .kasir-container {
-            display: flex;
-            gap: 20px;
-            align-items: stretch;
-            padding: 10px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.kasir-container {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    padding: 5px 0px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        /* Bagian kategori */
-        .category-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 8px;
-            padding: 15px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
+.filter-container {
+  background: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 
-        .category-btn {
-            border: 1px solid #A74C29;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 14px;
-            background: #fff;
-            color: #A74C29;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+  display: flex;
+  justify-content: space-between; /* biar kategori kiri, search kanan */
+  align-items: center;
+  gap: 20px;
+}
 
-        .category-btn.active,
-        .category-btn:hover {
-            background: #A74C29;
-            color: #fff;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(167, 76, 41, 0.3);
-        }
+.category-container {
+  flex: 1; /* kategori biar menyesuaikan isi */
+}
 
+.search-container-inline {
+  flex: 0 0 300px; /* search bar fix max 300px, biar seimbang */
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-input-inline {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+}
+
+.search-btn-inline {
+  padding: 8px 14px;
+  background: #A74C29;
+  color: white;
+  border: 1px solid #a74c29;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.category-btn {
+    border: 1px solid #A74C29;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 14px;
+    background: #fff;
+    color: #A74C29;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-btn.active,
+.category-btn:hover {
+    background: #A74C29;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(167, 76, 41, 0.3);
+}
         /* Bagian menu */
         .menu-section {
             flex: 3;
@@ -68,36 +108,41 @@
         }
 
         .menu-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            border: 1px solid #f0f0f0;
-            height: 220px;
-        }
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #f0f0f0;
+    height: 240px; /* konsisten */
+}
 
-        .menu-card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+.menu-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f5f5f5; /* placeholder bg */
+}
 
-        .menu-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 8px;
-        }
+.menu-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
+    width: 100%;
+}
 
         .menu-title {
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 4px;
+            margin-top: 4px;
             text-align: center;
             color: #333;
             line-height: 1.2;
@@ -158,7 +203,7 @@
             flex: 1;
             overflow-y: auto;
             margin-bottom: 15px;
-            max-height: 350px;
+            max-height: 500px;
         }
 
         .cart-items::-webkit-scrollbar {
@@ -217,12 +262,15 @@
         }
 
         .qty-display {
-            width: 35px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #f9f9f9;
-        }
+    width: 30px;
+    height: 26px;   /* kecilkan tinggi */
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+    padding: 2px;
+}
 
         .remove-btn {
             background: none;
@@ -366,119 +414,146 @@
             }
         }
     </style>
-    <div class="kasir-container">
-    <div class="menu-section">
+<div class="kasir-container">
+  <div class="menu-section">
+    <div class="filter-container">
+      <!-- 🔘 Kategori -->
+      <div class="category-container">
         <ul class="category-list">
-            @foreach($categories as $category)
-                <li>
-                    <button 
-                        class="category-btn {{ $loop->first ? 'active' : '' }}" 
-                        data-id="{{ $category->id }}">
-                        {{ $category->name }}
-                    </button>
-                </li>
-            @endforeach
+          <li>
+            <button class="category-btn {{ request('category', 'all') == 'all' && !request('search') ? 'active' : '' }}" 
+                    data-id="all">
+              Semua
+            </button>
+          </li>
+          @foreach($categories as $category)
+            <li>
+              <button class="category-btn {{ request('category') == $category->id ? 'active' : '' }}" 
+                      data-id="{{ $category->id }}">
+                {{ $category->name }}
+              </button>
+            </li>
+          @endforeach
         </ul>
+      </div>
 
-        <div class="menu-container" id="menu-container">
-            @forelse($menus as $menu)
-                <div class="menu-card">
-                    <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
-                    <div class="menu-info">
-                        <div class="menu-title">{{ $menu->nama }}</div>
-                        <div class="menu-price">
-                            Rp {{ number_format($menu->harga, 0, ',', '.') }}
-                        </div>
-                        <form action="{{ route('order.add', $menu->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="add-btn">+ Tambah</button>
-                        </form>
-                    </div>
-                </div>
-            @empty
-                <p>Tidak ada menu tersedia.</p>
-            @endforelse
-        </div>
+      <!-- 🔍 Search Bar -->
+      <div class="search-container-inline">
+        <form method="GET" action="{{ route('kasir.order') }}" class="search-form">
+          <input type="text" 
+                 name="search" 
+                 class="search-input-inline" 
+                 placeholder="Cari nama / harga menu" 
+                 value="{{ request('search') }}">
+          <button type="submit" class="search-btn-inline">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
     </div>
 
-    {{-- Cart --}}
-    <div class="cart-section">
-        <div class="cart-title">Keranjang</div>
-        <div class="cart-items">
-            @if(session('cart') && count(session('cart')) > 0)
-                @foreach(session('cart') as $id => $item)
-                    <div class="cart-item">
-                        <div style="flex:1">
-                            <div class="cart-item-name">{{ $item['nama'] }}</div>
-                            <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls">
-                                @csrf
-                                <button type="submit" name="qty" value="{{ $item['qty'] - 1 }}" class="qty-btn minus" {{ $item['qty'] <= 1 ? 'disabled' : '' }}>-</button>
-                                <input type="text" value="{{ $item['qty'] }}" readonly class="qty-display">
-                                <button type="submit" name="qty" value="{{ $item['qty'] + 1 }}" class="qty-btn">+</button>
-                            </form>
-                        </div>
-                        <div style="text-align:right; min-width:100px;">
-                            <div>Rp {{ number_format($item['harga'], 0, ',', '.') }}</div>
-                            <div style="font-size:13px; color:#666;">
-                                Subtotal: Rp {{ number_format($item['harga'] * $item['qty'], 0, ',', '.') }}
-                            </div>
-                            <form action="{{ route('order.remove', $id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="remove-btn">Hapus</button>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="empty-cart"><p>Keranjang masih kosong.</p></div>
-            @endif
+    {{-- Menu --}}
+    <div class="menu-container" id="menu-container">
+      @forelse($menus as $menu)
+        <div class="menu-card">
+          <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
+          <div class="menu-info">
+            <div class="menu-title">{{ $menu->nama }}</div>
+            <div class="menu-price">
+              Rp {{ number_format($menu->harga, 0, ',', '.') }}
+            </div>
+            <form action="{{ route('order.add', $menu->id) }}" method="POST">
+              @csrf
+              <button type="submit" class="add-btn">+ Tambah</button>
+            </form>
+          </div>
         </div>
+      @empty
+        <p>Tidak ada menu tersedia.</p>
+      @endforelse
+    </div>
+  </div>
 
-        <div id="cart-footer">
-            @if(session('cart') && count(session('cart')) > 0)
-                <form action="{{ route('order.checkout') }}" method="POST">
-                    @csrf
-                    <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-                    <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
+  {{-- Cart --}}
+  <div class="cart-section">
+    <div class="cart-title">Keranjang</div>
+    <div class="cart-items">
+      @if(session('cart') && count(session('cart')) > 0)
+        @foreach(session('cart') as $id => $item)
+          <div class="cart-item">
+            <div style="flex:1">
+              <div class="cart-item-name">{{ $item['nama'] }}</div>
+              <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls">
+                @csrf
+                <button type="submit" name="qty" value="{{ $item['qty'] - 1 }}" class="qty-btn minus" {{ $item['qty'] <= 1 ? 'disabled' : '' }}>-</button>
+                <input type="text" value="{{ $item['qty'] }}" readonly class="qty-display">
+                <button type="submit" name="qty" value="{{ $item['qty'] + 1 }}" class="qty-btn">+</button>
+              </form>
+            </div>
+            <div style="text-align:right; min-width:100px;">
+              <div>Rp {{ number_format($item['harga'], 0, ',', '.') }}</div>
+              <div style="font-size:13px; color:#666;">
+                Subtotal: Rp {{ number_format($item['harga'] * $item['qty'], 0, ',', '.') }}
+              </div>
+              <form action="{{ route('order.remove', $id) }}" method="POST">
+                @csrf
+                <button type="submit" class="remove-btn">Hapus</button>
+              </form>
+            </div>
+          </div>
+        @endforeach
+      @else
+        <div class="empty-cart"><p>Keranjang masih kosong.</p></div>
+      @endif
+    </div>
 
-                    <div class="order-type">
-                        <label>Pilih Tipe Pesanan:</label>
-                        <div class="order-type-buttons">
-                            <input type="radio" id="dine_in" name="order_type" value="dine_in" checked>
-                            <label for="dine_in">Dine In</label>
-                            <input type="radio" id="take_away" name="order_type" value="take_away">
-                            <label for="take_away">Takeaway</label>
-                        </div>
-                    </div>
+<div id="cart-footer">
+  @if(session('cart') && count(session('cart')) > 0)
 
-                    <div class="cart-summary">
-    <div><span>Jumlah Menu:</span><span data-summary="total_items">{{ count(session('cart')) }}</span></div>
-    <div><span>Total Porsi:</span><span data-summary="total_qty">{{ array_sum(array_column(session('cart'), 'qty')) }}</span></div>
-    <div class="total"><span>Total Bayar:</span>
-        <span data-summary="total_price">
+    <!-- FORM CHECKOUT full width -->
+    <form action="{{ route('order.checkout') }}" method="POST">
+      @csrf
+
+      <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
+      <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label for="catatan" class="form-label">Catatan Pesanan (Opsional):</label>
+        <textarea name="catatan" id="catatan" 
+                  class="form-control" rows="2" 
+                  placeholder="Contoh: tanpa gula, pedas sedang, es sedikit"></textarea>
+      </div>
+
+      <div class="cart-summary" style="margin-top:12px;">
+        <div><span>Jumlah Menu:</span><span data-summary="total_items">{{ count(session('cart')) }}</span></div>
+        <div><span>Total Porsi:</span><span data-summary="total_qty">{{ array_sum(array_column(session('cart'), 'qty')) }}</span></div>
+        <div class="total" style="margin-top:6px;"><span>Total Bayar:</span>
+          <span data-summary="total_price">
             Rp {{ number_format(array_sum(array_map(fn($i) => $i['harga'] * $i['qty'], session('cart'))), 0, ',', '.') }}
-        </span>
-    </div>
-</div>
-
-                    <div style="display:flex; gap:10px; margin-top:12px;">
-                        <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
-                </form>
-                <form action="{{ route('order.reset') }}" method="POST" style="flex:1;">
-                    @csrf
-                    <button type="submit" class="reset-btn">Reset</button>
-                </form>
-            @endif
+          </span>
         </div>
-    </div>
+      </div>
+
+        <div style="display:flex; gap:10px; margin-top:12px;">
+        <button type="submit" class="pay-btn" style="flex:3;">Bayar</button>
+
+        <form action="{{ route('order.reset') }}" method="POST" style="flex:1;">
+          @csrf
+          <button type="submit" class="reset-btn">Reset</button>
+        </form>
+      </div>
+    </form>
+
+  @endif
+</div>
+  </div>
 </div>
 
-   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-$(document).ready(function () {
-    // Klik kategori → simpan ke localStorage
+<script>$(document).ready(function () {
+    // Klik kategori
     $(".category-btn").on("click", function(e) {
         e.preventDefault();
         $(".category-btn").removeClass("active");
@@ -488,69 +563,62 @@ $(document).ready(function () {
         localStorage.setItem("activeCategory", kategoriId);
         loadCategory(kategoriId);
     });
-    
-    // Fungsi load menu by kategori
+
+    // Load kategori
     function loadCategory(kategoriId) {
-        $.ajax({
-            url: "/order/category/" + kategoriId,
-            method: "GET",
-            success: function(data) {
-                let html = "";
-                if (data.length === 0) {
-                    html = "<p>Tidak ada menu tersedia.</p>";
-                } else {
-                    data.forEach(menu => {
-                        html += `
-                            <div class="menu-card">
-                                <img src="/storage/${menu.gambar}" alt="${menu.nama}">
-                                <div class="menu-info">
-                                    <div class="menu-title">${menu.nama}</div>
-                                    <div class="menu-price">
-                                        Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
-                                    </div>
-                                    <form action="/order/add/${menu.id}" method="POST">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="add-btn">+ Tambah</button>
-                                    </form>
+        $.get("/order/category/" + kategoriId, function(data) {
+            let html = "";
+            if (data.length === 0) {
+                html = "<p>Tidak ada menu tersedia.</p>";
+            } else {
+                data.forEach(menu => {
+                    html += `
+                        <div class="menu-card">
+                            <img src="/storage/${menu.gambar}" alt="${menu.nama}">
+                            <div class="menu-info">
+                                <div class="menu-title">${menu.nama}</div>
+                                <div class="menu-price">
+                                    Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
                                 </div>
+                                <form action="/order/add/${menu.id}" method="POST" class="ajax-form">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="add-btn">+ Tambah</button>
+                                </form>
                             </div>
-                        `;
-                    });
-                }
-                $("#menu-container").html(html);
-            },
-            error: function(xhr) {
-                console.error("Gagal load kategori:", xhr.responseText);
+                        </div>
+                    `;
+                });
             }
+            $("#menu-container").html(html);
         });
     }
 
-    // Saat reload → buka kategori terakhir yang aktif
-    let savedCategory = localStorage.getItem("activeCategory");
-    if (savedCategory) {
+    // Restore kategori atau search
+    let currentSearch = "{{ request('search') }}";
+    if (!currentSearch) {
+        let savedCategory = localStorage.getItem("activeCategory") || "all";
         $(".category-btn").removeClass("active");
         $(`.category-btn[data-id="${savedCategory}"]`).addClass("active");
         loadCategory(savedCategory);
     }
-});
 
-// --- Handle add/remove/update cart via AJAX ---
-$(document).on("click", "form button[type=submit]", function() {
-    $(this).closest("form").find("button[type=submit]").removeAttr("clicked");
-    $(this).attr("clicked", "true");
-});
-
-$(document).on("submit", ".menu-card form, .cart-item-controls, .cart-item form[action*='remove']", function(e) {
-    e.preventDefault();
-
+    // 🔥 Handler untuk semua form di menu/cart (delegasi)
+    $(document).on("submit", ".ajax-form, .cart-item form", function(e) {
     let form = $(this);
-    let url = form.attr("action");
 
-    let clickedButton = form.find("button[type=submit][clicked=true]");
+    // 🚫 Kalau checkout → biarkan normal (redirect server)
+    if (form.attr("action").includes("/order/checkout")) {
+        return; 
+    }
+
+    e.preventDefault(); // hanya intercept selain checkout
+
+    let url = form.attr("action");
     let data = form.serialize();
 
-    if (clickedButton.length) {
-        data += "&" + clickedButton.attr("name") + "=" + encodeURIComponent(clickedButton.val());
+    let btn = form.find("button[type=submit]:focus");
+    if (btn.length) {
+        data += "&" + btn.attr("name") + "=" + encodeURIComponent(btn.val());
     }
 
     $.post(url, data, function(res) {
@@ -560,76 +628,72 @@ $(document).on("submit", ".menu-card form, .cart-item-controls, .cart-item form[
     });
 });
 
-// --- Render ulang cart ---
-function renderCart(cart, summary) {
-    let itemsHtml = "";
+    // Render cart
+    function renderCart(cart, summary) {
+        let itemsHtml = "";
+        let savedCustomer = $("#nama_customer").val() || "";
+        let savedCatatan = $("#catatan").val() || "";
 
-    if (Object.keys(cart).length === 0) {
-        itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
-        $("#cart-footer").hide(); // sembunyikan footer jika kosong
-    } else {
-        $("#cart-footer").show(); // tampilkan footer
-        $.each(cart, function(id, item) {
-            itemsHtml += `
-                <div class="cart-item">
-                    <div style="flex:1">
-                        <div class="cart-item-name">${item.nama}</div>
-                        <form action="/order/update/${id}" method="POST" class="cart-item-controls">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <button type="submit" name="qty" value="${item.qty - 1}" class="qty-btn minus" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
-                            <input type="text" value="${item.qty}" readonly class="qty-display">
-                            <button type="submit" name="qty" value="${item.qty + 1}" class="qty-btn">+</button>
-                        </form>
-                    </div>
-                    <div style="text-align:right; min-width:100px;">
-                        <div>Rp ${new Intl.NumberFormat('id-ID').format(item.harga)}</div>
-                        <div style="font-size:13px; color:#666;">
-                            Subtotal: Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}
+        if (Object.keys(cart).length === 0) {
+            itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
+            $("#cart-footer").html("");
+        } else {
+            $.each(cart, function(id, item) {
+                itemsHtml += `
+                    <div class="cart-item">
+                        <div style="flex:1">
+                            <div class="cart-item-name">${item.nama}</div>
+                            <form action="/order/update/${id}" method="POST" class="ajax-form cart-item-controls">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <button type="submit" name="qty" value="${item.qty - 1}" class="qty-btn minus" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
+                                <input type="text" value="${item.qty}" readonly class="qty-display">
+                                <button type="submit" name="qty" value="${item.qty + 1}" class="qty-btn">+</button>
+                            </form>
                         </div>
-                        <form action="/order/remove/${id}" method="POST">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="remove-btn">Hapus</button>
-                        </form>
+                        <div style="text-align:right; min-width:100px;">
+                            <div>Rp ${new Intl.NumberFormat('id-ID').format(item.harga)}</div>
+                            <div style="font-size:13px; color:#666;">
+                                Subtotal: Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}
+                            </div>
+                            <form action="/order/remove/${id}" method="POST" class="ajax-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="remove-btn">Hapus</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                `;
+            });
+
+            let footerHtml = `
+                <form action="/order/checkout" method="POST" class="ajax-form">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
+                    <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required value="${savedCustomer}">
+                    <div class="form-group" style="margin-top:12px;">
+                        <label for="catatan" class="form-label">Catatan Pesanan (Opsional):</label>
+                        <textarea name="catatan" id="catatan" class="form-control" rows="2">${savedCatatan}</textarea>
+                    </div>
+                    <div class="cart-summary">
+                        <div><span>Jumlah Menu:</span><span>${summary.total_items}</span></div>
+                        <div><span>Total Porsi:</span><span>${summary.total_qty}</span></div>
+                        <div class="total"><span>Total Bayar:</span>
+                            <span>Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:12px;">
+                        <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
+                    </div>
+                </form>
+                <form action="/order/reset" method="POST" class="ajax-form" style="margin-top:10px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="reset-btn">Reset</button>
+                </form>
             `;
-        });
+            $("#cart-footer").html(footerHtml);
+        }
 
-        // --- footer dynamic ---
-        let footerHtml = `
-            <form action="/order/checkout" method="POST">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-                <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
-                <div class="order-type">
-                    <label>Pilih Tipe Pesanan:</label>
-                    <div class="order-type-buttons">
-                        <input type="radio" id="dine_in" name="order_type" value="dine_in" checked>
-                        <label for="dine_in">Dine In</label>
-                        <input type="radio" id="take_away" name="order_type" value="take_away">
-                        <label for="take_away">Takeaway</label>
-                    </div>
-                </div>
-                <div class="cart-summary">
-                    <div><span>Jumlah Menu:</span><span data-summary="total_items">${summary.total_items}</span></div>
-                    <div><span>Total Porsi:</span><span data-summary="total_qty">${summary.total_qty}</span></div>
-                    <div class="total"><span>Total Bayar:</span>
-                        <span data-summary="total_price">Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span>
-                    </div>
-                </div>
-                <div style="display:flex; gap:10px; margin-top:12px;">
-                    <button type="submit" class="pay-btn" style="flex:2;">Bayar</button>
-            </form>
-            <form action="/order/reset" method="POST" style="flex:1;">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <button type="submit" class="reset-btn">Reset</button>
-            </form>
-            </div>
-        `;
-        $("#cart-footer").html(footerHtml);
+        $(".cart-items").html(itemsHtml);
     }
-
-    $(".cart-items").html(itemsHtml);
-}
+});
 </script>
-    @endsection
+@endsection

@@ -12,11 +12,29 @@ use App\Models\Status;
 class OrderController extends Controller
 {
     // Halaman order (pilih menu)
-    public function order()
+    public function order(Request $request)
     {
-        $menus = Menu::all();
         $categories = Category::all();
-        $statuses = Status::all();
+        $statuses   = Status::all();
+
+        $menus = Menu::query();
+
+        // 🔍 filter search nama/harga
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $menus->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('harga', 'like', "%{$search}%");
+            });
+        }
+
+        // 🔖 filter kategori (jika ada)
+        if ($request->filled('category') && $request->category != 'all') {
+            $menus->where('categories_id', $request->category);
+        }
+
+        $menus = $menus->get();
+
         return view('kasir.order', compact('menus', 'categories', 'statuses'));
     }
 
@@ -116,7 +134,7 @@ class OrderController extends Controller
     {
         $request->validate([
             'nama_customer' => 'required|string|max:100',
-            'order_type' => 'required|in:dine_in,take_away',
+            'catatan'       => 'nullable|string|max:255',
         ]);
 
         $cart = session('cart', []);
@@ -127,11 +145,11 @@ class OrderController extends Controller
         $total = collect($cart)->sum(fn($i) => $i['harga'] * $i['qty']);
         $summary = [
             'nama_customer' => $request->nama_customer,
-            'order_type' => $request->order_type,
-            'cart' => $cart,
-            'total' => $total,
-            'total_items' => count($cart),
-            'total_qty' => array_sum(array_column($cart, 'qty')),
+            'catatan'       => $request->catatan, 
+            'cart'          => $cart,
+            'total'         => $total,
+            'total_items'   => count($cart),
+            'total_qty'     => array_sum(array_column($cart, 'qty')),
         ];
 
         session(['payment_data' => $summary]);
@@ -160,5 +178,4 @@ class OrderController extends Controller
         }
         return redirect()->route('menuhabis')->with('success', 'Status menu berhasil diperbarui.');
     }
-    
 }
