@@ -49,9 +49,20 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 10px 0;
-            width: 100%;
+            width: 70%; 
             transition: 0.2s;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        nav a.active {
+            background: #A74C3C;
+            color: #fff;
+            border-radius: 8px;
+            width: 75%;
+            margin: 0 auto;
         }
 
         nav a i {
@@ -61,13 +72,6 @@
 
         nav a:hover {
             color: #A74C3C;
-        }
-
-        nav a.active {
-            background: #A74C3C;
-            color: #fff;
-            border-radius: 8px;
-            width: 60px;
         }
 
         nav a.logout {
@@ -93,58 +97,59 @@
         }
 
         .topbar {
-            height: 60px;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            margin: 10px;
-            border-radius: 8px;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: #f3f3f3;
-            border-radius: 6px;
-            padding: 6px 10px;
-        }
-
-        .search-bar input {
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 14px;
-        }
-
-        .clock {
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .profile { display: flex; align-items: center; gap: 10px; }
-        .profile span { font-weight: 600; }
-        .profile .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: #FBBC05;
-    color: #fff;
-    font-weight: bold;
-    font-size: 16px;
+    height: 60px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin: 10px;
+    border-radius: 8px;
+    padding: 0 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
-}
-    .menu-item.highlight {
-    background-color: yellow !important;
-    transition: background 0.3s ease;
+    position: relative; /* supaya bisa pakai absolute center */
 }
 
-    .content { flex: 1; padding: 20px; overflow-y: auto; }
-   </style>
+.topbar-left {
+    font-weight: 700;
+    font-size: 18px;
+    color: #A74C3C;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clock {
+    font-size: 18px;          /* sedikit lebih besar */
+    font-weight: 600;         /* semi-bold, tidak terlalu tebal */
+    letter-spacing: 1px;      /* beri jarak antar digit */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #333;              /* lebih netral, cocok dengan tema */
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto; /* dorong ke kanan */
+}
+
+        .profile span { font-weight: 600; }
+        .profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #A74C3C;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content { flex: 1; padding: 20px; overflow-y: auto; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -154,18 +159,20 @@
                 <img src="/images/logok4cafe.png" alt="Logo">
             </div>
             <nav>
-                <a href="{{ route('kasir.order') }}" class="active">
+               <a href="{{ route('kasir.order') }}" 
+                   class="{{ request()->routeIs('kasir.order') || request()->routeIs('kasir.payment') ? 'active' : '' }}">
                     <i class="fa-solid fa-utensils"></i>
-                    <span>Order</span>
+                    <span>Pesan</span>
                 </a>
                 <a href="{{ route('kasir.history') }}" 
                    class="{{ request()->routeIs('kasir.history') ? 'active' : '' }}">
                     <i class="fa fa-clock-rotate-left"></i>
                     <span>Riwayat</span>
                 </a>
-                <a href="{{ route('menuhabis') }}">
+                <a href="{{ route('menuhabis') }}"
+                    class="{{ request()->routeIs('menuhabis') ? 'active' : '' }}">
                     <i class="fa-solid fa-circle-xmark"></i>
-                    <span>Menu Habis</span>
+                    <span>Habis</span>
                 </a>
                 <a href="{{ route('logout') }}" class="logout">
                     <i class="fa fa-right-from-bracket"></i>
@@ -177,18 +184,29 @@
         <!-- Main -->
         <main>
             <div class="topbar">
-                <div class="search-bar">
-                    <i class="fa fa-search" style="color: #777; margin-right: 6px;"></i>
-<input type="text" id="searchInput" placeholder="Cari...">
-                </div>
-                <div id="clock" class="clock"></div>
-                <div class="profile">
-                    <span>{{ session('users_username') }}</span>
-<div class="avatar" id="profile-avatar">
-    {{ strtoupper(substr(session('users_username'), 0, 1)) }}
+    <div class="topbar-left">
+    <span>
+        @if(request()->routeIs('kasir.order'))
+            Pesanan Baru
+        @elseif(request()->routeIs('kasir.payment'))
+            Pembayaran Pesanan
+        @elseif(request()->routeIs('kasir.history'))
+            Riwayat Pesanan
+        @elseif(request()->routeIs('menuhabis'))
+            Kelola Menu Habis
+        @else
+            Kasir Cafe
+        @endif
+    </span>
 </div>
-                </div>
-            </div>
+    <div id="clock" class="clock"></div>
+    <div class="profile">
+        <span>{{ session('users_username') }}</span>
+        <div class="avatar" id="profile-avatar">
+            {{ strtoupper(substr(session('users_username'), 0, 1)) }}
+        </div>
+    </div>
+</div>
 
             <div class="content">
                 @yield('content')

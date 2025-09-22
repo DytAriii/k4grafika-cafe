@@ -8,8 +8,12 @@
   <div><strong>Invoice:</strong> {{ $transaksi->invoice }}</div>
   <div><strong>Tanggal:</strong> {{ $transaksi->created_at->format('d/m/Y H:i') }}</div>
   <div><strong>Kasir:</strong> {{ session('users_username') }}</div>
-  <div><strong>Customer:</strong> {{ $transaksi->nama_customer ?? '-' }}</div>
   <div class="line"></div>
+  <div><strong>Customer:</strong> {{ $transaksi->nama_customer ?? '-' }}</div>
+@if($transaksi->catatan)
+  <div><strong>Catatan:</strong> {{ $transaksi->catatan }}</div>
+@endif
+<div class="line"></div>
 
   {{-- Daftar item --}}
   @foreach($transaksi->details as $d)

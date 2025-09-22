@@ -114,7 +114,9 @@
       <h2 class="mb-2">Ringkasan Pesanan</h2>
       <div class="nota-info">
         <p><strong>Pelanggan:</strong> {{ $payment['nama_customer'] ?? 'Umum' }}</p>
-        <p><strong>Tipe:</strong> {{ ucfirst($payment['order_type']) }}</p>
+@if(!empty($payment['catatan']))
+  <p><strong>Catatan:</strong> {{ $payment['catatan'] }}</p>
+@endif
       </div>
         <hr class="nota-separator">
 
