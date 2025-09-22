@@ -21,17 +21,17 @@ class CategoryFactory extends Factory
         ];
     }
 
-    public function Drink(): self
+    public function NonCoffee(): self
     {
         return $this->state([
-            'nama_category' => 'Non-Coffee',
+            'nama_category' => 'Non Coffee',
         ]);
     }
 
-    public function Food(): self
+    public function MainCourse(): self
     {
         return $this->state([
-            'nama_category' => 'Food',
+            'nama_category' => 'Main Course',
         ]);
     }
 
