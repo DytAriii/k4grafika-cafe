@@ -419,7 +419,7 @@
             <div class="menu-card{{ $menu->status_id == 2 ? ' sold-out' : '' }}">
                 <img src="{{ asset('storage/'.$menu->gambar) }}" alt="{{ $menu->nama }}">
                 @if($menu->status_id == 2)
-                <div class="sold-out-label">SOLD OUT</div>
+                <div class="sold-out-label">Menu Habis</div>
                 @endif
                 <div class="menu-info">
                     <div class="menu-title">{{ $menu->nama }}</div>
@@ -541,7 +541,7 @@ $(document).ready(function () {
                 } else {
                     data.forEach(menu => {
                         let soldOutClass = menu.status_id == 2 ? " sold-out" : "";
-                        let soldOutLabel = menu.status_id == 2 ? `<div class="sold-out-label">SOLD OUT</div>` : "";
+                        let soldOutLabel = menu.status_id == 2 ? `<div class="sold-out-label">Menu Habis</div>` : "";
                         let addButton = "";
                         if (menu.status_id != 2) {
                             addButton = `

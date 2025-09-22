@@ -12,7 +12,7 @@ use App\Http\Controllers\dashboardController;
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
 Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory']);
-Route::get('/kasir/history', [KasirController::class, 'history'])->name('kasir.history');
+Route::get('/kasir/history', [TransaksiController::class, 'history'])->name('kasir.history');
 Route::get('/menu/menuHabis/', [OrderController::class, 'menuHabis'])->name('menuhabis');
 Route::post('/menu/updateStatus', [OrderController::class, 'updateMenuStatus'])->name('menuhabis.update');
 Route::get('/kasir/payment', [KasirController::class, 'payment'])->name('kasir.payment');

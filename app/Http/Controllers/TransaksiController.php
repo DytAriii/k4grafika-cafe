@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
@@ -50,101 +51,101 @@ class TransaksiController extends Controller
             ->with('success', 'Transaksi berhasil!');
     }
 
-   public function processPayment(Request $request)
-{
-    $request->validate([
-        'metode' => 'required|in:cash,qris',
-        'bayar'  => 'nullable|numeric',
-    ]);
-
-    // Ambil data dari session
-    $data = session('payment_data');
-    if (!$data) {
-        return redirect()->route('kasir.order')->with('error', 'Data pembayaran tidak ditemukan.');
-    }
-
-    // Hitung total berdasarkan session cart (trusted server-side calculation)
-    $total = collect($data['cart'])->sum(fn($i) => $i['harga'] * $i['qty']);
-
-    // Validasi jika cash wajib bayar cukup
-    if ($request->metode === 'cash') {
-        $bayar = $request->bayar ?? 0;
-        if ($bayar < $total) {
-            return back()->with('error', 'Nominal pembayaran cash kurang dari total.');
-        }
-    }
-
-    // invoice
-    $invoice = 'INV-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(5));
-    
-    // Simpan transaksi
-    $transaksi = Transaksi::create([
-        'invoice' => $invoice,
-        'nama_customer' => $data['nama_customer'],
-        'order_type' => $data['order_type'],
-        'total' => $total,
-        'metode_pembayaran' => $request->metode,
-        'bayar' => $request->metode === 'cash' ? $request->bayar : null,
-        'kembali' => $request->metode === 'cash' ? ($request->bayar - $total) : null,
-        'user_id' => session('users_id'),
-    ]);
-
-    // Simpan detail transaksi
-    foreach ($data['cart'] as $menuId => $item) {
-        TransaksiDetail::create([
-            'transaksi_id' => $transaksi->id,
-            'menu_id' => $item['id'] ?? $menuId,
-            'jumlah' => $item['qty'],
-            'harga' => $item['harga'],
-            'subtotal' => $item['qty'] * $item['harga'],
+    public function processPayment(Request $request)
+    {
+        $request->validate([
+            'metode' => 'required|in:cash,qris',
+            'bayar'  => 'nullable|numeric',
         ]);
+
+        // Ambil data dari session
+        $data = session('payment_data');
+        if (!$data) {
+            return redirect()->route('kasir.order')->with('error', 'Data pembayaran tidak ditemukan.');
+        }
+
+        // Hitung total berdasarkan session cart (trusted server-side calculation)
+        $total = collect($data['cart'])->sum(fn($i) => $i['harga'] * $i['qty']);
+
+        // Validasi jika cash wajib bayar cukup
+        if ($request->metode === 'cash') {
+            $bayar = $request->bayar ?? 0;
+            if ($bayar < $total) {
+                return back()->with('error', 'Nominal pembayaran cash kurang dari total.');
+            }
+        }
+
+        // invoice
+        $invoice = 'INV-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(5));
+
+        // Simpan transaksi
+        $transaksi = Transaksi::create([
+            'invoice' => $invoice,
+            'nama_customer' => $data['nama_customer'],
+            'order_type' => $data['order_type'],
+            'total' => $total,
+            'metode_pembayaran' => $request->metode,
+            'bayar' => $request->metode === 'cash' ? $request->bayar : null,
+            'kembali' => $request->metode === 'cash' ? ($request->bayar - $total) : null,
+            'user_id' => session('users_id'),
+        ]);
+
+        // Simpan detail transaksi
+        foreach ($data['cart'] as $menuId => $item) {
+            TransaksiDetail::create([
+                'transaksi_id' => $transaksi->id,
+                'menu_id' => $item['id'] ?? $menuId,
+                'jumlah' => $item['qty'],
+                'harga' => $item['harga'],
+                'subtotal' => $item['qty'] * $item['harga'],
+            ]);
+        }
+
+        // Bersihkan session
+        session()->forget(['cart', 'payment_data']);
+
+        return redirect()->route('kasir.receipt', $transaksi->id);
     }
-
-    // Bersihkan session
-    session()->forget(['cart', 'payment_data']);
-
-    return redirect()->route('kasir.receipt', $transaksi->id);
-}
     /**
      * Riwayat transaksi
      */
     public function history(Request $request)
-{
-    $query = Transaksi::with('details.menu');
+    {
+        $query = Transaksi::with('details.menu');
 
-    // filter search
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('invoice', 'like', "%{$search}%")
-              ->orWhere('nama_customer', 'like', "%{$search}%");
-        });
+        // filter search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('invoice', 'like', "%{$search}%")
+                    ->orWhere('nama_customer', 'like', "%{$search}%");
+            });
+        }
+
+        // filter tanggal
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // filter metode pembayaran
+        if ($request->filled('metode')) {
+            $query->where('metode_pembayaran', $request->metode);
+        }
+
+        // filter order type
+        if ($request->filled('order')) {
+            $query->where('order_type', $request->order);
+        }
+
+        // paginate biar jalan dengan filter
+        $transaksis = $query->latest()->paginate(10)->appends($request->query());
+
+        return view('kasir.history', compact('transaksis'));
     }
-
-    // filter tanggal
-    if ($request->filled('date')) {
-        $query->whereDate('created_at', $request->date);
-    }
-
-    // filter metode pembayaran
-    if ($request->filled('metode')) {
-        $query->where('metode_pembayaran', $request->metode);
-    }
-
-    // filter order type
-    if ($request->filled('order')) {
-        $query->where('order_type', $request->order);
-    }
-
-    // paginate biar jalan dengan filter
-    $transaksis = $query->latest()->paginate(10)->appends($request->query());
-
-    return view('kasir.history', compact('transaksis'));
-}
 
     public function receipt($id)
-{
-    $transaksi = Transaksi::with('details.menu')->findOrFail($id);
-    return view('kasir.receipt', compact('transaksi'));
-}
+    {
+        $transaksi = Transaksi::with('details.menu')->findOrFail($id);
+        return view('kasir.receipt', compact('transaksi'));
+    }
 }
