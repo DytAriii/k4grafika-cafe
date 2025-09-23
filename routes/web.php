@@ -7,14 +7,15 @@ use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MenuController;
-use App\Http\Controllers\dashboardController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanController;
 
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
-Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory']);
+Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory'])->name('order.category');
 Route::get('/kasir/history', [KasirController::class, 'history'])->name('kasir.history');
-Route::get('/menu/menuHabis/', [OrderController::class, 'menuHabis'])->name('menuhabis');
-Route::post('/menu/updateStatus', [OrderController::class, 'updateMenuStatus'])->name('menuhabis.update');
+Route::get('/menu/menuHabis', [OrderController::class, 'menuHabis'])->name('menu.habis');
+Route::post('/menu/updateStatus', [OrderController::class, 'updateMenuStatus'])->name('menu.updateStatus');
 Route::get('/kasir/payment', [KasirController::class, 'payment'])->name('kasir.payment');
 Route::post('/kasir/payment/process', [TransaksiController::class, 'processPayment'])->name('kasir.payment.process');
 Route::get('/kasir/receipt/{id}', [TransaksiController::class, 'receipt'])->name('kasir.receipt');
@@ -27,14 +28,6 @@ Route::post('/order/remove/{id}', [OrderController::class, 'removeFromCart'])->n
 Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 Route::post('/order/reset', [OrderController::class, 'reset'])->name('order.reset');
 
-// pindah kategori
-Route::get('/order/category/{id}', function ($id) {
-    if ($id === 'all') {
-        return Menu::all();
-    }
-    return Menu::where('categories_id', $id)->get();
-});
-
 // print nota
 Route::get('/kasir/print/{id}', [KasirController::class, 'print'])->name('kasir.print');
 
@@ -45,7 +38,7 @@ Route::get('/home', [UsersController::class, 'home'])->name('home');
 Route::get('/logout', [UsersController::class, 'logout'])->name('logout');
 
 // ==================== Admin Dashboard ====================
-Route::get('/admin/dashboard', [dashboardController::class, 'index'])->name('dashboard');
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/admin/daftarKasir', [KasirController::class, 'daftarKasir'])->name('daftarKasir');
 Route::get('/admin/manajemenMenu', [MenuController::class, 'manajemenMenu'])->name('manajemenMenu');
 
@@ -63,4 +56,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/{id}/edit-menu', [MenuController::class, 'menuEdit'])->name('menu.edit');
     Route::patch('/{id}/update-menu', [MenuController::class, 'menuUpdate'])->name('menu.update');
     Route::get('/{id}/menu-delete', [MenuController::class, 'menuDelete'])->name('menu.delete');
+
+    // laporan
+Route::get('/admin/laporan-kasir', [LaporanController::class, 'index'])->name('admin.laporan');
 });

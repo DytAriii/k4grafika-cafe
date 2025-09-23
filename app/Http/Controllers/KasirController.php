@@ -92,6 +92,7 @@ class KasirController extends Controller
         return view('kasir.receipt', compact('transaksi'));
     }
 
+    // ✅ Halaman daftar kasir (sekaligus kirim $roles)
     public function daftarKasir()
     {
         if (!session()->has('users_id')) {
@@ -99,7 +100,9 @@ class KasirController extends Controller
         }
 
         $users = Users::all();
-        return view('admin.daftarKasir', compact('users'));
+        $roles = Roles::where('nama_role', 'kasir')->first(); // tambahin ini
+
+        return view('admin.daftarKasir', compact('users', 'roles'));
     }
 
     public function kasirCreate()

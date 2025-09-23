@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Category;
-use App\Models\status;
+use App\Models\Status; // perhatikan huruf besar S
 use Illuminate\Support\Facades\Storage;
 
-class menuController extends Controller
+class MenuController extends Controller
 {
     public function manajemenMenu()
-{
-    if (!session()->has('users_id')) {
-        return redirect()->route('login');
+    {
+        if (!session()->has('users_id')) {
+            return redirect()->route('login');
+        }
+
+        $menu = Menu::with('category')->get(); 
+        $categories = Category::all();
+        $statuses = Status::all();
+
+        return view('admin.manajemenMenu', compact('menu', 'categories', 'statuses'));
     }
-    $menu = Menu::with('category')->get(); // Eager load category
-    return view('admin.manajemenMenu', compact('menu'));
-}
+
     public function menuCreate()
     {
         $categories = Category::all();
@@ -25,7 +30,7 @@ class menuController extends Controller
         return view('admin.create-menu', compact('categories', 'statuses'));
     }
 
-    public function menuStore(Request $request) //untuk menyimpan data menu
+    public function menuStore(Request $request) 
     {
         $request->validate([
             'nama' => 'required',
@@ -37,7 +42,9 @@ class menuController extends Controller
 
         $data = $request->only('nama', 'harga', 'categories_id', 'status_id');
         $data['gambar'] = $request->file('gambar')->store('menu', 'public');
+
         Menu::create($data);
+
         return redirect()->route('manajemenMenu');
     }
 
@@ -45,12 +52,12 @@ class menuController extends Controller
     {
         $menu = Menu::findOrFail($id);
 
-        // Hapus file gambar dari storage jika ada
         if ($menu->gambar && Storage::disk('public')->exists($menu->gambar)) {
             Storage::disk('public')->delete($menu->gambar);
         }
 
         $menu->delete();
+
         return redirect()->route('manajemenMenu');
     }
 
@@ -59,6 +66,7 @@ class menuController extends Controller
         $categories = Category::all();
         $statuses = Status::all();
         $menu = Menu::findOrFail($id);
+
         return view('admin.edit-menu', compact('menu', 'categories', 'statuses'));
     }
 
@@ -77,15 +85,15 @@ class menuController extends Controller
         $data = $request->only('nama', 'harga', 'categories_id', 'status_id');
 
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
             if ($menu->gambar && Storage::disk('public')->exists($menu->gambar)) {
                 Storage::disk('public')->delete($menu->gambar);
             }
-            // Simpan gambar baru
+
             $data['gambar'] = $request->file('gambar')->store('menu', 'public');
         }
 
         $menu->update($data);
+
         return redirect()->route('manajemenMenu');
     }
 }
