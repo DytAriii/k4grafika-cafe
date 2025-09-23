@@ -7,6 +7,9 @@ use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanController;
+
 
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
@@ -18,6 +21,8 @@ Route::get('/kasir/payment', [KasirController::class, 'payment'])->name('kasir.p
 Route::post('/kasir/payment/process', [TransaksiController::class, 'processPayment'])->name('kasir.payment.process');
 Route::get('/kasir/receipt/{id}', [TransaksiController::class, 'receipt'])->name('kasir.receipt');
 Route::post('/kasir/checkout', [TransaksiController::class, 'checkout'])->name('kasir.checkout');
+Route::get('/kasir/harian', [LaporanController::class, 'harian'])->name('kasir.harian');
+
 
 // ==================== Order & Cart ====================
 Route::post('/order/add/{id}', [OrderController::class, 'addToCart'])->name('order.add');

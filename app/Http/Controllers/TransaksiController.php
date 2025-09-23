@@ -113,38 +113,39 @@ class TransaksiController extends Controller
     /**
      * Riwayat transaksi
      */
-    public function history(Request $request)
-    {
-       $query = Transaksi::with('details.menu')
-              ->where('user_id', auth()->id());
-              
-        $query = Transaksi::with('details.menu');
+public function history(Request $request)
+{
+    // Menginisialisasi query dengan relasi yang dibutuhkan
+    $query = Transaksi::with('details.menu');
 
-        // filter search
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('invoice', 'like', "%{$search}%")
-                  ->orWhere('nama_customer', 'like', "%{$search}%")
-                  ->orWhere('catatan', 'like', "%{$search}%");
-            });
-        }
-
-        // filter tanggal
-        if ($request->filled('date')) {
-            $query->whereDate('created_at', $request->date);
-        }
-
-        // filter metode pembayaran
-        if ($request->filled('metode')) {
-            $query->where('metode_pembayaran', $request->metode);
-        }
-
-        // paginate biar jalan dengan filter
-        $transaksis = $query->latest()->paginate(10);
-        return view('kasir.history', compact('transaksis'));
+    // Filter utama: hanya tampilkan transaksi milik kasir yang sedang login
+    $query->where('user_id', session('users_id'));
+          
+    // Filter pencarian
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('invoice', 'like', "%{$search}%")
+              ->orWhere('nama_customer', 'like', "%{$search}%")
+              ->orWhere('catatan', 'like', "%{$search}%");
+        });
     }
 
+    // Filter tanggal
+    if ($request->filled('date')) {
+        $query->whereDate('created_at', $request->date);
+    }
+
+    // Filter metode pembayaran
+    if ($request->filled('metode')) {
+        $query->where('metode_pembayaran', $request->metode);
+    }
+
+    // Mengambil data dengan pagination, diurutkan dari yang terbaru
+    $transaksis = $query->latest()->paginate(10);
+
+    return view('kasir.history', compact('transaksis'));
+}
     /**
      * Cetak struk
      */

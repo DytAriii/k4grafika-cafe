@@ -2,6 +2,10 @@
 
 @section('content')
 <style>
+  .payment-container {
+    gap: 20px;
+    box-sizing: border-box;
+}
   /* === Payment Page Styles === */
   .nota-info {
     display: flex;
@@ -107,7 +111,7 @@
 
 </style>
 
-<div class="page-app-container">
+<div class="payment-container">
   <div class="grid">
     {{-- Nota --}}
     <div class="card">

@@ -174,6 +174,11 @@
                     <i class="fa-solid fa-circle-xmark"></i>
                     <span>Habis</span>
                 </a>
+                <a href="{{ route('kasir.harian') }}"
+                    class="{{ request()->routeIs('kasir.harian') ? 'active' : '' }}">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span>Laporan</span>
+                </a>
                 <a href="{{ route('logout') }}" class="logout">
                     <i class="fa fa-right-from-bracket"></i>
                     <span>Keluar</span>
@@ -194,6 +199,8 @@
             Riwayat Pesanan
         @elseif(request()->routeIs('menuhabis'))
             Kelola Menu Habis
+            @elseif(request()->routeIs('kasir.harian'))
+            Total penjualan
         @else
             Kasir Cafe
         @endif

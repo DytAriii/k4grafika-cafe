@@ -32,10 +32,6 @@ html, body {
 }
 
 /* === GLOBAL LAYOUT === */
-.app-container {
-  display: flex;
-  min-height: 100vh;
-}
 
 .main-content {
   flex: 1;
