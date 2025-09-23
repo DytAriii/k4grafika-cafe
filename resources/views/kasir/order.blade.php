@@ -183,12 +183,13 @@ body {
     align-items: center;
     padding: 10px;
     border: 1px solid #f0f0f0;
-    height: 240px;
+
+    height: 245px; /* konsisten */
 }
 
 .menu-card img {
     width: 100%;
-    height: 140px;
+    height: 133.8px;
     object-fit: cover;
     border-radius: 8px;
     background: #f5f5f5;
@@ -381,17 +382,23 @@ body {
 
 .menu-card .sold-out-label {
     position: absolute;
-    top: 25%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;           /* sedikit diperkecil agar muat */
     font-weight: bold;
-    padding: 8px 18px;
+    padding: 6px 12px;
     border-radius: 8px;
     z-index: 2;
     pointer-events: none;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+
+    /* tambahan agar teks tidak terpisah ke baris baru */
+    white-space: nowrap;
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 /* Responsive */
@@ -437,10 +444,10 @@ body {
             <div class="search-container-inline">
                 <form method="GET" action="{{ route('kasir.order') }}" class="search-form">
                     <input type="text" 
-                            name="search" 
-                            class="search-input-inline" 
-                            placeholder="Cari nama / harga menu" 
-                            value="{{ request('search') }}">
+                           name="search" 
+                           class="search-input-inline" 
+                           placeholder="Cari nama / harga menu" 
+                           value="{{ request('search') }}">
                     <button type="submit" class="search-btn-inline">
                         <i class="fas fa-search"></i>
                     </button>
@@ -487,7 +494,7 @@ body {
                     <div class="cart-item">
                         <div style="flex:1">
                             <div class="cart-item-name">{{ $item['nama'] }}</div>
-                            <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls">
+                            <form action="{{ route('order.update', $id) }}" method="POST" class="cart-item-controls ajax-form">
                                 @csrf
                                 <button type="submit" name="qty" value="{{ $item['qty'] - 1 }}" class="qty-btn minus" {{ $item['qty'] <= 1 ? 'disabled' : '' }}>-</button>
                                 <input type="text" value="{{ $item['qty'] }}" readonly class="qty-display">
@@ -499,7 +506,7 @@ body {
                             <div style="font-size:13px; color:#666;">
                                 Subtotal: Rp {{ number_format($item['harga'] * $item['qty'], 0, ',', '.') }}
                             </div>
-                            <form action="{{ route('order.remove', $id) }}" method="POST">
+                            <form action="{{ route('order.remove', $id) }}" method="POST" class="ajax-form">
                                 @csrf
                                 <button type="submit" class="remove-btn">Hapus</button>
                             </form>
@@ -538,7 +545,7 @@ body {
                     </div>
                 </form>
                 
-                <form action="{{ route('order.reset') }}" method="POST" style="margin-top:12px;">
+                <form action="{{ route('order.reset') }}" method="POST" class="reset-form" style="margin-top:12px;">
                     @csrf
                     <button type="submit" class="reset-btn" style="width:100%;">Reset</button>
                 </form>
@@ -551,180 +558,182 @@ body {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        // Klik kategori
-        $(".category-btn").on("click", function(e) {
-            e.preventDefault();
-            $(".category-btn").removeClass("active");
-            $(this).addClass("active");
-            let kategoriId = $(this).data("id");
-            localStorage.setItem("activeCategory", kategoriId);
-            loadCategory(kategoriId);
-        });
+$(document).ready(function () {
+    // Klik kategori → simpan ke localStorage
+    $(".category-btn").on("click", function(e) {
+        e.preventDefault();
+        $(".category-btn").removeClass("active");
+        $(this).addClass("active");
 
-        // Load kategori
-        function loadCategory(kategoriId) {
-            $.ajax({
-                url: "/order/category/" + kategoriId,
-                method: "GET",
-                success: function(data) {
-                    let html = "";
-                    if (data.length === 0) {
-                        html = "<p>Tidak ada menu tersedia.</p>";
-                    } else {
-                        data.forEach(menu => {
-                            let soldOutClass = menu.status_id == 2 ? " sold-out" : "";
-                            let soldOutLabel = menu.status_id == 2 ? `<div class="sold-out-label">SOLD OUT</div>` : "";
-                            let addButton = "";
-                            if (menu.status_id != 2) {
-                                addButton = `
-                                    <form action="/order/add/${menu.id}" method="POST" class="ajax-form">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="add-btn">+ Tambah</button>
-                                    </form>
-                                `;
-                            } else {
-                                addButton = `<button class="add-btn" disabled style="background:#bbb;cursor:not-allowed;">+ Tambah</button>`;
-                            }
-
-                            html += `
-                                <div class="menu-card${soldOutClass}">
-                                    <img src="/storage/${menu.gambar}" alt="${menu.nama}">
-                                    ${soldOutLabel}
-                                    <div class="menu-info">
-                                        <div class="menu-title">${menu.nama}</div>
-                                        <div class="menu-price">
-                                            Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
-                                        </div>
-                                        ${addButton}
-                                    </div>
-                                </div>
+        let kategoriId = $(this).data("id");
+        localStorage.setItem("activeCategory", kategoriId);
+        loadCategory(kategoriId);
+    });
+    
+    // Fungsi load menu by kategori
+    function loadCategory(kategoriId) {
+        $.ajax({
+            url: "/order/category/" + kategoriId,
+            method: "GET",
+            success: function(data) {
+                let html = "";
+                if (data.length === 0) {
+                    html = "<p>Tidak ada menu tersedia.</p>";
+                } else {
+                    data.forEach(menu => {
+                        let soldOutClass = menu.status_id == 2 ? " sold-out" : "";
+                        let soldOutLabel = menu.status_id == 2 ? `<div class="sold-out-label">SOLD OUT</div>` : "";
+                        let addButton = "";
+                        if (menu.status_id != 2) {
+                            addButton = `
+                                <form action="/order/add/${menu.id}" method="POST" class="ajax-form">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="add-btn">+ Tambah</button>
+                                </form>
                             `;
-                        });
-                    }
-                    $("#menu-container").html(html);
-                }
-            });
-        }
+                        } else {
+                            addButton = `<button class="add-btn" disabled style="background:#bbb;cursor:not-allowed;">+ Tambah</button>`;
+                        }
 
-        // Restore kategori atau search
-        let currentSearch = "{{ request('search') }}";
-        if (!currentSearch) {
-            let savedCategory = localStorage.getItem("activeCategory") || "all";
-            $(".category-btn").removeClass("active");
-            $(`.category-btn[data-id="${savedCategory}"]`).addClass("active");
-            loadCategory(savedCategory);
-        }
-
-        // 🔥 Handler untuk semua form di menu/cart (delegasi)
-        $(document).on("submit", ".ajax-form, .cart-item form, .reset-form", function(e) {
-            e.preventDefault(); 
-            let form = $(this);
-            let url = form.attr("action");
-
-            // Cek apakah ini form reset
-            if (url.includes("/order/reset")) {
-                $.post(url, form.serialize(), function(res) {
-                    if (res.success) {
-                        renderCart({}, {total_items: 0, total_qty: 0, total_price: 0});
-                    }
-                });
-                return;
-            }
-
-            // Untuk form lain (tambah, update, hapus)
-            let data = form.serialize();
-            let btn = form.find("button[type=submit]:focus");
-            if (btn.length) {
-                data += "&" + btn.attr("name") + "=" + encodeURIComponent(btn.val());
-            }
-
-            $.post(url, data, function(res) {
-                if (res.success) {
-                    renderCart(res.cart, res.summary);
-                }
-            });
-        });
-
-        // Render cart
-        function renderCart(cart, summary) {
-            let itemsHtml = "";
-            let savedCustomer = $("#nama_customer").val() || "";
-            let savedCatatan = $("#catatan").val() || "";
-
-            if (Object.keys(cart).length === 0) {
-                itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
-                $("#cart-footer").html("");
-                
-                // Tambahkan kembali form reset jika keranjang kosong
-                let resetFormHtml = `
-                    <form action="/order/reset" method="POST" class="reset-form" style="margin-top:12px;">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="reset-btn" style="width:100%;">Reset</button>
-                    </form>
-                `;
-                $("#cart-footer").append(resetFormHtml);
-            } else {
-                $.each(cart, function(id, item) {
-                    itemsHtml += `
-                        <div class="cart-item">
-                            <div style="flex:1">
-                                <div class="cart-item-name">${item.nama}</div>
-                                <form action="/order/update/${id}" method="POST" class="ajax-form cart-item-controls">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <button type="submit" name="qty" value="${item.qty - 1}" class="qty-btn minus" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
-                                    <input type="text" value="${item.qty}" readonly class="qty-display">
-                                    <button type="submit" name="qty" value="${item.qty + 1}" class="qty-btn">+</button>
-                                </form>
-                            </div>
-                            <div style="text-align:right; min-width:100px;">
-                                <div>Rp ${new Intl.NumberFormat('id-ID').format(item.harga)}</div>
-                                <div style="font-size:13px; color:#666;">
-                                    Subtotal: Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}
+                        html += `
+                            <div class="menu-card${soldOutClass}">
+                                <img src="/storage/${menu.gambar}" alt="${menu.nama}">
+                                ${soldOutLabel}
+                                <div class="menu-info">
+                                    <div class="menu-title">${menu.nama}</div>
+                                    <div class="menu-price">
+                                        Rp ${new Intl.NumberFormat('id-ID').format(menu.harga)}
+                                    </div>
+                                    ${addButton}
                                 </div>
-                                <form action="/order/remove/${id}" method="POST" class="ajax-form">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <button type="submit" class="remove-btn">Hapus</button>
-                                </form>
                             </div>
-                        </div>
-                    `;
-                });
+                        `;
+                    });
+                }
+                $("#menu-container").html(html);
+            }
+        });
+    }
 
-                let footerHtml = `
-                    <form action="/order/checkout" method="POST" class="checkout-form" style="display:flex; flex-direction:column; gap:12px; flex:1;">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        
-                        <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-                        <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required value="${savedCustomer}">
-                        
-                        <div class="form-group">
-                            <label for="catatan" class="form-label">Catatan Pesanan (Opsional):</label>
-                            <textarea name="catatan" id="catatan" class="form-control" rows="2" placeholder="Contoh: tanpa gula, pedas sedang, es sedikit">${savedCatatan}</textarea>
-                        </div>
-                        
-                        <div class="cart-summary">
-                            <div><span>Jumlah Menu:</span><span>${summary.total_items}</span></div>
-                            <div><span>Total Porsi:</span><span>${summary.total_qty}</span></div>
-                            <div class="total"><span>Total Bayar:</span>
-                                <span>Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span>
-                            </div>
-                        </div>
+    // Restore kategori atau search
+    let currentSearch = "{{ request('search') }}";
+    if (!currentSearch) {
+        let savedCategory = localStorage.getItem("activeCategory") || "all";
+        $(".category-btn").removeClass("active");
+        $(`.category-btn[data-id="${savedCategory}"]`).addClass("active");
+        loadCategory(savedCategory);
+    }
 
-                        <div class="cart-actions">
-                            <button type="submit" class="pay-btn">Bayar</button>
-                            <form action="/order/reset" method="POST" class="reset-form" style="flex:1;">
+    // 🔥 Handler untuk semua form di menu/cart (delegasi)
+    $(document).on("submit", ".ajax-form, .cart-item form, .reset-form", function(e) {
+        e.preventDefault(); 
+        let form = $(this);
+        let url = form.attr("action");
+
+        // Cek apakah ini form reset
+        if (url.includes("/order/reset")) {
+            $.post(url, form.serialize(), function(res) {
+                if (res.success) {
+                    renderCart({}, {total_items: 0, total_qty: 0, total_price: 0});
+                }
+            });
+            return;
+        }
+
+        // Untuk form lain (tambah, update, hapus)
+        let data = form.serialize();
+        let btn = form.find("button[type=submit]:focus");
+        if (btn.length) {
+            data += "&" + btn.attr("name") + "=" + encodeURIComponent(btn.val());
+        }
+
+        $.post(url, data, function(res) {
+            if (res.success) {
+                renderCart(res.cart, res.summary);
+            }
+        });
+    });
+
+    // Render cart
+    function renderCart(cart, summary) {
+        let itemsHtml = "";
+        let savedCustomer = $("#nama_customer").val() || "";
+        let savedCatatan = $("#catatan").val() || "";
+
+        if (Object.keys(cart).length === 0) {
+            itemsHtml = `<div class="empty-cart"><p>Keranjang masih kosong.</p></div>`;
+            $("#cart-footer").html("");
+            
+            // Tambahkan kembali form reset jika keranjang kosong
+            let resetFormHtml = `
+                <form action="/order/reset" method="POST" class="reset-form" style="margin-top:12px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="reset-btn" style="width:100%;">Reset</button>
+                </form>
+            `;
+            $("#cart-footer").append(resetFormHtml);
+        } else {
+            $.each(cart, function(id, item) {
+                itemsHtml += `
+                    <div class="cart-item">
+                        <div style="flex:1">
+                            <div class="cart-item-name">${item.nama}</div>
+                            <form action="/order/update/${id}" method="POST" class="ajax-form cart-item-controls">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="reset-btn">Reset</button>
+                                <button type="submit" name="qty" value="${item.qty - 1}" class="qty-btn minus" ${item.qty <= 1 ? 'disabled' : ''}>-</button>
+                                <input type="text" value="${item.qty}" readonly class="qty-display">
+                                <button type="submit" name="qty" value="${item.qty + 1}" class="qty-btn">+</button>
                             </form>
                         </div>
-                    </form>
+                        <div style="text-align:right; min-width:100px;">
+                            <div>Rp ${new Intl.NumberFormat('id-ID').format(item.harga)}</div>
+                            <div style="font-size:13px; color:#666;">
+                                Subtotal: Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}
+                            </div>
+                            <form action="/order/remove/${id}" method="POST" class="ajax-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="remove-btn">Hapus</button>
+                            </form>
+                        </div>
+                    </div>
                 `;
-                $("#cart-footer").html(footerHtml);
-            }
-            
-            $(".cart-items").html(itemsHtml);
+            });
+
+            let footerHtml = `
+                <form action="/order/checkout" method="POST" class="checkout-form" style="display:flex; flex-direction:column; gap:12px; flex:1;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    
+                    <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
+                    <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required value="${savedCustomer}">
+                    
+                    <div class="form-group">
+                        <label for="catatan" class="form-label">Catatan Pesanan (Opsional):</label>
+                        <textarea name="catatan" id="catatan" class="form-control" rows="2" placeholder="Contoh: tanpa gula, pedas sedang, es sedikit">${savedCatatan}</textarea>
+                    </div>
+                    
+                    <div class="cart-summary">
+                        <div><span>Jumlah Menu:</span><span>${summary.total_items}</span></div>
+                        <div><span>Total Porsi:</span><span>${summary.total_qty}</span></div>
+                        <div class="total"><span>Total Bayar:</span>
+                            <span>Rp ${new Intl.NumberFormat('id-ID').format(summary.total_price)}</span>
+                        </div>
+                    </div>
+
+                    <div class="cart-actions">
+                        <button type="submit" class="pay-btn">Bayar</button>
+                    </div>
+                </form>
+
+                <form action="/order/reset" method="POST" class="reset-form" style="margin-top:12px;">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="reset-btn" style="width:100%;">Reset</button>
+                </form>
+            `;
+            $("#cart-footer").html(footerHtml);
         }
-    });
+        
+        $(".cart-items").html(itemsHtml);
+    }
+});
 </script>
 @endsection

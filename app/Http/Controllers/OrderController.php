@@ -70,7 +70,7 @@ class OrderController extends Controller
     }
 
     // Update jumlah item
-    public function update(Request $request, $id)
+        public function update(Request $request, $id)
     {
         $cart = session()->get('cart', []);
 
@@ -177,5 +177,15 @@ class OrderController extends Controller
             }
         }
         return redirect()->route('menuhabis')->with('success', 'Status menu berhasil diperbarui.');
+    }
+    
+    public function category($id)
+    {
+        $query = Menu::query();
+        if ($id !== 'all') {
+            $query->where('category_id', $id);
+        }
+        $menus = $query->get(['id','nama','harga','gambar','status_id']);
+        return response()->json($menus);
     }
 }

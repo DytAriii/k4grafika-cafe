@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Menu</title>
-    <link rel="stylesheet" href="{{ asset('css/create-menu.css') }}">
+    <!-- load CSS dari public/css -->
+    <link rel="stylesheet" href="{{ asset('css/create-menu.css') }}?v={{ time() }}">
 </head>
 <body>
     <div class="container">
@@ -16,13 +17,13 @@
             @csrf
             
             <div class="form-group">
-                <label>Name</label>
+                <label>Nama</label>
                 <input type="text" name="nama" required>
             </div>
             
             <div class="form-row">
                 <div class="form-group half">
-                    <label>Category</label>
+                    <label>Kategori</label>
                     <select name="categories_id" required>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->nama_category }}</option>
@@ -31,13 +32,13 @@
                 </div>
                 
                 <div class="form-group half">
-                    <label>Price</label>
+                    <label>Harga</label>
                     <input type="number" name="harga" required>
                 </div>
             </div>
             
             <div class="form-group">
-                <label>Photo</label>
+                <label>Foto</label>
                 <input type="file" name="gambar" accept="image/*" required>
             </div>
             
