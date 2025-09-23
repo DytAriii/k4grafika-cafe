@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
@@ -10,7 +11,7 @@ use App\Models\Menu;
 class TransaksiController extends Controller
 {
     /**
-     * Simpan transaksi langsung bayar
+     * Simpan transaksi langsung bayar (tanpa halaman payment)
      */
     public function store(Request $request)
     {
@@ -26,9 +27,9 @@ class TransaksiController extends Controller
 
         // Simpan transaksi utama
         $transaksi = Transaksi::create([
-            'nama_pelanggan'     => $request->nama_pelanggan,
-            'metode_pembayaran'  => $request->metode_pembayaran,
-            'total'              => $total,
+            'nama_customer' => $request->nama_customer,
+            'catatan'       => $request->catatan ?? null,
+            'total'         => $total,
         ]);
 
         // Simpan detail transaksi
@@ -57,22 +58,22 @@ class TransaksiController extends Controller
         'bayar'  => 'nullable|numeric',
     ]);
 
-    // Ambil data dari session
-    $data = session('payment_data');
-    if (!$data) {
-        return redirect()->route('kasir.order')->with('error', 'Data pembayaran tidak ditemukan.');
-    }
+        // Ambil data dari session
+        $data = session('payment_data');
+        if (!$data) {
+            return redirect()->route('kasir.order')->with('error', 'Data pembayaran tidak ditemukan.');
+        }
 
     // Hitung total berdasarkan session cart (trusted server-side calculation)
     $total = collect($data['cart'])->sum(fn($i) => $i['harga'] * $i['qty']);
 
-    // Validasi jika cash wajib bayar cukup
-    if ($request->metode === 'cash') {
-        $bayar = $request->bayar ?? 0;
-        if ($bayar < $total) {
-            return back()->with('error', 'Nominal pembayaran cash kurang dari total.');
+        // Validasi jika cash wajib bayar cukup
+        if ($request->metode === 'cash') {
+            $bayar = $request->bayar ?? 0;
+            if ($bayar < $total) {
+                return back()->with('error', 'Nominal pembayaran cash kurang dari total.');
+            }
         }
-    }
 
     // invoice
     $invoice = 'INV-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(5));
@@ -100,8 +101,8 @@ class TransaksiController extends Controller
         ]);
     }
 
-    // Bersihkan session
-    session()->forget(['cart', 'payment_data']);
+        // Bersihkan session
+        session()->forget(['cart', 'payment_data']);
 
     return redirect()->route('kasir.receipt', $transaksi->id);
 }
@@ -121,10 +122,10 @@ class TransaksiController extends Controller
         });
     }
 
-    // filter tanggal
-    if ($request->filled('date')) {
-        $query->whereDate('created_at', $request->date);
-    }
+        // filter tanggal
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
 
     // filter metode pembayaran
     if ($request->filled('metode')) {
@@ -142,9 +143,12 @@ class TransaksiController extends Controller
     return view('kasir.history', compact('transaksis'));
 }
 
+    /**
+     * Cetak struk
+     */
     public function receipt($id)
-{
-    $transaksi = Transaksi::with('details.menu')->findOrFail($id);
-    return view('kasir.receipt', compact('transaksi'));
-}
+    {
+        $transaksi = Transaksi::with('details.menu')->findOrFail($id);
+        return view('kasir.receipt', compact('transaksi'));
+    }
 }

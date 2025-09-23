@@ -12,10 +12,11 @@ use App\Http\Controllers\LaporanController;
 
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
-Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory'])->name('order.category');
-Route::get('/kasir/history', [KasirController::class, 'history'])->name('kasir.history');
-Route::get('/menu/menuHabis', [OrderController::class, 'menuHabis'])->name('menu.habis');
-Route::post('/menu/updateStatus', [OrderController::class, 'updateMenuStatus'])->name('menu.updateStatus');
+
+Route::get('/order/category/{id}', [KasirController::class, 'getMenusByCategory']);
+Route::get('/kasir/history', [TransaksiController::class, 'history'])->name('kasir.history');
+Route::get('/menu/menuHabis/', [OrderController::class, 'menuHabis'])->name('menuhabis');
+Route::post('/menu/updateStatus', [OrderController::class, 'updateMenuStatus'])->name('menuhabis.update');
 Route::get('/kasir/payment', [KasirController::class, 'payment'])->name('kasir.payment');
 Route::post('/kasir/payment/process', [TransaksiController::class, 'processPayment'])->name('kasir.payment.process');
 Route::get('/kasir/receipt/{id}', [TransaksiController::class, 'receipt'])->name('kasir.receipt');
