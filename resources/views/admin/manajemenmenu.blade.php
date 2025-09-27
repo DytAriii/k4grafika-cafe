@@ -2,11 +2,38 @@
 
 @section('content')
 <div class="menu-container">
-    <h1 class="page-title">Manajemen Menu</h1>
+   
 
-    {{-- Tombol Tambah Menu --}}
-    <div class="menu-actions">
-        <button class="btn btn-add" id="openModal">+ Tambah Menu</button>
+    {{-- Controls: Search, Filter, dan Tombol Tambah --}}
+    <div class="menu-controls">
+        <div class="controls-left">
+            <div class="search-box">
+                <input type="text" id="searchMenu" placeholder="Cari menu..." class="search-input">
+                
+            </div>
+            
+            <div class="filter-box">
+                <select id="categoryFilter" class="filter-select">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->nama_category }}">{{ $category->nama_category }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="filter-box">
+                <select id="statusFilter" class="filter-select">
+                    <option value="">Semua Status</option>
+                    @foreach($statuses as $status)
+                        <option value="{{ $status->nama_status }}">{{ $status->nama_status }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="controls-right">
+            <button class="btn btn-add" id="openModal">+ Tambah Menu</button>
+        </div>
     </div>
 
     {{-- Tabel Menu --}}
@@ -14,21 +41,29 @@
         <table class="menu-table">
             <thead>
                 <tr>
+                    <th>No</th>
                     <th>Menu Name</th>
                     <th>Category</th>
                     <th>Price</th>
                     <th>Image</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach ($menu as $mn)
+            <tbody id="menuTableBody">
+                @foreach ($menu as $index => $mn)
                 <tr>
+                    <td>{{ $index + 1 }}</td>
                     <td>{{ $mn->nama }}</td>
                     <td>{{ $mn->category->nama_category ?? '-' }}</td>
                     <td>Rp{{ number_format($mn->harga, 0, ',', '.') }}</td>
                     <td>
                         <img src="{{ asset('storage/' . $mn->gambar) }}" alt="{{ $mn->nama }}" width="70">
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ strtolower($mn->status->nama_status ?? 'active') }}">
+                            {{ $mn->status->nama_status ?? 'Active' }}
+                        </span>
                     </td>
                     <td class="action-buttons">
                         <button class="btn-edit" 
@@ -49,6 +84,18 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    {{-- Pagination --}}
+    <div class="pagination-wrapper">
+        <div class="pagination-info">
+            <span>Menampilkan <span id="startItem">1</span> - <span id="endItem">10</span> dari <span id="totalItems">{{ count($menu) }}</span> items</span>
+        </div>
+        <div class="pagination-controls">
+            <button class="pagination-btn" id="prevPage" disabled>Previous</button>
+            <div class="pagination-numbers" id="paginationNumbers"></div>
+            <button class="pagination-btn" id="nextPage">Next</button>
+        </div>
     </div>
 </div>
 
@@ -235,5 +282,120 @@ document.getElementById('closeEditModal').onclick = () => {
 document.getElementById('closeEditModal2').onclick = () => {
     document.getElementById('editMenuModal').style.display = "none";
 }
+
+// Search, Filter, dan Pagination
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchMenu');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const tableBody = document.getElementById('menuTableBody');
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    
+    let filteredRows = [...rows];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategory = categoryFilter.value.toLowerCase();
+        const selectedStatus = statusFilter.value.toLowerCase();
+
+        filteredRows = rows.filter(row => {
+            const menuName = row.cells[1].textContent.toLowerCase();
+            const category = row.cells[2].textContent.toLowerCase();
+            const status = row.cells[5].textContent.toLowerCase();
+
+            return menuName.includes(searchTerm) &&
+                   (selectedCategory === '' || category.includes(selectedCategory)) &&
+                   (selectedStatus === '' || status.includes(selectedStatus));
+        });
+
+        currentPage = 1;
+        updateTable();
+        updatePagination();
+    }
+
+    function updateTable() {
+        // Hide all rows
+        rows.forEach(row => row.style.display = 'none');
+
+        // Show filtered rows for current page
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentRows = filteredRows.slice(startIndex, endIndex);
+
+        currentRows.forEach((row, index) => {
+            row.style.display = '';
+            // Update numbering
+            row.cells[0].textContent = startIndex + index + 1;
+        });
+
+        // Update pagination info
+        const totalItems = filteredRows.length;
+        const startItem = totalItems > 0 ? startIndex + 1 : 0;
+        const endItem = Math.min(endIndex, totalItems);
+        
+        document.getElementById('startItem').textContent = startItem;
+        document.getElementById('endItem').textContent = endItem;
+        document.getElementById('totalItems').textContent = totalItems;
+    }
+
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+        const paginationNumbers = document.getElementById('paginationNumbers');
+        const prevBtn = document.getElementById('prevPage');
+        const nextBtn = document.getElementById('nextPage');
+
+        // Clear pagination numbers
+        paginationNumbers.innerHTML = '';
+
+        // Create page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = 'pagination-number';
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => {
+                currentPage = i;
+                updateTable();
+                updatePagination();
+            };
+            
+            if (i === currentPage) {
+                pageBtn.classList.add('active');
+            }
+            
+            paginationNumbers.appendChild(pageBtn);
+        }
+
+        // Update prev/next buttons
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+        prevBtn.onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateTable();
+                updatePagination();
+            }
+        };
+
+        nextBtn.onclick = () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateTable();
+                updatePagination();
+            }
+        };
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterTable);
+    categoryFilter.addEventListener('change', filterTable);
+    statusFilter.addEventListener('change', filterTable);
+
+    // Initialize
+    updateTable();
+    updatePagination();
+});
 </script>
 @endsection

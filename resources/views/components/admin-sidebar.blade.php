@@ -1,11 +1,13 @@
-<div class="sidebar">
+<aside>
+    <div class="sidebar">
     <div class="sidebar-header">
-        <img src="{{ asset('images/logok4cafe.png') }}" alt="Logo K4 Cafe" class="sidebar-logo">
+        <img src="{{ asset('images/Judul.png') }}" alt="Logo K4 Cafe" class="sidebar-logo">
+
     </div>
     <ul class="sidebar-menu">
         <li>
             <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <i class="fas fa-tachometer-alt icon"></i> Dashboard
+                <i class="fas fa-border-all icon"></i> Dashboard
             </a>
         </li>
         <li>
@@ -26,10 +28,11 @@
     </ul>
     <div class="sidebar-footer">
         <a href="{{ route('logout') }}">
-            <i class="fas fa-sign-out-alt icon"></i> Logout
+            <i class="fas fa-sign-out-alt icon" style="padding-right: 10px;"></i> Logout
         </a>
     </div>
 </div>
+</aside>
 
 {{-- Panggil file CSS --}}
 <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">

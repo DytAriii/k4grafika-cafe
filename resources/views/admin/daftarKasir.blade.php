@@ -2,39 +2,43 @@
 
 @section('content')
 <div class="kasir-container">
+    
+
     {{-- Tombol Tambah Kasir --}}
     <div class="kasir-header">
         <button class="btn-tambah" onclick="openModal()">+ Tambah Kasir</button>
     </div>
 
     {{-- Tabel Kasir --}}
-    <table class="kasir-table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Username</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $index => $usr)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $usr->username }}</td>
-                <td class="aksi">
-                    <button class="btn-edit" 
-                            onclick="openEditModal('{{ $usr->id }}', '{{ $usr->username }}')">
-                        Edit
-                    </button>
-                    <a href="{{ route('kasir.delete', $usr->id) }}" 
-                       onclick="return confirm('Yakin ingin menghapus?')">
-                        <button class="btn-delete">Hapus</button>
-                    </a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table class="kasir-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Username</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($users as $index => $usr)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $usr->username }}</td>
+                    <td class="aksi">
+                        <button class="btn-edit" 
+                                onclick="openEditModal('{{ $usr->id }}', '{{ $usr->username }}')">
+                            Edit
+                        </button>
+                        <a href="{{ route('kasir.delete', $usr->id) }}" 
+                           onclick="return confirm('Yakin ingin menghapus?')">
+                            <button class="btn-delete">Hapus</button>
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {{-- Modal Tambah Kasir --}}

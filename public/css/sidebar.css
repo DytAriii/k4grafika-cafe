@@ -1,11 +1,16 @@
+body {
+    margin: 0;
+    font-family: Poppins, sans-serif;
+    padding-left: 240px;
+}
+
 .sidebar {
     width: 240px;
-    height: 100vh;              /* tinggi penuh layar */
-    background-color: #F5F5F0;  /* putih cream */
-    color: #3E2723;
+    height: 100%;              /* tinggi penuh layar */
+    background-color: #FFF;  /* putih cream */
     display: flex;
     flex-direction: column;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Poppins, sans-serif;
     position: fixed;
     top: 0;
     left: 0;
@@ -16,23 +21,23 @@
 
 /* Header Sidebar */
 .sidebar-header {
-    background-color: #F5F5F0;
+    display: flex;
+    background-color: #FFF;
     text-align: center;
-    padding: 20px 10px;
-    border-bottom: 1px solid rgba(62, 39, 35, 0.2);
+    padding: 0 10px;
+
 }
 
 .sidebar-header h2 {
     font-size: 22px;
     font-weight: bold;
     margin: 0;
-    color: #3E2723;
 }
 
 .sidebar-logo {
-    max-width: 120px;
+    max-width: 200px;
     height: auto;
-    max-height: 60px;
+    max-height: 100px;
     object-fit: contain;
 }
 
@@ -45,15 +50,16 @@
     overflow-y: auto; /* hanya bagian menu yg scroll */
 }
 
-.sidebar-menu li {
+/* .sidebar-menu li {
     margin: 5px 0;
-}
+} */
 
 .sidebar-menu a {
     display: flex;
     align-items: center;
-    padding: 12px 20px;
-    color: #3E2723; /* teks coklat */
+    padding: 12px 10px;
+    margin: 0 10px;
+    color: #424242; /* teks coklat */
     text-decoration: none;
     font-size: 15px;
     transition: background 0.3s ease, color 0.3s ease;
@@ -63,8 +69,8 @@
 
 .sidebar-menu a:hover,
 .sidebar-menu a.active {
-    background-color: #74512D; /* coklat */
-    color: #fff; /* teks putih saat hover */
+    background-color: rgba(167, 76, 41, 0.20); 
+    color: #892A06; 
 }
 
 .sidebar-menu .icon {
@@ -74,41 +80,38 @@
 
 /* Footer Sidebar */
 .sidebar-footer {
-    padding: 15px 20px;
-    border-top: 1px solid rgba(62, 39, 35, 0.2);
+    padding: 20px 0;
+    
+
 }
 
-.sidebar-footer a {
+.sidebar-footer a{
     display: flex;
     align-items: center;
-    color: #3E2723;
+    padding: 12px 10px;
+    margin: 0 10px;
+    color: #424242; /* teks coklat */
     text-decoration: none;
     font-size: 15px;
     transition: background 0.3s ease, color 0.3s ease;
     border-radius: 8px;
+    font-weight: 500;
+
 }
 
 .sidebar-footer a:hover {
-    background-color: #74512D; /* coklat */
-    color: #fff;
+    background-color: rgba(167, 76, 41, 0.20); 
+    color: #892A06;
 }
 
 /* Sembunyikan scrollbar agar clean (opsional) */
-.sidebar-menu::-webkit-scrollbar {
+/* .sidebar-menu::-webkit-scrollbar {
     width: 6px;
 }
 .sidebar-menu::-webkit-scrollbar-thumb {
     background: rgba(62, 39, 35, 0.3);
     border-radius: 4px;
-}
-
-/* Layout global */
-body {
-    margin: 0;
-    padding-left: 240px; /* offset sesuai sidebar */
-    background-color: #f9f9f9;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+} */
 
 /* Konten utama */
 .main-content {

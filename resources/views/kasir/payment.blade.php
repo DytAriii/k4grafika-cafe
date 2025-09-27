@@ -60,24 +60,34 @@
   }
   #cash-display, #change-display { font-size: 1rem; font-weight: 600; }
 
-  /* Grid Numpad */
-  .grid-buttons {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  .grid-buttons .btn {
-    font-size: 1rem;
-    font-weight: 600;
-    height: 60px;       /* ukuran standar */
-    border-radius: var(--radius);
-  }
+ /* Keypad Grid */
+.grid-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.grid-buttons .btn {
+  font-size: 1.1rem;
+  font-weight: bold;
+  height: 60px;
+  border-radius: var(--radius);
+}
+.grid-buttons .btn-light {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+}
+.grid-buttons .btn-clear {
+  background: #f8d7da;
+  border: 1px solid #f1aeb5;
+  color: #842029;
+}
 
-  /* QRIS */
   .qris-img {
     max-width: 220px;
     border-radius: var(--radius);
-    margin: 20px 0;
+    margin: 20px auto;   /* auto kiri kanan → center */
+    display: block;      /* biar margin auto jalan */
     box-shadow: var(--shadow);
   }
 
@@ -94,21 +104,27 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 580px; /* ambil tinggi terbesar (cash) */
 }
 
-/* Payment method isi ikut penuh */
 .payment-method {
   display: none;
+  flex: 1;
   flex-direction: column;
-  gap: 15px;
-  flex: 1;      /* isi memanjang */
-  height: 100%; /* biar tingginya ikut card */
+  justify-content: space-between; /* biar tombol confirm tetap di bawah */
 }
 
 .payment-method.show {
   display: flex;
 }
 
+/* Area konten tengah (biar QRIS & Cash sama proporsional) */
+.payment-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 </style>
 
 <div class="payment-container">
@@ -153,50 +169,50 @@
       </div>
 
       {{-- Cash --}}
-      <div id="cash-method" class="payment-method show">
-        <div>
-          <div class="display-area">
-            <div id="cash-display">Cash: Rp0</div>
-            <div id="change-display" style="color: var(--success);">Kembali: Rp0</div>
-          </div>
+<div id="cash-method" class="payment-method show">
+  <div class="payment-body">
+    <div class="display-area">
+      <div id="cash-display">Cash: Rp0</div>
+      <div id="change-display" style="color: var(--success);">Kembali: Rp0</div>
+    </div>
 
-          <div class="grid-buttons">
-            @foreach(['1','2','3','4','5','6','7','8','9','00','0','C'] as $b)
-              <button type="button" 
-                class="btn {{ $b === 'C' ? 'btn-danger' : 'btn-light' }}"
-                onclick="{{ $b === 'C' ? 'clearCash()' : "appendCash('$b')" }}">
-                {{ $b }}
-              </button>
-            @endforeach
-          </div>
-        </div>
+    <div class="grid-buttons">
+  @foreach(['1','2','3','4','5','6','7','8','9','00','0','C'] as $b)
+    <button type="button"
+      class="btn {{ $b === 'C' ? 'btn-clear' : 'btn-light' }}"
+      onclick="{{ $b === 'C' ? 'clearCash()' : "appendCash('$b')" }}">
+      {{ $b }}
+    </button>
+  @endforeach
+</div>
+  </div>
 
-        <form id="confirm-cash-form" action="{{ route('kasir.payment.process') }}" method="POST" class="mt-2">
-          @csrf
-          <input type="hidden" name="metode" value="cash">
-          <input type="hidden" name="bayar" id="input-bayar" value="0">
-          <button type="button" onclick="validateCash()" class="btn btn-primary w-100">
-            Konfirmasi Pembayaran (Cash)
-          </button>
-        </form>
-      </div>
+  <form id="confirm-cash-form" action="{{ route('kasir.payment.process') }}" method="POST">
+    @csrf
+    <input type="hidden" name="metode" value="cash">
+    <input type="hidden" name="bayar" id="input-bayar" value="0">
+    <button type="button" onclick="validateCash()" class="btn btn-primary w-100 mt-3">
+      Konfirmasi Pembayaran (Cash)
+    </button>
+  </form>
+</div>
 
-      {{-- QRIS --}}
-      <div id="qris-method" class="payment-method">
-        <div class="text-center" style="margin-top:auto; margin-bottom:auto;">
-          <p>Scan QRIS berikut untuk menyelesaikan pembayaran:</p>
-          <img src="{{ asset('images/qris-cafe.png') }}" alt="QRIS" class="qris-img">
-          <p><strong>Total Bayar: Rp{{ number_format($payment['total'],0,',','.') }}</strong></p>
-        </div>
+{{-- QRIS --}}
+<div id="qris-method" class="payment-method">
+  <div class="payment-body text-center">
+    <p>Scan QRIS berikut untuk menyelesaikan pembayaran:</p>
+    <img src="{{ asset('images/qris-cafe.png') }}" alt="QRIS" class="qris-img">
+    <p><strong>Total Bayar: Rp{{ number_format($payment['total'],0,',','.') }}</strong></p>
+  </div>
 
-        <form id="confirm-qris-form" action="{{ route('kasir.payment.process') }}" method="POST" class="mt-2">
-          @csrf
-          <input type="hidden" name="metode" value="qris">
-          <button type="submit" class="btn btn-primary w-100">
-            Konfirmasi Pembayaran (QRIS)
-          </button>
-        </form>
-      </div>
+  <form id="confirm-qris-form" action="{{ route('kasir.payment.process') }}" method="POST">
+    @csrf
+    <input type="hidden" name="metode" value="qris">
+    <button type="submit" class="btn btn-primary w-100 mt-3">
+      Konfirmasi Pembayaran (QRIS)
+    </button>
+  </form>
+</div>
     </div>
   </div>
 </div>
@@ -241,4 +257,5 @@
 
     updateDisplay();
 </script>
+  
 @endsection

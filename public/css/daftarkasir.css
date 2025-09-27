@@ -3,75 +3,137 @@
     background: #faf9f7;
     min-height: 100vh;
     font-family: 'Poppins', sans-serif;
+    padding-top: 80px;  Space untuk topbar
+    /*margin: 0 auto;  Center container */
+    width: 100%;
 }
 
+/* Page Title */
+.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-title h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #892A06;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Header dengan button */
 .kasir-header {
-    margin-bottom: 18px;
-    text-align: left; /* biar tombol sejajar kiri */
+    margin-bottom: 25px;
+    text-align: left;
 }
 
 .btn-tambah {
     display: inline-block;
-    padding: 8px 16px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 25px;
     color: #fff;
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
-    background: #6a4e42;
-    transition: 0.3s;
+    background: #892A06;
+    transition: all 0.3s ease;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
 }
+
 .btn-tambah:hover {
-    background: #4a342b;
+    background: #892A06;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Table Container - untuk responsiveness */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
 }
 
 /* Table */
 .kasir-table {
-    width: 100%; /* pastikan full */
+    width: 100%;
+    min-width: 1086px; /* Minimum width untuk table */
     border-collapse: collapse;
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
 .kasir-table th {
-    background: #6a4e42;
+    background: #892A06;
     color: #fff;
-    padding: 12px 14px;
+    padding: 16px 20px;
     text-align: left;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .kasir-table td {
-    padding: 10px 14px;
+    padding: 14px 20px;
     border-bottom: 1px solid #eee;
     font-size: 14px;
     color: #333;
+    vertical-align: middle;
+}
+
+.kasir-table tr:nth-child(even) {
+    background-color: #f8f8f8;
 }
 
 .kasir-table tr:last-child td {
     border-bottom: none;
 }
 
-/* Aksi */
+/* Column widths */
+.kasir-table th:nth-child(1),
+.kasir-table td:nth-child(1) {
+    width: 80px;
+    text-align: center;
+}
+
+.kasir-table th:nth-child(2),
+.kasir-table td:nth-child(2) {
+    width: auto; /* Takes remaining space */
+    min-width: 200px;
+}
+
+.kasir-table th:nth-child(3),
+.kasir-table td:nth-child(3) {
+    width: 200px;
+    text-align: center;
+}
+
+/* Aksi buttons */
 .aksi {
     display: flex;
     gap: 10px;
     justify-content: center;
+    align-items: center;
 }
 
 .btn-edit, .btn-delete {
-    padding: 6px 12px;
+    padding: 8px 16px;
     font-size: 13px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
 }
 
 /* Edit Button */
@@ -79,8 +141,11 @@
     background: #d1a257;
     color: #fff;
 }
+
 .btn-edit:hover {
     background: #b9883d;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(209, 162, 87, 0.4);
 }
 
 /* Delete Button */
@@ -88,6 +153,50 @@
     background: #c94c4c;
     color: #fff;
 }
+
 .btn-delete:hover {
     background: #a63838;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(201, 76, 76, 0.4);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .kasir-container {
+        padding: 15px;
+        padding-top: 70px; /* Space untuk topbar di mobile */
+    }
+    
+    .page-title h1 {
+        font-size: 24px;
+    }
+    
+    .kasir-table {
+        min-width: 600px;
+    }
+    
+    .kasir-table th,
+    .kasir-table td {
+        padding: 12px 15px;
+    }
+    
+    .btn-tambah {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .aksi {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .btn-edit,
+    .btn-delete {
+        width: 100%;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
 }

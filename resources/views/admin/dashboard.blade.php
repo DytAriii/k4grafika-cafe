@@ -8,8 +8,7 @@
 }
 .chart-card--small canvas {
     width: 100% !important;
-    /* height: 320px !important;  tinggi tetap agar Chart.js menggambar sesuai 
-    max-height: 420px; */
+    max-height: 320px; /* batasi tinggi */
 }
 </style>
 @endpush
@@ -76,30 +75,8 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right'
-                        }
-                    }
-                }
-            });
-        }
-
-        // Grafik Dine in vs Take Away (Dummy)
-        const dineTakeAwayEl = document.getElementById('dineTakeAwayChart');
-        if (dineTakeAwayEl) {
-            const ctxDineTakeAway = dineTakeAwayEl.getContext('2d');
-            new Chart(ctxDineTakeAway, {
-                type: 'pie',
-                data: {
-                    labels: ['Dine In', 'Take Away'],
-                    datasets: [{
-                        data: [70, 30],
-                        backgroundColor: ['#6a994e', '#f2cc8f']
-                    }]
-                },
-                options: {
-                    responsive: true,
+                    maintainAspectRatio: false, // <-- tambahkan
+                    aspectRatio: 1.2,           // <-- sesuaikan (opsional)
                     plugins: {
                         legend: {
                             position: 'right'
@@ -118,9 +95,7 @@
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 @section('content')
 <div class="dashboard-container">
-    <h1 class="dashboard-title">Dashboard</h1>
-
-    <!-- Bagian Statistik -->
+        <!-- Bagian Statistik -->
     <div class="stats-row">
         <div class="stat-card">
             <h3>Total Transaksi Hari Ini</h3>
@@ -162,14 +137,9 @@
     </div>
 
     <div class="charts-row">
-        <div class="chart-card">
+        <div class="chart-card chart-card--small">
             <h3>Grafik Menu Terlaris</h3>
             <canvas id="topMenuChart"></canvas>
-        </div>
-
-        <div class="chart-card">
-            <h3>Grafik Rasio Dine in/Take Away</h3>
-            <canvas id="dineTakeAwayChart"></canvas>
         </div>
     </div>
 </div>

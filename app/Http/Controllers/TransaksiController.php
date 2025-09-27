@@ -85,7 +85,7 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::create([
             'invoice' => $invoice,
             'nama_customer' => $data['nama_customer'],
-            'order_type' => $data['order_type'],
+            'catatan' => $data['catatan'] ?? null,
             'total' => $total,
             'metode_pembayaran' => $request->metode,
             'bayar' => $request->metode === 'cash' ? $request->bayar : null,

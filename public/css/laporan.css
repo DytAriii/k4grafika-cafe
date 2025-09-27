@@ -1,67 +1,546 @@
-body {
+/* Container utama */
+.laporan-container {
     font-family: 'Poppins', sans-serif;
+    padding: 30px;
+    padding-top: 80px;  Space untuk topbar
     background: #f9f9f9;
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Judul halaman */
+.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-title h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #892A06;
     margin: 0;
-    padding: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.container {
-    max-width: 1000px;
-    margin: auto;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.header {
+/* Controls: Filter, Search, dan Tombol */
+.laporan-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 25px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.controls-left {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.controls-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Filter Box */
+.filter-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 200px;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.filter-select {
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.filter-select:focus {
+    border-color: #892A06;
+    box-shadow: 0 0 0 3px rgba(160, 82, 45, 0.1);
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+    min-width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.search-input:focus {
+    border-color: #892A06;
+    box-shadow: 0 0 0 3px rgba(160, 82, 45, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #666;
+}
+
+/* Tombol Export dan Print */
+.btn {
+    padding: 12px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-export {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.btn-export:hover {
+    background: #45A049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.btn-print {
+    background: #2196F3;
+    color: #fff;
+}
+
+.btn-print:hover {
+    background: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+/* Info Card */
+.kasir-info-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid #892A06;
+}
+
+.info-row {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+}
+
+.badge-count {
+    background: #892A06;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    display: inline-block;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* Wrapper tabel */
+.table-wrapper {
+    background: #fff;
+    border-radius: 12px;
+    overflow-x: auto;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
     margin-bottom: 20px;
 }
 
-.header h1 {
-    font-size: 22px;
-    color: #333;
-}
-
-.filter select {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-
-.info {
-    margin-bottom: 15px;
-    font-size: 14px;
-    color: #555;
-}
-
+/* Tabel */
 .laporan-table {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
-    margin-top: 15px;
+}
+
+.laporan-table thead {
+    background: #892A06;
 }
 
 .laporan-table th {
-    background: #a0522d;
+    padding: 16px 18px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
     color: #fff;
-    padding: 10px;
-    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .laporan-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    padding: 14px 18px;
+    text-align: center;
     font-size: 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
 }
 
 .laporan-table tr:nth-child(even) {
-    background: #f2f2f2;
+    background-color: #f8f8f8;
 }
 
-.laporan-table tr:hover {
-    background: #ffe5d9;
+.laporan-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Column widths */
+.laporan-table th:nth-child(1),
+.laporan-table td:nth-child(1) {
+    width: 60px;
+}
+
+.laporan-table th:nth-child(2),
+.laporan-table td:nth-child(2) {
+    width: 130px;
+}
+
+.laporan-table th:nth-child(3),
+.laporan-table td:nth-child(3) {
+    width: auto;
+    min-width: 200px;
+    text-align: left;
+}
+
+.laporan-table th:nth-child(4),
+.laporan-table td:nth-child(4) {
+    width: 150px;
+}
+
+.laporan-table th:nth-child(5),
+.laporan-table td:nth-child(5) {
+    width: 120px;
+}
+
+.laporan-table th:nth-child(6),
+.laporan-table td:nth-child(6) {
+    width: 140px;
+}
+
+/* Cell styling */
+.invoice-cell {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #2196F3;
+}
+
+.menu-cell {
+    text-align: left !important;
+}
+
+.total-cell {
+    font-weight: 600;
+    color: #4CAF50;
+}
+
+.time-cell {
+    font-size: 13px;
+    color: #666;
+}
+
+/* Payment Badge */
+.payment-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.payment-cash {
+    background: #e8f5e8;
+    color: #2e7d32;
+    border: 1px solid #4caf50;
+}
+
+.payment-card {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #2196f3;
+}
+
+.payment-qris {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #9c27b0;
+}
+
+.payment-transfer {
+    background: #fff3e0;
+    color: #ef6c00;
+    border: 1px solid #ff9800;
+}
+
+/* Summary Card */
+.summary-card {
+    background: linear-gradient(135deg, #a0522d, #892A06);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+    color: #fff;
+}
+
+.summary-row {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+}
+
+.summary-label {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.summary-value {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.total-revenue {
+    font-size: 24px;
+    color: #FFD700;
+}
+
+/* Pagination */
+.pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #666;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #892A06;
+    color: #fff;
+    border-color: #892A06;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-numbers {
+    display: flex;
+    gap: 5px;
+}
+
+.pagination-number {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    min-width: 40px;
+}
+
+.pagination-number:hover {
+    background: #f0f0f0;
+}
+
+.pagination-number.active {
+    background: #892A06;
+    color: #fff;
+    border-color: #892A06;
+}
+
+/* Print Styles */
+@media print {
+    .laporan-controls,
+    .pagination-wrapper {
+        display: none;
+    }
+    
+    .laporan-container {
+        padding: 20px;
+        padding-top: 20px;
+    }
+    
+    .page-title h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .laporan-table {
+        font-size: 12px;
+    }
+    
+    .summary-card {
+        background: #892A06 !important;
+       
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .laporan-container {
+        padding: 15px;
+        padding-top: 70px;
+    }
+    
+    .page-title h1 {
+        font-size: 24px;
+    }
+    
+    .laporan-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .controls-left {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .controls-right {
+        justify-content: center;
+    }
+    
+    .search-box,
+    .filter-box {
+        min-width: auto;
+    }
+    
+    .filter-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .summary-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .laporan-table {
+        min-width: 800px;
+    }
+    
+    .pagination-wrapper {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .pagination-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .btn {
+        font-size: 12px;
+        padding: 10px 12px;
+    }
+    
+    .summary-value {
+        font-size: 16px;
+    }
+    
+    .total-revenue {
+        font-size: 20px;
+    }
+    
+    .laporan-table th,
+    .laporan-table td {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
 }

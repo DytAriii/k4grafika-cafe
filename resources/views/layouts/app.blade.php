@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        ul, li { list-style: none; margin: 0; padding: 0; }
+        ul,
+        li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
 
         .container {
             display: flex;
@@ -19,7 +25,7 @@
         aside {
             width: 80px;
             background: #fff;
-            box-shadow: 2px 0 6px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -27,7 +33,7 @@
         }
 
         .logo img {
-            width: 70px;     
+            width: 70px;
             height: auto;
             display: block;
             margin: 0 auto 40px auto;
@@ -51,7 +57,7 @@
             align-items: center;
             justify-content: center;
             padding: 10px 0;
-            width: 70%; 
+            width: 70%;
             transition: 0.2s;
             text-align: center;
             line-height: 1.2;
@@ -97,44 +103,53 @@
         }
 
         .topbar {
-    height: 60px;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    margin: 10px;
-    border-radius: 8px;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    position: relative; /* supaya bisa pakai absolute center */
-}
+            height: 60px;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            border-radius: 8px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            /* supaya bisa pakai absolute center */
+        }
 
-.topbar-left {
-    font-weight: 700;
-    font-size: 18px;
-    color: #A74C3C;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        .topbar-left {
+            font-weight: 700;
+            font-size: 18px;
+            color: #A74C3C;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-.clock {
-    font-size: 18px;          /* sedikit lebih besar */
-    font-weight: 600;         /* semi-bold, tidak terlalu tebal */
-    letter-spacing: 1px;      /* beri jarak antar digit */
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #333;              /* lebih netral, cocok dengan tema */
-}
+        .clock {
+            font-size: 18px;
+            /* sedikit lebih besar */
+            font-weight: 600;
+            /* semi-bold, tidak terlalu tebal */
+            letter-spacing: 1px;
+            /* beri jarak antar digit */
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #333;
+            /* lebih netral, cocok dengan tema */
+        }
 
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: auto; /* dorong ke kanan */
-}
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            /* dorong ke kanan */
+        }
 
-        .profile span { font-weight: 600; }
+        .profile span {
+            font-weight: 600;
+        }
+
         .profile .avatar {
             width: 32px;
             height: 32px;
@@ -148,9 +163,14 @@
             justify-content: center;
         }
 
-        .content { flex: 1; padding: 20px; overflow-y: auto; }
+        .content {
+            flex: 1;
+            padding: 0 20px 20px;
+            overflow-y: auto;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Sidebar -->
@@ -159,13 +179,13 @@
                 <img src="/images/logok4cafe.png" alt="Logo">
             </div>
             <nav>
-               <a href="{{ route('kasir.order') }}" 
-                   class="{{ request()->routeIs('kasir.order') || request()->routeIs('kasir.payment') ? 'active' : '' }}">
+                <a href="{{ route('kasir.order') }}"
+                    class="{{ request()->routeIs('kasir.order') || request()->routeIs('kasir.payment') ? 'active' : '' }}">
                     <i class="fa-solid fa-utensils"></i>
                     <span>Pesan</span>
                 </a>
-                <a href="{{ route('kasir.history') }}" 
-                   class="{{ request()->routeIs('kasir.history') ? 'active' : '' }}">
+                <a href="{{ route('kasir.history') }}"
+                    class="{{ request()->routeIs('kasir.history') ? 'active' : '' }}">
                     <i class="fa fa-clock-rotate-left"></i>
                     <span>Riwayat</span>
                 </a>
@@ -176,7 +196,7 @@
                 </a>
                 <a href="{{ route('kasir.harian') }}"
                     class="{{ request()->routeIs('kasir.harian') ? 'active' : '' }}">
-                    <i class="fa-solid fa-circle-xmark"></i>
+                    <i class="fa-solid fas fa-file-alt icon"></i>
                     <span>Laporan</span>
                 </a>
                 <a href="{{ route('logout') }}" class="logout">
@@ -189,31 +209,31 @@
         <!-- Main -->
         <main>
             <div class="topbar">
-    <div class="topbar-left">
-    <span>
-        @if(request()->routeIs('kasir.order'))
-            Pesanan Baru
-        @elseif(request()->routeIs('kasir.payment'))
-            Pembayaran Pesanan
-        @elseif(request()->routeIs('kasir.history'))
-            Riwayat Pesanan
-        @elseif(request()->routeIs('menuhabis'))
-            Kelola Menu Habis
-            @elseif(request()->routeIs('kasir.harian'))
-            Total penjualan
-        @else
-            Kasir Cafe
-        @endif
-    </span>
-</div>
-    <div id="clock" class="clock"></div>
-    <div class="profile">
-        <span>{{ session('users_username') }}</span>
-        <div class="avatar" id="profile-avatar">
-            {{ strtoupper(substr(session('users_username'), 0, 1)) }}
-        </div>
-    </div>
-</div>
+                <div class="topbar-left">
+                    <span>
+                        @if(request()->routeIs('kasir.order'))
+                        Pesanan Baru
+                        @elseif(request()->routeIs('kasir.payment'))
+                        Pembayaran Pesanan
+                        @elseif(request()->routeIs('kasir.history'))
+                        Riwayat Pesanan
+                        @elseif(request()->routeIs('menuhabis'))
+                        Kelola Menu Habis
+                        @elseif(request()->routeIs('kasir.harian'))
+                        Total penjualan perhari
+                        @else
+                        Kasir Cafe
+                        @endif
+                    </span>
+                </div>
+                <div id="clock" class="clock"></div>
+                <div class="profile">
+                    <span>{{ session('users_username') }}</span>
+                    <div class="avatar" id="profile-avatar">
+                        {{ strtoupper(substr(session('users_username'), 0, 1)) }}
+                    </div>
+                </div>
+            </div>
 
             <div class="content">
                 @yield('content')
@@ -234,4 +254,5 @@
         updateClock();
     </script>
 </body>
+
 </html>

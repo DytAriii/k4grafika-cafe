@@ -1,16 +1,8 @@
 .dashboard-container {
     font-family: 'Poppins', sans-serif;
-    padding: 30px;
+    padding: 20px;
     background: #f9f9f9;
     min-height: 100vh;
-}
-
-.dashboard-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #222;
 }
 
 /* Card Statistik Horizontal */
@@ -19,15 +11,15 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: space-around;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .stat-card {
     flex: 1;
     min-width: 200px;
     max-width: 240px;
-    background: #fff5f2;
-    border-radius: 20px;
+    background: #fff;
+    border-radius: 10px;
     padding: 20px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     text-align: center;
@@ -40,7 +32,7 @@
 
 .stat-card h3 {
     font-size: 15px;
-    color: #a94d28;
+    color: #892A06;
     margin-bottom: 8px;
     font-weight: 600;
 }
@@ -65,12 +57,13 @@
     background: #ffffff;
     border-radius: 20px;
     padding: 20px;
+    margin-bottom: 20px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 .chart-card h3 {
     font-size: 16px;
     font-weight: 600;
-    color: #a94d28;
+    color: #892A06;
     margin-bottom: 15px;
 }
