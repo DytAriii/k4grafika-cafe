@@ -1,15 +1,15 @@
-/* Container utama */
+/* Container Utama */
 .menu-container {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
-    padding-top: 80px;  Space untuk topbar
+    padding-top: 80px;
     background: #f9f9f9;
     min-height: 100vh;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Judul halaman */
+/* Judul Halaman */
 .page-title {
     text-align: center;
     margin-bottom: 30px;
@@ -24,7 +24,7 @@
     letter-spacing: 1px;
 }
 
-/* Controls: Search, Filter, dan Tombol */
+/* Controls: Search, Filter, Tambah Menu */
 .menu-controls {
     display: flex;
     justify-content: space-between;
@@ -117,12 +117,12 @@
 }
 
 .btn-add:hover {
-    background: #892A06;
+    background: #7c1f1f;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(124, 31, 31, 0.3);
 }
 
-/* Wrapper tabel */
+/* Wrapper Tabel */
 .table-wrapper {
     background: #fff;
     border-radius: 12px;
@@ -165,14 +165,18 @@
     background-color: #f8f8f8;
 }
 
+.menu-table tr:hover {
+    background-color: #f0f0f0;
+}
+
 .menu-table tr:last-child td {
     border-bottom: none;
 }
 
-/* Column widths */
+/* Column Width */
 .menu-table th:nth-child(1),
-.menu-table td:nth-child(1) {
-    width: 60px;
+.menu-table td:nth-child(1) { 
+    width: 60px; 
 }
 
 .menu-table th:nth-child(2),
@@ -183,31 +187,31 @@
 }
 
 .menu-table th:nth-child(3),
-.menu-table td:nth-child(3) {
-    width: 120px;
+.menu-table td:nth-child(3) { 
+    width: 120px; 
 }
 
 .menu-table th:nth-child(4),
-.menu-table td:nth-child(4) {
-    width: 100px;
+.menu-table td:nth-child(4) { 
+    width: 100px; 
 }
 
 .menu-table th:nth-child(5),
-.menu-table td:nth-child(5) {
-    width: 80px;
+.menu-table td:nth-child(5) { 
+    width: 80px; 
 }
 
 .menu-table th:nth-child(6),
-.menu-table td:nth-child(6) {
-    width: 100px;
+.menu-table td:nth-child(6) { 
+    width: 100px; 
 }
 
 .menu-table th:nth-child(7),
-.menu-table td:nth-child(7) {
-    width: 150px;
+.menu-table td:nth-child(7) { 
+    width: 150px; 
 }
 
-/* Gambar menu */
+/* Gambar Menu */
 .menu-table td img {
     width: 50px;
     height: 50px;
@@ -223,6 +227,7 @@
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
+    display: inline-block;
 }
 
 .status-active {
@@ -237,7 +242,7 @@
     border: 1px solid #892A06;
 }
 
-/* Tombol aksi */
+/* Tombol Aksi */
 .action-buttons {
     display: flex;
     gap: 8px;
@@ -258,7 +263,6 @@
     cursor: pointer;
 }
 
-/* Edit */
 .btn-edit {
     background-color: #4CAF50;
 }
@@ -269,7 +273,6 @@
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
 }
 
-/* Delete */
 .btn-delete {
     background-color: #E53935;
 }
@@ -309,6 +312,7 @@
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
+    font-family: inherit;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -336,6 +340,8 @@
     font-size: 14px;
     transition: all 0.3s ease;
     min-width: 40px;
+    text-align: center;
+    font-family: inherit;
 }
 
 .pagination-number:hover {
@@ -354,42 +360,42 @@
         padding: 15px;
         padding-top: 70px;
     }
-    
+
     .page-title h1 {
         font-size: 24px;
     }
-    
+
     .menu-controls {
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
     }
-    
+
     .controls-left {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .search-box,
     .filter-box {
         min-width: auto;
     }
-    
+
     .btn-add {
         width: 100%;
         text-align: center;
     }
-    
+
     .menu-table {
         min-width: 700px;
     }
-    
+
     .pagination-wrapper {
         flex-direction: column;
         text-align: center;
         gap: 10px;
     }
-    
+
     .pagination-controls {
         flex-wrap: wrap;
         justify-content: center;
@@ -401,16 +407,22 @@
         flex-direction: column;
         gap: 5px;
     }
-    
+
     .btn-edit,
     .btn-delete {
         width: 80px;
         font-size: 11px;
         padding: 5px 8px;
     }
-    
+
     .menu-table td img {
         width: 40px;
         height: 40px;
+    }
+    
+    .pagination-number {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 35px;
     }
 }

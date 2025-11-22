@@ -2,14 +2,11 @@
 
 @section('content')
 <div class="menu-container">
-   
-
     {{-- Controls: Search, Filter, dan Tombol Tambah --}}
     <div class="menu-controls">
         <div class="controls-left">
             <div class="search-box">
                 <input type="text" id="searchMenu" placeholder="Cari menu..." class="search-input">
-                
             </div>
             
             <div class="filter-box">
@@ -212,11 +209,14 @@
     display: none;
     position: fixed;
     z-index: 999;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
+    left: 0; 
+    top: 0;
+    width: 100%; 
+    height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.5);
 }
+
 .modal-content {
     background: #fff;
     margin: 5% auto;
@@ -226,65 +226,38 @@
     position: relative;
     animation: fadeIn 0.3s ease-in-out;
 }
+
 .close {
     position: absolute;
-    right: 20px; top: 15px;
+    right: 20px; 
+    top: 15px;
     font-size: 24px;
     cursor: pointer;
+    color: #666;
+}
+
+.close:hover {
+    color: #000;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 
-{{-- JS --}}
+{{-- JavaScript --}}
 <script>
-// Tambah Menu Modal
-document.getElementById('openModal').onclick = () => {
-    document.getElementById('menuModal').style.display = "block";
-}
-document.getElementById('closeModal').onclick = () => {
-    document.getElementById('menuModal').style.display = "none";
-}
-document.getElementById('closeModal2').onclick = () => {
-    document.getElementById('menuModal').style.display = "none";
-}
-
-// Edit Menu Modal
-const editButtons = document.querySelectorAll('.btn-edit');
-editButtons.forEach(btn => {
-    btn.onclick = function() {
-        let id = this.dataset.id;
-        let nama = this.dataset.nama;
-        let harga = this.dataset.harga;
-        let category = this.dataset.category;
-        let status = this.dataset.status;
-        let gambar = this.dataset.gambar;
-
-        // Isi form
-        document.getElementById('editNama').value = nama;
-        document.getElementById('editHarga').value = harga;
-        document.getElementById('editCategory').value = category;
-        document.getElementById('editStatus').value = status;
-
-        // Gambar preview
-        let preview = document.getElementById('editPreviewImg');
-        preview.innerHTML = '<img src="'+gambar+'" width="100">';
-
-        // Update action form
-        document.getElementById('editMenuForm').action = '/admin/' + id + '/update-menu';
-
-        // Tampilkan modal
-        document.getElementById('editMenuModal').style.display = "block";
-    }
-});
-
-document.getElementById('closeEditModal').onclick = () => {
-    document.getElementById('editMenuModal').style.display = "none";
-}
-document.getElementById('closeEditModal2').onclick = () => {
-    document.getElementById('editMenuModal').style.display = "none";
-}
-
-// Search, Filter, dan Pagination
 document.addEventListener('DOMContentLoaded', function() {
+    // Modal Elements
+    const menuModal = document.getElementById('menuModal');
+    const editMenuModal = document.getElementById('editMenuModal');
+    const openModalBtn = document.getElementById('openModal');
+    const closeModalBtns = document.querySelectorAll('#closeModal, #closeModal2');
+    const closeEditModalBtns = document.querySelectorAll('#closeEditModal, #closeEditModal2');
+    const editButtons = document.querySelectorAll('.btn-edit');
+
+    // Search, Filter, dan Pagination Elements
     const searchInput = document.getElementById('searchMenu');
     const categoryFilter = document.getElementById('categoryFilter');
     const statusFilter = document.getElementById('statusFilter');
@@ -295,6 +268,59 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     const itemsPerPage = 10;
 
+    // Modal Functions
+    function openModal(modal) {
+        modal.style.display = "block";
+    }
+
+    function closeModal(modal) {
+        modal.style.display = "none";
+    }
+
+    // Tambah Menu Modal
+    openModalBtn.addEventListener('click', () => openModal(menuModal));
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', () => closeModal(menuModal));
+    });
+
+    // Edit Menu Modal
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const nama = this.dataset.nama;
+            const harga = this.dataset.harga;
+            const category = this.dataset.category;
+            const status = this.dataset.status;
+            const gambar = this.dataset.gambar;
+
+            // Isi form
+            document.getElementById('editNama').value = nama;
+            document.getElementById('editHarga').value = harga;
+            document.getElementById('editCategory').value = category;
+            document.getElementById('editStatus').value = status;
+
+            // Gambar preview
+            const preview = document.getElementById('editPreviewImg');
+            preview.innerHTML = `<img src="${gambar}" width="100" alt="Preview">`;
+
+            // Update action form
+            document.getElementById('editMenuForm').action = `/admin/${id}/update-menu`;
+
+            openModal(editMenuModal);
+        });
+    });
+
+    closeEditModalBtns.forEach(btn => {
+        btn.addEventListener('click', () => closeModal(editMenuModal));
+    });
+
+    // Close modal ketika klik di luar
+    window.addEventListener('click', function(event) {
+        if (event.target === menuModal) closeModal(menuModal);
+        if (event.target === editMenuModal) closeModal(editMenuModal);
+    });
+
+    // Search, Filter, dan Pagination Functions
     function filterTable() {
         const searchTerm = searchInput.value.toLowerCase();
         const selectedCategory = categoryFilter.value.toLowerCase();
@@ -354,11 +380,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const pageBtn = document.createElement('button');
             pageBtn.className = 'pagination-number';
             pageBtn.textContent = i;
-            pageBtn.onclick = () => {
+            pageBtn.addEventListener('click', () => {
                 currentPage = i;
                 updateTable();
                 updatePagination();
-            };
+            });
             
             if (i === currentPage) {
                 pageBtn.classList.add('active');
@@ -388,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Event listeners
+    // Event listeners untuk search dan filter
     searchInput.addEventListener('input', filterTable);
     categoryFilter.addEventListener('change', filterTable);
     statusFilter.addEventListener('change', filterTable);

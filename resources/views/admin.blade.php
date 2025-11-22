@@ -11,6 +11,11 @@
             padding: 0;
             background-color: #f9f9f9;
         }
+    .content {
+        width: 100%;
+        padding: 20px 30px; 
+        box-sizing: border-box;
+    }
     </style>
     @stack('styles')
 </head>

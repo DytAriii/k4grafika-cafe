@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
+    protected $table = 'transaksis';
     protected $fillable = [
         'user_id','invoice','nama_customer', 'catatan',
         'total','diskon','bayar','kembali','metode_pembayaran'

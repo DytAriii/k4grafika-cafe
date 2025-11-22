@@ -114,14 +114,17 @@ class KasirController extends Controller
         return view('admin.kasir-create', compact('roles'));
     }
 
-    public function kasirStore(Request $request)
+   public function kasirStore(Request $request)
     {
-        $data = $request->only('username', 'roles_id');
-        $data['password'] = Hash::make($request->password);
+        Users::create([
+            'username' => $request->username,
+            'roles_id' => 2,
+            'password' => Hash::make($request->password)
+        ]);
 
-        Users::create($data);
-
-        return redirect()->route('daftarKasir');
+        return redirect()
+            ->route('daftarKasir')
+            ->with('success', 'Kasir berhasil ditambahkan!');
     }
 
     public function kasirEdit($id)
@@ -144,11 +147,12 @@ class KasirController extends Controller
         return redirect()->route('daftarKasir');
     }
 
-    public function kasirDelete($id)
-    {
-        $users = Users::findOrFail($id);
-        $users->delete();
+    public function destroy($id)
+{
+    $user = Users::findOrFail($id);
+    $user->delete();
 
-        return redirect()->route('daftarKasir');
-    }
+    return redirect()->back()->with('success', 'Kasir berhasil dihapus');
+}
+
 }

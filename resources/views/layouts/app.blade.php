@@ -103,17 +103,20 @@
         }
 
         .topbar {
-            height: 60px;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            margin: 20px;
-            border-radius: 8px;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            position: relative;
-            /* supaya bisa pakai absolute center */
-        }
+    height: 60px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 0 20px;
+    
+    position: sticky;    /* Biar nempel di atas */
+    top: 20px;           /* Menjaga jarak sesuai margin kamu */
+    z-index: 999;        /* Naikkan supaya tidak ketutup konten */
+
+    margin: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+}
 
         .topbar-left {
             font-weight: 700;

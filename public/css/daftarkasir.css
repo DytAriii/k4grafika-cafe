@@ -3,7 +3,7 @@
     background: #faf9f7;
     min-height: 100vh;
     font-family: 'Poppins', sans-serif;
-    padding-top: 80px;  Space untuk topbar
+    padding-top: 80px;  
     /*margin: 0 auto;  Center container */
     width: 100%;
 }
@@ -62,7 +62,6 @@
 /* Table */
 .kasir-table {
     width: 100%;
-    min-width: 1086px; /* Minimum width untuk table */
     border-collapse: collapse;
     background: #fff;
     border-radius: 12px;
@@ -171,9 +170,7 @@
         font-size: 24px;
     }
     
-    .kasir-table {
-        min-width: 600px;
-    }
+   
     
     .kasir-table th,
     .kasir-table td {
