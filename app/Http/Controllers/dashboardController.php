@@ -74,4 +74,42 @@ class DashboardController extends Controller
             'topMenu'
         ));
     }
+
+    public function filterByDate()
+{
+    $date = request('date'); // yyyy-mm-dd
+
+    // ---- Total pendapatan pada tanggal tersebut ----
+    $income = DB::table('transaksis')
+        ->whereDate('created_at', $date)
+        ->sum('total');
+
+    // ---- Jumlah transaksi pada tanggal tersebut ----
+    $transactions = DB::table('transaksis')
+        ->whereDate('created_at', $date)
+        ->count();
+
+    // ---- Menu aktif (tetap sama) ----
+    $activeMenu = DB::table('menus')
+        ->where('status_id', 1)
+        ->count();
+
+    // ---- Menu terlaris tanggal tersebut ----
+    $topMenu = DB::table('transaksi_details')
+        ->join('menus', 'transaksi_details.menu_id', '=', 'menus.id')
+        ->select('menus.nama', DB::raw('SUM(transaksi_details.jumlah) as total'))
+        ->whereDate('transaksi_details.created_at', $date)
+        ->groupBy('menus.nama')
+        ->orderByDesc('total')
+        ->first();
+
+    return response()->json([
+        'income' => $income,
+        'transactions' => $transactions,
+        'activeMenu' => $activeMenu,
+        'topMenu' => $topMenu ? $topMenu->nama : "-",
+        'topMenuTotal' => $topMenu ? $topMenu->total : 0,
+    ]);
+}
+
 }

@@ -710,16 +710,122 @@ new Chart(document.getElementById('topMenuChart'), {
     }
 });
 
-// Kalender sederhana
-function updateCalendar() {
-    const now = new Date();
-    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    
-    document.querySelector('.month-year').textContent = 
-        `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+/* ===========================================
+   KALENDER DINAMIS (REAL WORKING)
+=========================================== */
+
+let currentDate = new Date(); // default: hari ini
+
+function renderCalendar(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    const monthNames = [
+        "Januari","Februari","Maret","April","Mei","Juni",
+        "Juli","Agustus","September","Oktober","November","Desember"
+    ];
+
+    // Update teks bulan
+    document.getElementById("monthYear").textContent =
+        monthNames[month] + " " + year;
+
+    const firstDay = new Date(year, month, 1).getDay(); 
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    let calendarHTML = "";
+    let dayCount = 1;
+    let nextMonthDay = 1;
+
+    // Baris maksimal kalender selalu 6
+    for (let i = 0; i < 6; i++) {
+        calendarHTML += "<tr>";
+
+        for (let j = 0; j < 7; j++) {
+            const cellIndex = i * 7 + j;
+
+            // Tanggal bulan sebelumnya
+            if (cellIndex < firstDay) {
+                const prevDay = prevMonthDays - (firstDay - cellIndex) + 1;
+                calendarHTML += `
+                    <td class="calendar-other-month">${prevDay}</td>
+                `;
+            }
+            // Tanggal bulan sekarang
+            else if (dayCount <= daysInMonth) {
+                const isToday =
+                    dayCount === new Date().getDate() &&
+                    month === new Date().getMonth() &&
+                    year === new Date().getFullYear();
+
+                calendarHTML += `
+                    <td class="${isToday ? "calendar-today" : ""}"
+                        data-date="${year}-${String(month+1).padStart(2,'0')}-${String(dayCount).padStart(2,'0')}">
+                        ${dayCount}
+                    </td>
+                `;
+                dayCount++;
+            }
+            // Tanggal bulan berikutnya
+            else {
+                calendarHTML += `
+                    <td class="calendar-other-month">${nextMonthDay}</td>
+                `;
+                nextMonthDay++;
+            }
+        }
+
+        calendarHTML += "</tr>";
+    }
+
+    document.getElementById("calendarBody").innerHTML = calendarHTML;
+
+    bindCalendarClickEvents();
 }
-updateCalendar();
+
+// Navigasi bulan
+document.getElementById("prevMonth").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar(currentDate);
+});
+
+document.getElementById("nextMonth").addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar(currentDate);
+});
+
+// Klik tanggal
+function bindCalendarClickEvents() {
+    document.querySelectorAll("#calendarBody td[data-date]").forEach(cell => {
+        cell.addEventListener("click", function() {
+            const selectedDate = this.getAttribute("data-date");
+
+            // ======= PANGGIL AJAX REFRESH DASHBOARD =======
+            loadDashboardByDate(selectedDate);
+
+            // Highlight tanggal yang dipilih
+            document.querySelectorAll("#calendarBody td").forEach(td => {
+                td.classList.remove("calendar-today");
+            });
+            this.classList.add("calendar-today");
+        });
+    });
+}
+
+renderCalendar(currentDate);
+
+function loadDashboardByDate(selectedDate) {
+    fetch(`/dashboard/filter?date=${selectedDate}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('stat-income').innerText = "Rp " + data.income;
+            document.getElementById('stat-transactions').innerText = data.transactions + " transaksi";
+            document.getElementById('stat-active-menu').innerText = data.activeMenu;
+            document.getElementById('stat-top-menu').innerText = data.topMenu + " (" + data.topMenuTotal + ")";
+        })
+        .catch(err => console.error(err));
+}
 </script>
 @endpush
 
@@ -731,25 +837,25 @@ updateCalendar();
         <div class="stat-card">
             <div class="stat-icon"><i class="fas fa-wallet"></i></div>
             <h3>Total Pendapatan</h3>
-            <div class="stat-value">Rp {{ number_format($todayIncome,0,',','.') }}</div>
+            <div class="stat-value" id="stat-income">Rp {{ number_format($todayIncome,0,',','.') }}</div>
         </div>
 
         <div class="stat-card">
             <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
             <h3>Transaksi Hari Ini</h3>
-            <div class="stat-value">{{ $todayTransactions }}</div>
+            <div class="stat-value" id="stat-transactions">{{ $todayTransactions }}</div>
         </div>
 
         <div class="stat-card">
             <div class="stat-icon"><i class="fas fa-utensils"></i></div>
             <h3>Menu Terlaris</h3>
-            <div class="stat-value">{{ $topMenuToday->nama ?? '-' }}</div>
+            <div class="stat-value" id="stat-top-menu">{{ $topMenuToday->nama ?? '-' }}</div>
         </div>
 
         <div class="stat-card">
             <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
             <h3>Menu Aktif</h3>
-            <div class="stat-value">{{ $activeMenu }}</div>
+            <div class="stat-value" id="stat-active-menu">{{ $activeMenu }}</div>
         </div>
     </div>
 
@@ -799,42 +905,32 @@ updateCalendar();
 
             <!-- KALENDER -->
             <div class="sidebar-box calendar-box">
-                <div class="calendar-header">
-                    <div class="month-year">{{ \Carbon\Carbon::now()->translatedFormat('F Y') }}</div>
-                    <div class="calendar-nav">
-                        <button><i class="fas fa-chevron-left"></i></button>
-                        <button><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                </div>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>M</th><th>S</th><th>S</th><th>R</th><th>K</th><th>J</th><th>S</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="calendar-other-month">29</td>
-                            <td class="calendar-other-month">30</td>
-                            <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
-                        </tr>
-                        <tr>
-                            <td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
-                        </tr>
-                        <tr>
-                            <td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td>
-                        </tr>
-                        <tr>
-                            <td>20</td><td>21</td><td>22</td><td class="calendar-today">23</td><td>24</td><td>25</td><td>26</td>
-                        </tr>
-                        <tr>
-                            <td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
-                            <td class="calendar-other-month">1</td>
-                            <td class="calendar-other-month">2</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="calendar-box">
+    <div class="calendar-header">
+        <span id="monthYear" class="month-year"></span>
+
+        <div class="calendar-nav">
+            <button id="prevMonth">&lt;</button>
+            <button id="nextMonth">&gt;</button>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Min</th>
+                <th>Sen</th>
+                <th>Sel</th>
+                <th>Rab</th>
+                <th>Kam</th>
+                <th>Jum</th>
+                <th>Sab</th>
+            </tr>
+        </thead>
+        <tbody id="calendarBody"></tbody>
+    </table>
+</div>
+
             </div>
 
             <!-- ACTIVITY LOG -->
