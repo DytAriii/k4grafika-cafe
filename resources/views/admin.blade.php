@@ -16,10 +16,10 @@
 </head>
 
 <body>
-    <div style="display: flex;">
+    <div>
         @include('components.admin-sidebar') <!-- Sidebar tetap ada -->
 
-        
+
         <div class="content">
             @include('components.admin-topbar') <!-- Topbar tetap ada -->
             @yield('content')

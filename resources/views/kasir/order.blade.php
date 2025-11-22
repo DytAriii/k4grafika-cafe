@@ -372,24 +372,24 @@
 
     /* Form */
     .form-group {
-    margin-bottom: 6px; /* sempitkan jarak antar input */
-}
+        margin-bottom: 6px;
+    }
 
-.form-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 3px; /* rapatkan label dengan input */
-    display: block;
-}
+    .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 3px;
+        display: block;
+    }
 
-.form-control {
-    width: 100%;
-    padding: 6px 8px; /* lebih compact */
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 13px;
-}
+    .form-control {
+        width: 100%;
+        padding: 6px 8px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 13px;
+    }
 
     /* Sold out */
     .menu-card.sold-out {
@@ -408,7 +408,6 @@
         transform: translate(-50%, -50%);
         color: #fff;
         font-size: 16px;
-        /* sedikit diperkecil agar muat */
         font-weight: bold;
         padding: 6px 12px;
         border-radius: 8px;
@@ -416,7 +415,6 @@
         pointer-events: none;
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 
-        /* tambahan agar teks tidak terpisah ke baris baru */
         white-space: nowrap;
         display: inline-block;
         text-align: center;
@@ -548,14 +546,14 @@
                 @csrf
                 <div>
                     <div class="form-group">
-                    <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
-                    <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
-                </div>
+                        <label for="nama_customer" class="form-label">Nama Pelanggan:</label>
+                        <input type="text" name="nama_customer" id="nama_customer" placeholder="Pelanggan" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="catatan" class="form-label">Catatan Pesanan (Opsional):</label>
-                    <textarea name="catatan" id="catatan" class="form-control" rows="2" placeholder="Contoh: tanpa gula, pedas sedang, es sedikit"></textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="catatan" class="form-label">Catatan Pesanan (Opsional):</label>
+                        <textarea name="catatan" id="catatan" class="form-control" rows="2" placeholder="Contoh: tanpa gula, pedas sedang, es sedikit"></textarea>
+                    </div>
                 </div>
 
                 <div class="cart-summary">
@@ -607,7 +605,8 @@
                 } else {
                     $cards.each(function() {
                         const cat = $(this).data("category")?.toString();
-                        if (cat === kategoriId.toString()) $(this).show(); else $(this).hide();
+                        if (cat === kategoriId.toString()) $(this).show();
+                        else $(this).hide();
                     });
                 }
             } else {
@@ -779,25 +778,27 @@
 
             $(".cart-items").html(itemsHtml);
         }
-// 🔍 Live Search
-    let searchTimeout;
-    $(".search-input-inline").on("keyup", function () {
-        clearTimeout(searchTimeout);
-        let query = $(this).val();
+        // 🔍 Live Search
+        let searchTimeout;
+        $(".search-input-inline").on("keyup", function() {
+            clearTimeout(searchTimeout);
+            let query = $(this).val();
 
-        searchTimeout = setTimeout(function () {
-            $.ajax({
-                url: "{{ route('kasir.order') }}",
-                type: "GET",
-                data: { search: query },
-                success: function (res) {
-                    // ambil isi #menu-container dari response
-                    let html = $(res).find("#menu-container").html();
-                    $("#menu-container").html(html);
-                }
-            });
-        }, 150);
+            searchTimeout = setTimeout(function() {
+                $.ajax({
+                    url: "{{ route('kasir.order') }}",
+                    type: "GET",
+                    data: {
+                        search: query
+                    },
+                    success: function(res) {
+                        // ambil isi #menu-container dari response
+                        let html = $(res).find("#menu-container").html();
+                        $("#menu-container").html(html);
+                    }
+                });
+            }, 150);
+        });
     });
-});
 </script>
 @endsection

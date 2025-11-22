@@ -76,6 +76,9 @@ class DatabaseSeeder extends Seeder
         Menu::factory()->TahuWalik()->create();
         Menu::factory()->TahuBakso()->create();
         Menu::factory()->Donat()->create();
+
+        // Seed kasir tambahan (opsional, jika ingin lebih dari 1 kasir)
+        $this->call(KasirSeeder::class);
     }
 
 }

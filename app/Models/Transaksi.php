@@ -4,10 +4,12 @@ namespace App\Models;
 use App\Models\TransaksiDetail;
 use App\Models\User;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'user_id','invoice','nama_customer', 'catatan',
         'total','diskon','bayar','kembali','metode_pembayaran'
