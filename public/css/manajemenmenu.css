@@ -1,44 +1,56 @@
-/* Container utama */
+/* Container Utama */
 .menu-container {
-    font-family: 'Poppins', sans-serif;
-    padding: 20px;
-    padding-top: 80px;  Space untuk topbar
-    background: #f9f9f9;
+    font-family: 'Poppins';
+    padding: 20px 0px;
+    background: #f9fafb;
     min-height: 100vh;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-/* Judul halaman */
+/* Judul Halaman */
 .page-title {
-    text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 .page-title h1 {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
-    color: #7c1f1f;
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
 }
 
-/* Controls: Search, Filter, dan Tombol */
+.page-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Controls: Search, Filter, Tambah Menu */
 .menu-controls {
+    background: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
     gap: 20px;
     flex-wrap: wrap;
+    border: 1px solid #e5e7eb;
 }
 
 .controls-left {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
     flex-wrap: wrap;
+    flex: 1;
 }
 
 .controls-right {
@@ -49,195 +61,239 @@
 /* Search Box */
 .search-box {
     position: relative;
-    min-width: 250px;
+    display: flex;
+    align-items: center;
+    flex: 0 0 230px;
 }
 
 .search-input {
-    width: 100%;
-    padding: 12px 40px 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 25px;
+    flex: 1;
+    padding: 4.5px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px 0 0 6px;
     font-size: 14px;
     outline: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     background: #fff;
+    font-family: inherit;
 }
 
 .search-input:focus {
-    border-color: #892A06;
-    box-shadow: 0 0 0 3px rgba(124, 31, 31, 0.1);
+    border-color: #A74C29;
 }
 
-.search-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #666;
+.search-btn {
+    padding: 8px 14px;
+    background: #A74C29;
+    color: white;
+    border: 1px solid #A74C29;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn:hover {
+    background: #8a3d23;
+    border-color: #8a3d23;
 }
 
 /* Filter Box */
 .filter-box {
-    min-width: 150px;
+    flex: 0 0 180px;
 }
 
 .filter-select {
     width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 25px;
+    padding: 4.5px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
     font-size: 14px;
     outline: none;
     background: #fff;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-family: inherit;
 }
 
 .filter-select:focus {
-    border-color: #892A06;
-    box-shadow: 0 0 0 3px rgba(124, 31, 31, 0.1);
+    border-color: #A74C29;
+    box-shadow: 0 0 0 3px rgba(167, 76, 41, 0.1);
 }
 
 /* Tombol Tambah Menu */
 .btn {
-    padding: 12px 20px;
-    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 8px;
     font-size: 14px;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     border: none;
+    font-family: inherit;
 }
 
 .btn-add {
-    background: #892A06;
+    background: #A74C29;
     color: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .btn-add:hover {
-    background: #892A06;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(124, 31, 31, 0.3);
+    background: #8a3d23;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Wrapper tabel */
+/* Wrapper Tabel */
 .table-wrapper {
     background: #fff;
     border-radius: 12px;
     overflow-x: auto;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+    width: 100%;
 }
 
 /* Tabel */
 .menu-table {
     width: 100%;
-    min-width: 1086px;
+    min-width: 1070px;
     border-collapse: collapse;
 }
 
 .menu-table thead {
-    background: #892A06;
+    background: #A74C29;
 }
 
 .menu-table th {
-    padding: 16px 18px;
+    padding: 14px 16px;
     text-align: center;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
 .menu-table td {
-    padding: 14px 18px;
-    text-align: center;
+    padding: 14px 16px;
+    text-align: left;
     font-size: 14px;
-    border-bottom: 1px solid #eee;
     vertical-align: middle;
+    color: #333;
 }
 
-.menu-table tr:nth-child(even) {
-    background-color: #f8f8f8;
+.menu-table tr:hover {
+    background-color: #f9f9f9;
 }
 
 .menu-table tr:last-child td {
     border-bottom: none;
 }
 
-/* Column widths */
-.menu-table th:nth-child(1),
-.menu-table td:nth-child(1) {
-    width: 60px;
+//Column Width
+ .menu-table th:nth-child(1),
+.menu-table td:nth-child(1) { 
+    width: 5%;
+    text-align: center;
 }
-
+/*
 .menu-table th:nth-child(2),
 .menu-table td:nth-child(2) {
-    width: auto;
-    min-width: 150px;
-    text-align: left;
+    width: 25%;
+    font-weight: 500;
 }
 
 .menu-table th:nth-child(3),
-.menu-table td:nth-child(3) {
-    width: 120px;
+.menu-table td:nth-child(3) { 
+    width: 10%; 
 }
 
 .menu-table th:nth-child(4),
-.menu-table td:nth-child(4) {
-    width: 100px;
+.menu-table td:nth-child(4) { 
+    width: 10%;
+    font-weight: 600;
 }
 
 .menu-table th:nth-child(5),
-.menu-table td:nth-child(5) {
-    width: 80px;
+.menu-table td:nth-child(5) { 
+    width: 10%;
+    text-align: center;
 }
 
 .menu-table th:nth-child(6),
-.menu-table td:nth-child(6) {
-    width: 100px;
+.menu-table td:nth-child(6) { 
+    width: 10%;
+    text-align: center;
 }
 
 .menu-table th:nth-child(7),
-.menu-table td:nth-child(7) {
-    width: 150px;
-}
+.menu-table td:nth-child(7) { 
+    width: 30%;
+    text-align: center;
+} */
 
-/* Gambar menu */
+/* Gambar Menu */
 .menu-table td img {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     border-radius: 8px;
     object-fit: cover;
-    border: 2px solid #ddd;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Status Badge */
+
+.status-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .status-badge {
     padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
+    border-radius: 12px;
+    font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
+    display: inline-block;
+    letter-spacing: 0.3px;
 }
 
 .status-active {
-    background: #e8f5e8;
-    color: #2e7d32;
-    border: 1px solid #4caf50;
+    background: #d1fae5;
+    color: #065f46;
 }
 
 .status-inactive {
-    background: #fce4ec;
-    color: #892A06;
-    border: 1px solid #892A06;
+    background: #fee2e2;
+    color: #991b1b;
 }
 
-/* Tombol aksi */
+.status-available {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-unavailable {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Tombol Aksi */
 .action-buttons {
     display: flex;
     gap: 8px;
@@ -245,76 +301,103 @@
     align-items: center;
 }
 
-.btn-edit,
-.btn-delete {
-    padding: 6px 12px;
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 500;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     color: #fff;
     border: none;
     cursor: pointer;
+    min-width: 65px;
+    text-align: center;
+    justify-content: center;
 }
 
-/* Edit */
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    min-width: 65px;
+    text-align: center;
+    justify-content: center;
+}
+
 .btn-edit {
-    background-color: #4CAF50;
+    background-color: #A74C29;
 }
 
 .btn-edit:hover {
-    background-color: #45A049;
+    background-color: #8a3d23;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+    box-shadow: 0 2px 4px rgba(167, 76, 41, 0.3);
 }
 
-/* Delete */
 .btn-delete {
-    background-color: #E53935;
+    background-color: #ef4444;
 }
 
 .btn-delete:hover {
-    background-color: #C62828;
+    background-color: #dc2626;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(229, 57, 53, 0.4);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
 }
 
 /* Pagination */
 .pagination-wrapper {
+    background: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
     flex-wrap: wrap;
     gap: 15px;
+    border: 1px solid #e5e7eb;
 }
 
 .pagination-info {
     font-size: 14px;
-    color: #666;
+    color: #6b7280;
 }
 
 .pagination-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .pagination-btn {
-    padding: 8px 16px;
-    border: 1px solid #ddd;
+    padding: 6px 14px;
+    border: 1px solid #d1d5db;
     background: #fff;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    font-weight: 500;
 }
 
 .pagination-btn:hover:not(:disabled) {
-    background: #892A06;
+    background: #A74C29;
     color: #fff;
-    border-color: #892A06;
+    border-color: #A74C29;
 }
 
 .pagination-btn:disabled {
@@ -328,24 +411,29 @@
 }
 
 .pagination-number {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #d1d5db;
     background: #fff;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.3s ease;
-    min-width: 40px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-weight: 500;
 }
 
 .pagination-number:hover {
-    background: #f0f0f0;
+    background: #f3f4f6;
 }
 
 .pagination-number.active {
-    background: #892A06;
+    background: #A74C29;
     color: #fff;
-    border-color: #892A06;
+    border-color: #A74C29;
 }
 
 /* Responsive Design */
@@ -354,42 +442,42 @@
         padding: 15px;
         padding-top: 70px;
     }
-    
+
     .page-title h1 {
         font-size: 24px;
     }
-    
+
     .menu-controls {
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
     }
-    
+
     .controls-left {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .search-box,
     .filter-box {
         min-width: auto;
     }
-    
+
     .btn-add {
         width: 100%;
         text-align: center;
     }
-    
+
     .menu-table {
         min-width: 700px;
     }
-    
+
     .pagination-wrapper {
         flex-direction: column;
         text-align: center;
         gap: 10px;
     }
-    
+
     .pagination-controls {
         flex-wrap: wrap;
         justify-content: center;
@@ -401,16 +489,22 @@
         flex-direction: column;
         gap: 5px;
     }
-    
+
     .btn-edit,
     .btn-delete {
         width: 80px;
         font-size: 11px;
         padding: 5px 8px;
     }
-    
+
     .menu-table td img {
         width: 40px;
         height: 40px;
+    }
+    
+    .pagination-number {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 35px;
     }
 }

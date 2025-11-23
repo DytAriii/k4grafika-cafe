@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    use HasFactory;
     protected $fillable = [
         'user_id','invoice','nama_customer', 'catatan',
         'total','diskon','bayar','kembali','metode_pembayaran'

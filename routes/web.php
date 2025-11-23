@@ -10,6 +10,10 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LaporanController;
 
+// routes/web.php
+Route::get('/dashboard/filter', [DashboardController::class, 'filterByDate'])
+     ->name('dashboard.filter');
+
 // ==================== Kasir ====================
 Route::get('/kasir/order', [OrderController::class, 'order'])->name('kasir.order');
 
@@ -41,7 +45,7 @@ Route::get('/home', [UsersController::class, 'home'])->name('home');
 Route::get('/logout', [UsersController::class, 'logout'])->name('logout');
 
 // ==================== Admin Dashboard ====================
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::get('/admin/daftarKasir', [KasirController::class, 'daftarKasir'])->name('daftarKasir');
 Route::get('/admin/manajemenMenu', [MenuController::class, 'manajemenMenu'])->name('manajemenMenu');
 
@@ -50,7 +54,7 @@ Route::get('/admin/create-kasir', [KasirController::class, 'kasirCreate'])->name
 Route::post('/admin/store-kasir', [KasirController::class, 'kasirStore'])->name('kasir.store');
 Route::get('/admin/{id}/edit', [KasirController::class, 'kasirEdit'])->name('kasir.edit');
 Route::patch('/admin/{id}/update', [KasirController::class, 'kasirUpdate'])->name('kasir.update');
-Route::get('/admin/{id}/kasir-delete', [KasirController::class, 'kasirDelete'])->name('kasir.delete');
+Route::delete('/kasir/{id}', [KasirController::class, 'destroy'])->name('kasir.delete');
 
 // ==================== Manajemen Menu ====================
 Route::prefix('admin')->group(function () {

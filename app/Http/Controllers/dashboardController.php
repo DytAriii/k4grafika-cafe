@@ -2,52 +2,114 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Transaksi;
-use App\Models\TransaksiDetail;
-use App\Models\Menu;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
-class dashboardController extends Controller
+class DashboardController extends Controller
 {
-    // public function index(Request $request)
-    // {
-    //     $today = now()->toDateString();
-
-    //     // 1) Hitung jumlah transaksi yang dibuat hari ini
-    //     $todayCount = Transaksi::whereDate('created_at', $today)->count();
-
-    //     // 2) Jumlahkan total (kolom `total`) semua transaksi hari ini
-    //     $todayTotal = Transaksi::whereDate('created_at', $today)->sum('total');
-
-    //     // 3) Cari menu terlaris hari ini (dari tabel detail transaksi)
-    //     $topMenu = TransaksiDetail::select('menu_id', DB::raw('SUM(jumlah) as total_qty'))
-    //         ->groupBy('menu_id')
-    //         ->orderByDesc('total_qty')
-    //         ->with('menu')   // eager load relasi menu supaya bisa ambil nama
-    //         ->first();
-
-    //     $topMenuName = $topMenu?->menu?->nama ?? '-';
-
-    //     // 4) Hitung jumlah kasir (user) yang aktif hari ini — distinct user_id
-    //     $activeCashiers = Transaksi::whereDate('created_at', $today)->distinct('user_id')->count('user_id');
-
-    //     // 5) Hitung jumlah menu aktif (contoh sederhana dari tabel Menu)
-    //     $activeMenus = Menu::where('status', 'active')->count();
-
-    //     // 6) Return data ke view dashboard
-    //     return view('admin.dashboard', compact(
-    //         'todayCount',
-    //         'todayTotal',
-    //         'topMenuName',
-    //         'activeCashiers',
-    //         'activeMenus'
-    //     ));
-    // }
-
     public function index()
     {
-        return view('admin.dashboard');
+        // ----- Total pendapatan hari ini -----
+        $todayIncome = DB::table('transaksis')
+            ->whereDate('created_at', Carbon::today())
+            ->sum('total');
+
+        // ----- Jumlah transaksi hari ini -----
+        $todayTransactions = DB::table('transaksis')
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+
+        // ----- Total menu aktif -----
+        $activeMenu = DB::table('menus')
+    ->where('status_id', 1)
+    ->count();
+
+        // ----- Menu terlaris hari ini -----
+        $topMenuToday = DB::table('transaksi_details')
+            ->join('menus', 'transaksi_details.menu_id', '=', 'menus.id')
+            ->select('menus.nama', DB::raw('SUM(transaksi_details.jumlah) as total'))
+            ->whereDate('transaksi_details.created_at', Carbon::today())
+            ->groupBy('menus.nama')
+            ->orderByDesc('total')
+            ->first();
+
+        // ----- Grafik: Penjualan 7 hari -----
+        $sevenDays = DB::table('transaksis')
+            ->select(
+                DB::raw('DATE(created_at) as tanggal'),
+                DB::raw('SUM(total) as total')
+            )
+            ->where('created_at', '>=', Carbon::now()->subDays(7))
+            ->groupBy('tanggal')
+            ->orderBy('tanggal')
+            ->get();
+
+        // ----- Grafik: Pendapatan Bulanan -----
+        $monthlySales = DB::table('transaksis')
+            ->select(
+                DB::raw('MONTH(created_at) as bulan'),
+                DB::raw('SUM(total) as total')
+            )
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy('bulan')
+            ->orderBy('bulan')
+            ->get();
+
+        // ----- Menu terlaris (top 5) -----
+        $topMenu = DB::table('transaksi_details')
+            ->join('menus', 'transaksi_details.menu_id', '=', 'menus.id')
+            ->select('menus.nama', DB::raw('SUM(transaksi_details.jumlah) as total'))
+            ->groupBy('menus.nama')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'todayIncome',
+            'todayTransactions',
+            'activeMenu',
+            'topMenuToday',
+            'sevenDays',
+            'monthlySales',
+            'topMenu'
+        ));
     }
+
+    public function filterByDate()
+{
+    $date = request('date'); // yyyy-mm-dd
+
+    // ---- Total pendapatan pada tanggal tersebut ----
+    $income = DB::table('transaksis')
+        ->whereDate('created_at', $date)
+        ->sum('total');
+
+    // ---- Jumlah transaksi pada tanggal tersebut ----
+    $transactions = DB::table('transaksis')
+        ->whereDate('created_at', $date)
+        ->count();
+
+    // ---- Menu aktif (tetap sama) ----
+    $activeMenu = DB::table('menus')
+        ->where('status_id', 1)
+        ->count();
+
+    // ---- Menu terlaris tanggal tersebut ----
+    $topMenu = DB::table('transaksi_details')
+        ->join('menus', 'transaksi_details.menu_id', '=', 'menus.id')
+        ->select('menus.nama', DB::raw('SUM(transaksi_details.jumlah) as total'))
+        ->whereDate('transaksi_details.created_at', $date)
+        ->groupBy('menus.nama')
+        ->orderByDesc('total')
+        ->first();
+
+    return response()->json([
+        'income' => $income,
+        'transactions' => $transactions,
+        'activeMenu' => $activeMenu,
+        'topMenu' => $topMenu ? $topMenu->nama : "-",
+        'topMenuTotal' => $topMenu ? $topMenu->total : 0,
+    ]);
+}
+
 }

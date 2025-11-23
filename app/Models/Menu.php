@@ -16,4 +16,9 @@ class Menu extends Model
     {
         return $this->belongsTo(Category::class, 'categories_id');
     }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
 }

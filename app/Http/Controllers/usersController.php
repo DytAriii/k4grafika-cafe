@@ -30,17 +30,12 @@ class usersController extends Controller
             if ($users->roles_id == '2') {
                 return redirect()->route('kasir.order');
             } elseif ($users->roles_id == '1') {
-                return redirect()->route('dashboard');
+                return redirect()->route('admin.dashboard');
             } else {
                 return redirect()->route('login');
             }
         }
         return back()->with('error', 'Username atau password salah.');
-    }
-
-    public function home()
-    {
-        return view('home');
     }
 
     public function logout()

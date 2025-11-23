@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Category;
-use App\Models\Status; // perhatikan huruf besar S
+use App\Models\Status; 
 use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
@@ -16,11 +16,11 @@ class MenuController extends Controller
             return redirect()->route('login');
         }
 
-        $menu = Menu::with('category')->get(); 
+        $menu = Menu::with(['category', 'status'])->get(); 
         $categories = Category::all();
         $statuses = Status::all();
 
-        return view('admin.manajemenMenu', compact('menu', 'categories', 'statuses'));
+        return view('admin.manajemenmenu', compact('menu', 'categories', 'statuses'));
     }
 
     public function menuCreate()
