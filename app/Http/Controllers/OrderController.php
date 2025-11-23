@@ -8,6 +8,7 @@ use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
 use App\Models\Category;
 use App\Models\Status;
+use App\Helpers\LogActivity;
 
 class OrderController extends Controller
 {

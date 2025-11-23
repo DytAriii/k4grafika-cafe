@@ -43,10 +43,8 @@
 
 /* ===== BASE STYLES ===== */
 .kasir-management {
-    padding: 24px;
-    padding-top: 80px;
+    padding-top: 20px;
     background: var(--neutral-50);
-    min-height: 100vh;
     max-width: 100%;
     margin: 0;
     font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif;
@@ -57,12 +55,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
     padding: 20px 0;
-}
-
-.header-content {
-    flex: 1;
 }
 
 .page-title {
@@ -163,10 +156,6 @@
     color: white;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
-}
-
-.kasir-table th:hover {
-    background: var(--primary-700) !important;
 }
 
 .kasir-table td {
@@ -489,7 +478,7 @@
 @media screen and (max-width: 768px) {
     .kasir-management {
         padding: 16px;
-        padding-top: 70px;
+        padding-top: 0px;
     }
     
     .kasir-header {
@@ -550,10 +539,6 @@
 <div class="kasir-management">
     <!-- Header Section -->
     <div class="kasir-header">
-        <div class="header-content">
-            <h1 class="page-title">Manajemen Kasir</h1>
-            <p class="page-subtitle">Kelola data kasir dan akses sistem</p>
-        </div>
         <button class="btn-primary" onclick="openModal()">
             <span class="btn-icon">+</span>
             Tambah Kasir

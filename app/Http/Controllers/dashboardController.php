@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Helpers\LogActivity;
+use App\Models\ActivityLog;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+$logs = ActivityLog::whereDate('created_at', Carbon::today())
+    ->orderBy('created_at', 'desc')
+    ->get();
+
         // ----- Total pendapatan hari ini -----
         $todayIncome = DB::table('transaksis')
             ->whereDate('created_at', Carbon::today())
@@ -71,7 +77,8 @@ class DashboardController extends Controller
             'topMenuToday',
             'sevenDays',
             'monthlySales',
-            'topMenu'
+            'topMenu',
+              'logs'
         ));
     }
 
@@ -103,12 +110,18 @@ class DashboardController extends Controller
         ->orderByDesc('total')
         ->first();
 
+        $logs = ActivityLog::whereDate('created_at', $date)
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+
     return response()->json([
         'income' => $income,
         'transactions' => $transactions,
         'activeMenu' => $activeMenu,
         'topMenu' => $topMenu ? $topMenu->nama : "-",
         'topMenuTotal' => $topMenu ? $topMenu->total : 0,
+            'logs' => $logs
     ]);
 }
 

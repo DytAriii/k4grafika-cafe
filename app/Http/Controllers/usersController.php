@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\LogActivity;
 
 class usersController extends Controller
 {
@@ -26,6 +27,7 @@ class usersController extends Controller
                 'users_username' => $users->username,
                 'users_role' => $users->role
             ]);
+LogActivity::add('Login', $users->nama . ' berhasil login');
 
             if ($users->roles_id == '2') {
                 return redirect()->route('kasir.order');
@@ -44,8 +46,14 @@ class usersController extends Controller
     }
 
     public function logout()
-    {
-        session()->forget(['users_id', 'users_username']);
-        return redirect()->route('login');
-    }
+{
+    $user = users::find(session('users_id')); // Ambil user yang sedang login
+
+    LogActivity::add('Logout', ($user ? $user->nama : 'User') . ' berhasil logout');
+
+    session()->forget(['users_id', 'users_username', 'users_role']);
+
+    return redirect()->route('login');
+}
+
 }

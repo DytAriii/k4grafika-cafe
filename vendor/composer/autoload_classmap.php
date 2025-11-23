@@ -6,13 +6,15 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Helpers\\LogActivity' => $baseDir . '/app/Helpers/LogActivity.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\KasirController' => $baseDir . '/app/Http/Controllers/KasirController.php',
+    'App\\Http\\Controllers\\LaporanController' => $baseDir . '/app/Http/Controllers/LaporanController.php',
     'App\\Http\\Controllers\\OrderController' => $baseDir . '/app/Http/Controllers/OrderController.php',
     'App\\Http\\Controllers\\TransaksiController' => $baseDir . '/app/Http/Controllers/TransaksiController.php',
-    'App\\Http\\Controllers\\dashboardController' => $baseDir . '/app/Http/Controllers/dashboardController.php',
-    'App\\Http\\Controllers\\menuController' => $baseDir . '/app/Http/Controllers/menuController.php',
     'App\\Http\\Controllers\\usersController' => $baseDir . '/app/Http/Controllers/usersController.php',
+    'App\\Http\\Middleware\\IsAdmin' => $baseDir . '/app/Http/Middleware/IsAdmin.php',
+    'App\\Models\\ActivityLog' => $baseDir . '/app/Models/ActivityLog.php',
     'App\\Models\\Category' => $baseDir . '/app/Models/Category.php',
     'App\\Models\\Menu' => $baseDir . '/app/Models/Menu.php',
     'App\\Models\\Order' => $baseDir . '/app/Models/Order.php',

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Category;
-use App\Models\Status; // perhatikan huruf besar S
+use App\Models\Status; 
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\LogActivity;
 
 class MenuController extends Controller
 {
@@ -44,6 +45,7 @@ class MenuController extends Controller
         $data['gambar'] = $request->file('gambar')->store('menu', 'public');
 
         Menu::create($data);
+        LogActivity::add('Tambah Menu', 'Menu '.$request->nama.' berhasil ditambahkan');
 
         return redirect()->route('manajemenMenu');
     }
@@ -57,6 +59,7 @@ class MenuController extends Controller
         }
 
         $menu->delete();
+        LogActivity::add('Hapus Menu', 'Menu '.$menu->nama.' berhasil dihapus');
 
         return redirect()->route('manajemenMenu');
     }
@@ -93,6 +96,7 @@ class MenuController extends Controller
         }
 
         $menu->update($data);
+        LogActivity::add('Edit Menu', 'Menu '.$menu->nama.' berhasil diedit');
 
         return redirect()->route('manajemenMenu');
     }
