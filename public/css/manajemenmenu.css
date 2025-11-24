@@ -203,7 +203,6 @@
     border-bottom: none;
 }
 
-//Column Width
  .menu-table th:nth-child(1),
 .menu-table td:nth-child(1) { 
     width: 5%;

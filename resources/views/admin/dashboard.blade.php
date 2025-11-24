@@ -532,6 +532,28 @@ body {
         font-size: 11px;
     }
 }
+
+/* Batas tinggi log activity */
+.activity-log-wrapper {
+    max-height: 260px;   /* Sesuaikan tinggi */
+    overflow-y: auto;
+    padding-right: 5px; 
+}
+
+/* Scrollbar halus */
+.activity-log-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.activity-log-wrapper::-webkit-scrollbar-thumb {
+    background: var(--primary-300);
+    border-radius: 10px;
+}
+
+.activity-log-wrapper::-webkit-scrollbar-track {
+    background: var(--neutral-100);
+}
+
 </style>
 @endpush
 
@@ -823,8 +845,36 @@ function loadDashboardByDate(selectedDate) {
             document.getElementById('stat-transactions').innerText = data.transactions + " transaksi";
             document.getElementById('stat-active-menu').innerText = data.activeMenu;
             document.getElementById('stat-top-menu').innerText = data.topMenu + " (" + data.topMenuTotal + ")";
+                        updateLogs(response.logs);
         })
         .catch(err => console.error(err));
+}
+function updateLogs(logs) {
+    let html = "";
+
+    if (logs.length === 0) {
+        html = `<p class="text-muted">Tidak ada aktivitas.</p>`;
+    } else {
+        logs.forEach(log => {
+            html += `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p><strong>${log.activity}</strong> — 
+                            ${log.username ?? 'User'} ${log.description}
+                        </p>
+                        <div class="activity-time">
+                            ${new Date(log.created_at).toLocaleString('id-ID')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    document.getElementById("activityLogList").innerHTML = html;
 }
 </script>
 @endpush
@@ -934,52 +984,27 @@ function loadDashboardByDate(selectedDate) {
             </div>
 
             <!-- ACTIVITY LOG -->
-            <div class="sidebar-box">
-                <h3><i class="fa-solid fa-clock"></i> Activity Log</h3>
+<div class="sidebar-box">
+    <h3><i class="fa-solid fa-clock"></i> Activity Log</h3>
 
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-sign-in-alt"></i>
-                    </div>
-                    <div class="activity-content">
-                        <p>Admin login ke sistem</p>
-                        <div class="activity-time">10 menit lalu</div>
-                    </div>
+    <div class="activity-log-wrapper" id="activityLogList">
+        @forelse ($logs as $log)
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-info"></i>
                 </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-edit"></i>
-                    </div>
-                    <div class="activity-content">
-                        <p>Mengubah status menu "Cappuccino"</p>
-                        <div class="activity-time">1 jam lalu</div>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <div class="activity-content">
-                        <p>Melihat laporan transaksi</p>
-                        <div class="activity-time">2 jam lalu</div>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div class="activity-content">
-                        <p>Backup database otomatis</p>
-                        <div class="activity-time">Kemarin</div>
-                    </div>
+                <div class="activity-content">
+                    <p><strong>{{ $log->activity }}</strong> — 
+                       {{ $log->user->username ?? 'User' }} {{ $log->description }}
+                    </p>
+                    <div class="activity-time">{{ $log->created_at->diffForHumans() }}</div>
                 </div>
             </div>
-
-        </div>
-
+        @empty
+            <p class="text-muted">Tidak ada aktivitas.</p>
+        @endforelse
+    </div>
+</div>
     </div>
 
 </div>

@@ -7,6 +7,7 @@ use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
 use Illuminate\Support\Str;
 use App\Models\Menu;
+use App\Helpers\LogActivity;
 
 class TransaksiController extends Controller
 {
@@ -24,7 +25,6 @@ class TransaksiController extends Controller
         }
 
         $total = collect($cart)->sum(fn($item) => $item['harga'] * $item['qty']);
-
         // Simpan transaksi utama
         $transaksi = Transaksi::create([
             'nama_customer' => $request->nama_customer,
@@ -103,7 +103,10 @@ class TransaksiController extends Controller
                 'subtotal' => $item['qty'] * $item['harga'],
             ]);
         }
-
+        LogActivity::add(
+    'Transaksi Baru',
+    'Transaksi #'.$transaksi->id.' dibuat total Rp '.number_format($transaksi->total)
+);
         // Bersihkan session
         session()->forget(['cart', 'payment_data']);
 

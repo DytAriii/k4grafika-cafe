@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Transaksi;          
 use App\Models\TransaksiDetail;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\LogActivity;
 
 class KasirController extends Controller
 {
