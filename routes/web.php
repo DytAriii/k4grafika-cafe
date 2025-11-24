@@ -65,6 +65,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/{id}/menu-delete', [MenuController::class, 'menuDelete'])->name('menu.delete');
 
     // laporan
-Route::get('/admin/laporan-kasir', [LaporanController::class, 'kasirIndex'])->name('admin.laporan');
-
+    Route::get('/laporan-kasir', [LaporanController::class, 'kasirIndex'])->name('admin.laporan');
+    Route::get('/laporan-kasir/export-pdf', [LaporanController::class, 'exportPDF'])->name('admin.laporan.pdf');
 });
