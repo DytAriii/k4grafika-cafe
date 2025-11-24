@@ -147,16 +147,21 @@ body {
 
 /* ====================== MAIN CONTENT LAYOUT ======================= */
 .main-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
     gap: 20px;
 }
 
-/* ====================== LEFT CHARTS SECTION ======================= */
 .left-charts {
-    display: grid;
-    grid-template-rows: auto auto;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
+}
+
+.right-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Grafik Penjualan 7 Hari - FULL WIDTH */
@@ -536,6 +541,7 @@ body {
 /* Batas tinggi log activity */
 .activity-log-wrapper {
     max-height: 260px;   /* Sesuaikan tinggi */
+
     overflow-y: auto;
     padding-right: 5px; 
 }
@@ -553,7 +559,10 @@ body {
 .activity-log-wrapper::-webkit-scrollbar-track {
     background: var(--neutral-100);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7c65f964727b79c9fe66725fa77d6d254f7a4ad8
 </style>
 @endpush
 
@@ -846,6 +855,7 @@ function loadDashboardByDate(selectedDate) {
             document.getElementById('stat-active-menu').innerText = data.activeMenu;
             document.getElementById('stat-top-menu').innerText = data.topMenu + " (" + data.topMenuTotal + ")";
                         updateLogs(response.logs);
+
         })
         .catch(err => console.error(err));
 }
@@ -940,7 +950,7 @@ function updateLogs(logs) {
 
         <!-- ========== RIGHT SIDE - QUICK ACTIONS, KALENDER & LOG AKTIVITAS ========== -->
         <div>
-
+<div class="right-sidebar">
             <div class="sidebar-box">
     <div class="quick-action-single">
         <a href="{{ route('admin.laporan') }}" class="quick-action-btn">
@@ -1006,6 +1016,10 @@ function updateLogs(logs) {
     </div>
 </div>
     </div>
-
+</div>
+</div>
+    </div>
+</div>
+</div>
 </div>
 @endsection

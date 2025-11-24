@@ -86,14 +86,11 @@
 
 .search-input {
     flex: 1;
-    padding: 4.5px 12px;
-    border: 1px solid var(--neutral-300);
+    padding: 8px 12px;
+    border: 1px solid #ccc;
     border-radius: 6px 0 0 6px;
     font-size: 14px;
     outline: none;
-    transition: all 0.2s ease;
-    background: #fff;
-    font-family: inherit;
 }
 
 .search-input:focus {
@@ -101,17 +98,14 @@
 }
 
 .search-btn {
-    padding: 8px 14px;
-    background: var(--primary-600);
+     padding: 8px 14px;
+    background: #A74C29;
     color: white;
-    border: 1px solid var(--primary-600);
+    border: 1px solid #A74C29;
     border-radius: 0 6px 6px 0;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .search-btn:hover {

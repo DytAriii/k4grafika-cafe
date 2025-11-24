@@ -110,6 +110,11 @@ $logs = ActivityLog::whereDate('created_at', Carbon::today())
         ->orderByDesc('total')
         ->first();
 
+        $logs = ActivityLog::whereDate('created_at', $date)
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+
     return response()->json([
         'income' => $income,
         'transactions' => $transactions,
