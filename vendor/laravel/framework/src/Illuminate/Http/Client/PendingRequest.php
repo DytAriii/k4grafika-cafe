@@ -11,6 +11,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Promise\EachPromise;
 use GuzzleHttp\UriTemplate\UriTemplate;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\Events\ConnectionFailed;
@@ -171,6 +172,13 @@ class PendingRequest
      * @var bool
      */
     protected $preventStrayRequests = false;
+
+    /**
+     * A list of URL patterns that are allowed to bypass the stray request guard.
+     *
+     * @var array<int, string>
+     */
+    protected $allowedStrayRequestUrls = [];
 
     /**
      * The middleware callables added by users that will handle requests.
@@ -521,7 +529,7 @@ class PendingRequest
     public function withUrlParameters(array $parameters = [])
     {
         return tap($this, function () use ($parameters) {
-            $this->urlParameters = $parameters;
+            $this->urlParameters = array_merge($this->urlParameters, $parameters);
         });
     }
 
@@ -876,20 +884,52 @@ class PendingRequest
     /**
      * Send a pool of asynchronous requests concurrently.
      *
-     * @param  callable  $callback
-     * @return array<array-key, \Illuminate\Http\Client\Response>
+     * @param  (callable(\Illuminate\Http\Client\Pool): mixed)  $callback
+     * @param  int|null  $concurrency
+     * @return array<array-key, \Illuminate\Http\Client\Response|\Illuminate\Http\Client\ConnectionException|\Illuminate\Http\Client\RequestException>
      */
-    public function pool(callable $callback)
+    public function pool(callable $callback, ?int $concurrency = null)
     {
         $results = [];
 
         $requests = tap(new Pool($this->factory), $callback)->getRequests();
 
-        foreach ($requests as $key => $item) {
-            $results[$key] = $item instanceof static ? $item->getPromise()->wait() : $item->wait();
+        if ($concurrency === null) {
+            foreach ($requests as $key => $item) {
+                $results[$key] = $item instanceof static ? $item->getPromise()->wait() : $item->wait();
+            }
+
+            return $results;
         }
 
+        $promises = [];
+
+        foreach ($requests as $key => $item) {
+            $promises[$key] = $item instanceof static ? $item->getPromise() : $item;
+        }
+
+        (new EachPromise($promises, [
+            'fulfilled' => function ($result, $key) use (&$results) {
+                $results[$key] = $result;
+            },
+            'rejected' => function ($reason, $key) use (&$results) {
+                $results[$key] = $reason;
+            },
+            'concurrency' => $concurrency,
+        ]))->promise()->wait();
+
         return $results;
+    }
+
+    /**
+     * Send a pool of asynchronous requests concurrently, with callbacks for introspection.
+     *
+     * @param  callable  $callback
+     * @return \Illuminate\Http\Client\Batch
+     */
+    public function batch(callable $callback): Batch
+    {
+        return tap(new Batch($this->factory), $callback);
     }
 
     /**
@@ -1376,7 +1416,7 @@ class PendingRequest
                     ->first();
 
                 if (is_null($response)) {
-                    if ($this->preventStrayRequests) {
+                    if (! $this->isAllowedRequestUrl((string) $request->getUri())) {
                         throw new StrayRequestException((string) $request->getUri());
                     }
 
@@ -1499,6 +1539,40 @@ class PendingRequest
         $this->preventStrayRequests = $prevent;
 
         return $this;
+    }
+
+    /**
+     * Allow stray, unfaked requests entirely, or optionally allow only specific URLs.
+     *
+     * @param  array<int, string>  $only
+     * @return $this
+     */
+    public function allowStrayRequests(array $only)
+    {
+        $this->allowedStrayRequestUrls = array_values($only);
+
+        return $this;
+    }
+
+    /**
+     * Determine if the given URL is allowed as a stray request.
+     *
+     * @param  string  $url
+     * @return bool
+     */
+    public function isAllowedRequestUrl($url)
+    {
+        if (! $this->preventStrayRequests) {
+            return true;
+        }
+
+        foreach ($this->allowedStrayRequestUrls as $pattern) {
+            if (Str::is($pattern, $url)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -281,7 +281,16 @@
         });
 
         function exportToPDF() {
-            alert('Fitur export PDF akan segera tersedia');
+            // Ambil kasir yang dipilih
+            const kasirSelect = document.getElementById('kasir');
+            const selectedKasir = kasirSelect.value;
+            
+            // Ambil periode yang aktif
+            const activePeriod = document.querySelector('.category-btn.active');
+            const period = activePeriod ? activePeriod.dataset.period : 'all';
+            
+            // Redirect ke route export PDF dengan parameter
+            window.location.href = `{{ route('admin.laporan.pdf') }}?kasir=${selectedKasir}&period=${period}`;
         }
     </script>
 @endsection
