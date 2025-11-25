@@ -1,6 +1,6 @@
 /* Container Utama */
 .menu-container {
-    font-family: 'Poppins';
+  font-family: 'Poppins', Inter, system-ui, sans-serif;
     padding: 20px 0px;
     background: #f9fafb;
     min-height: 100vh;
@@ -42,6 +42,9 @@
     gap: 20px;
     flex-wrap: wrap;
     border: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;            /* WAJIB AGAR TIDAK KE-SCROLL */
+    z-index: 50;
 }
 
 .controls-left {
@@ -159,17 +162,19 @@
 /* Tabel */
 .menu-table {
     width: 100%;
-    min-width: 1070px;
     border-collapse: collapse;
+    table-layout: fixed;  /* supaya kolom mengecil otomatis */
+    word-wrap: break-word;
 }
 
 .menu-table thead {
+    text-align: left;
     background: #A74C29;
 }
 
 .menu-table th {
     padding: 14px 16px;
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     font-weight: 600;
     color: #fff;
@@ -251,8 +256,7 @@
 
 .status-col {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    align-items: left;
 }
 
 .status-badge {

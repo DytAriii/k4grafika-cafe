@@ -223,10 +223,6 @@
     position: relative;
 }
 
-.kasir-table th:hover {
-    background: var(--primary-700) !important;
-}
-
 .kasir-table td {
     padding: 16px 20px;
     border-bottom: 1px solid var(--neutral-200);

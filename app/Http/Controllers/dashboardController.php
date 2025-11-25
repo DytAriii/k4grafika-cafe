@@ -114,6 +114,19 @@ $logs = ActivityLog::whereDate('created_at', Carbon::today())
     ->orderBy('created_at', 'desc')
     ->get();
 
+    // ---- Grafik Pendapatan 7 Hari dari tanggal yang dipilih ----
+$sevenDays = DB::table('transaksis')
+    ->select(
+        DB::raw('DATE(created_at) as tanggal'),
+        DB::raw('SUM(total) as total')
+    )
+    ->whereBetween('created_at', [
+        Carbon::parse($date)->subDays(6)->startOfDay(),
+        Carbon::parse($date)->endOfDay()
+    ])
+    ->groupBy('tanggal')
+    ->orderBy('tanggal')
+    ->get();
 
     return response()->json([
         'income' => $income,
@@ -121,7 +134,8 @@ $logs = ActivityLog::whereDate('created_at', Carbon::today())
         'activeMenu' => $activeMenu,
         'topMenu' => $topMenu ? $topMenu->nama : "-",
         'topMenuTotal' => $topMenu ? $topMenu->total : 0,
-            'logs' => $logs
+            'logs' => $logs,
+                'sevenDays' => $sevenDays
     ]);
 }
 

@@ -559,10 +559,30 @@ body {
 .activity-log-wrapper::-webkit-scrollbar-track {
     background: var(--neutral-100);
 }
-<<<<<<< HEAD
+/* ===================== ANIMASI VALUE BERUBAH ===================== */
+/* ===================== ANIMASI VALUE BERUBAH (MODERN) ===================== */
+@keyframes modernValueChange {
+    0% {
+        opacity: 0.3;
+        transform: translateY(6px) scale(0.98);
+        color: var(--primary-500);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-2px) scale(1.03);
+        color: var(--primary-600);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        color: var(--neutral-900);
+    }
+}
 
-=======
->>>>>>> 7c65f964727b79c9fe66725fa77d6d254f7a4ad8
+.value-animate {
+    animation: modernValueChange 0.45s ease-out;
+}
+
 </style>
 @endpush
 
@@ -587,7 +607,7 @@ function mapMonthlyData(backendData) {
 }
 
 // Grafik 7 Hari - FULL WIDTH
-new Chart(document.getElementById('dailyChart'), {
+let dailyChart = new Chart(document.getElementById('dailyChart'), {
     type: 'line',
     data: {
         labels: {!! json_encode($sevenDays->pluck('tanggal')) !!},
@@ -850,15 +870,21 @@ function loadDashboardByDate(selectedDate) {
     fetch(`/dashboard/filter?date=${selectedDate}`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById('stat-income').innerText = "Rp " + data.income;
-            document.getElementById('stat-transactions').innerText = data.transactions + " transaksi";
-            document.getElementById('stat-active-menu').innerText = data.activeMenu;
-            document.getElementById('stat-top-menu').innerText = data.topMenu + " (" + data.topMenuTotal + ")";
-                        updateLogs(response.logs);
 
+            // SET STAT CARD
+            animateValueChange("stat-income", "Rp " + data.income.toLocaleString('id-ID'));
+            animateValueChange("stat-transactions", data.transactions + " transaksi");
+            animateValueChange("stat-active-menu", data.activeMenu);
+            animateValueChange("stat-top-menu", data.topMenu ?? "-");
+            // UPDATE GRAFIK 7 HARI
+updateDailyChart(data.sevenDays);
+
+            // UPDATE LOG
+            updateLogs(data.logs);
         })
         .catch(err => console.error(err));
 }
+
 function updateLogs(logs) {
     let html = "";
 
@@ -867,24 +893,42 @@ function updateLogs(logs) {
     } else {
         logs.forEach(log => {
             html += `
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-info"></i>
-                    </div>
-                    <div class="activity-content">
-                        <p><strong>${log.activity}</strong> — 
-                            ${log.username ?? 'User'} ${log.description}
-                        </p>
-                        <div class="activity-time">
-                            ${new Date(log.created_at).toLocaleString('id-ID')}
-                        </div>
-                    </div>
-                </div>
-            `;
+    <div class="activity-item value-animate">
+        <div class="activity-icon">
+            <i class="fas fa-info"></i>
+        </div>
+        <div class="activity-content">
+            <p><strong>${log.activity}</strong> — 
+                ${log.username ?? 'User'} ${log.description}
+            </p>
+            <div class="activity-time">
+                ${new Date(log.created_at).toLocaleString('id-ID')}
+            </div>
+        </div>
+    </div>
+`;
         });
     }
 
     document.getElementById("activityLogList").innerHTML = html;
+}
+function animateValueChange(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.innerText = value;
+
+    el.classList.remove("value-animate");
+    void el.offsetWidth;
+    el.classList.add("value-animate");
+}
+function updateDailyChart(sevenDays) {
+    const labels = sevenDays.map(item => item.tanggal);
+    const values = sevenDays.map(item => item.total);
+
+    dailyChart.data.labels = labels;
+    dailyChart.data.datasets[0].data = values;
+    dailyChart.update();
 }
 </script>
 @endpush
